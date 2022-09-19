@@ -12,6 +12,7 @@ Python-Script for automated click-sequences and text entry.
 - enter
 - scroll
 - stop
+- [number] -> pauses for [number] seconds
 
 
 ---
