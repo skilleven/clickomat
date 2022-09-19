@@ -11,3 +11,13 @@ Python-Script for automated click-sequences and text entry.
 - write
 - enter
 - scroll
+- stop
+
+
+---
+
+pyautogui
+keyboard
+easygui
+opencv-python
+pillow

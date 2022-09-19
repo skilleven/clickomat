@@ -1,17 +1,30 @@
-import pyautogui, re, time, keyboard
+import pyautogui, re, time, keyboard, os
 from datetime import datetime
 import easygui as e
 
 class Clickomat:
 
-    input_file_name      = "t2.txt"
-    confidence           = 0.97
-    autoswitch           = False
+    def __init__(self, case_path=None, input_file_name=None):
 
-    switched             = 0
-    breakout             = False
-    linenumber           = 0
-    error                = ""
+        if case_path is None:
+            self.case_path = "./testcases/case1"
+        else:
+            self.case_path = case_path
+
+        if input_file_name is None:
+            self.input_file_name = "t1.txt"
+        else:
+            self.input_file_name = input_file_name
+
+        self.input_file_path      = f"{self.case_path}/{self.input_file_name}"
+        self.confidence           = 0.98
+        self.autoswitch           = False
+
+        self.switched             = 0
+        self.breakout             = False
+        self.stopped              = False
+        self.linenumber           = 0
+        self.error                = ""
 
     def pause(self,line):
         try:
@@ -24,7 +37,7 @@ class Clickomat:
         try:
             image = re.search(r" -[a-zA-Z0-9_-]+", line).group(0)
             image = image[2:len(image)]
-            image = f"{image}.png"
+            image = f"{self.case_path}/{image}.png"
             return image
         except:
             return False
@@ -48,35 +61,40 @@ class Clickomat:
 
     def findImage(self,image):
         try:
-            x, y = pyautogui.locateCenterOnScreen(image, confidence = self.confidence)
+            x, y = pyautogui.locateCenterOnScreen(image, confidence=self.confidence)
             return True
         except:
             return False
 
     def locateImage(self,image):
         try:
-            box = pyautogui.locateOnScreen(image, confidence = self.confidence)
+            box = pyautogui.locateOnScreen(image, confidence=self.confidence)
             return box
         except:
             return False
 
     def clickImage(self,image):
         try:
-            x, y = pyautogui.locateCenterOnScreen(image, confidence = self.confidence)
+            x, y = pyautogui.locateCenterOnScreen(image, confidence=self.confidence)
             pyautogui.click(x, y)
             return True
         except:
             return False
 
     def switch(self):
-        pyautogui.keyDown('command')
-        pyautogui.press('tab')
-        pyautogui.keyUp('command')
+        if os.name == 'nt':
+            pyautogui.keyDown('alt')
+            pyautogui.press('tab')
+            pyautogui.keyUp('alt')
+        else:   
+            pyautogui.keyDown('command')
+            pyautogui.press('tab')
+            pyautogui.keyUp('command')
         time.sleep(0.5)
 
     def write(self,line):
         try:
-            text = re.search(r" \"[a-zA-Z0-9_\-\.\/]+\"", line).group(0)
+            text = re.search(r" \"[a-zA-Z0-9_:\-\.\/\\]+\"", line).group(0)
             text = text[2:len(text)-1]
             print(" -> ", text, end = "")
             keyboard.write(text)
@@ -87,9 +105,12 @@ class Clickomat:
             self.breakout = True
             return False
 
+    def stop(self):
+        self.stopped = True
+
     def main(self):
 
-        with open(self.input_file_name, 'r', encoding='UTF-8') as file:
+        with open(self.input_file_path, 'r', encoding='UTF-8') as file:
             lines = file.readlines()
             lines = [line.rstrip() for line in lines]
 
@@ -102,6 +123,10 @@ class Clickomat:
                 print ("Loop broken!")
                 e.msgbox("An error has occured: " + self.error, self.error)
                 break
+            if self.stopped:
+                print ("Loop stopped!")
+                break
+
 
             self.linenumber += 1
             print(self.linenumber, end = " " )
@@ -110,6 +135,9 @@ class Clickomat:
             self.pause(line)
 
             order = line.split(" ")
+
+            if "stop" in order:
+                self.stop()
 
             if "switch" in order:
                 self.switch()
@@ -159,7 +187,7 @@ class Clickomat:
                     self.error = "Nothing to drag!"
                     self.breakout = True
 
-            if "wait" in order:
+            if "await" in order:
 
                 found = False
                 timeout = self.getTimeout(line)
@@ -172,6 +200,7 @@ class Clickomat:
                         break
 
                     image = self.getImage(line)
+                    print(image)
                     if self.findImage(image):
                         t=round(time_delta.total_seconds())
                         print(" -> found after " + str(t) + "s.",end = "")
@@ -180,8 +209,8 @@ class Clickomat:
 
                 if not found:
                     print(" -> Not found.", end = "")
-                    error = "Image to wait for was not found."
-                    breakout = True
+                    self.error = "Image to wait for was not found."
+                    self.breakout = True
 
             if "write" in order:
                 self.write(line)
@@ -202,5 +231,6 @@ class Clickomat:
             print ("Loop finished.")
 
 if __name__ == "__main__":
+
     c = Clickomat()
     c.main()
