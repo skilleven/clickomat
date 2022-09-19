@@ -16,8 +16,13 @@ Python-Script for automated click-sequences and text entry.
 
 ---
 
-pyautogui
-keyboard
-easygui
-opencv-python
-pillow
+### Dependencies:
+
+* pyautogui
+* keyboard
+* easygui
+
+### On some systems further dependencies may be needed/updated:
+
+* opencv-python
+* pillow
