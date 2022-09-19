@@ -1,20 +1,35 @@
 import pyautogui, re, time, keyboard, os
 from datetime import datetime
+from os.path import exists
 import easygui as e
 
 class Clickomat:
 
-    def __init__(self, case_path=None, input_file_name=None):
+    def __init__(self, case_path=None, input_file_name=None, images=None):
 
         if case_path is None:
-            self.case_path = "./testcases/case1"
+            self.case_path = "."
         else:
             self.case_path = case_path
+            if not os.path.isdir(self.case_path):
+                print("given case path is not existing.")
+                exit()
 
         if input_file_name is None:
             self.input_file_name = "t1.txt"
         else:
             self.input_file_name = input_file_name
+            if not exists( self.input_file_name):
+                print("given clicklist is not existing.")
+                exit()
+
+        if images is None:
+            self.images = "."
+        else:
+            self.images = images
+            if not os.path.isdir(self.images):
+                print("given case path is not existing.")
+                exit()
 
         self.input_file_path      = f"{self.case_path}/{self.input_file_name}"
         self.confidence           = 0.98
@@ -37,7 +52,9 @@ class Clickomat:
         try:
             image = re.search(r" -[a-zA-Z0-9_-]+", line).group(0)
             image = image[2:len(image)]
-            image = f"{self.case_path}/{image}.png"
+            image = f"{self.images}/{image}.png"
+            if not exists(image):
+                return False
             return image
         except:
             return False
@@ -105,8 +122,23 @@ class Clickomat:
             self.breakout = True
             return False
 
+    def file(self,line):
+        try:
+            file = re.search(r" \"[a-zA-Z0-9_:\-\.\/\\]+\"", line).group(0)
+            file = file[2:len(file)-1]
+            return file
+        except:
+            return False
+
     def stop(self):
         self.stopped = True
+
+    def image_not_found(self):
+        self.error = "Target image not existing!"
+        print(" -> Target image not existing! Check directory for screenshot-snippet.")
+        self.breakout = True
+
+
 
     def main(self):
 
@@ -120,13 +152,12 @@ class Clickomat:
         for line in lines:
 
             if self.breakout:
-                print ("Loop broken!")
+                print ("Loop broken!\n\n")
                 e.msgbox("An error has occured: " + self.error, self.error)
                 break
             if self.stopped:
-                print ("Loop stopped!")
+                print ("Loop stopped!\n\n")
                 break
-
 
             self.linenumber += 1
             print(self.linenumber, end = " " )
@@ -145,13 +176,19 @@ class Clickomat:
 
             if "click" in order:
                 image = self.getImage(line)
-                if not image: break
+
+                if not image:
+                    self.image_not_found()
+                    print("Loop Broke!\n\n")
+                    self.breakout = True
+                    break
+
                 if not self.clickImage(image):
                     print(" -> not clicked!", end="")
                     if "!" in order:
                         print()
                         self.error = "Forced image-click could not be executed"
-                        print("Loop Broke!")
+                        print("Loop Broke!\n\n")
                         self.breakout = True
                         break
                 else:
@@ -159,7 +196,11 @@ class Clickomat:
 
             if "pos" in order:
                 image = self.getImage(line)
-                if not image: break
+
+                if not image:
+                    self.image_not_found()
+                    break
+
                 box = self.locateImage(image)
                 if box:
                     print(" -> ", box, end = "")
@@ -171,7 +212,11 @@ class Clickomat:
 
             if "drag" in order:
                 image = self.getImage(line)
-                if not image: break
+
+                if not image:
+                    self.image_not_found()
+                    break
+                
                 box = self.locateImage(image)
                 if box:
                     print(" -> ", box, end = "")
@@ -194,23 +239,28 @@ class Clickomat:
                 print(" -> timeout: " + str(timeout) + "s", end = "")
                 start_time = datetime.now()
 
-                while 1:
-                    time_delta = datetime.now() - start_time
-                    if time_delta.total_seconds() >= timeout:
-                        break
+                image = self.getImage(line)
 
-                    image = self.getImage(line)
-                    print(image)
-                    if self.findImage(image):
-                        t=round(time_delta.total_seconds())
-                        print(" -> found after " + str(t) + "s.",end = "")
-                        found = True
-                        break
+                if not image:
+                    self.image_not_found()
+                else:
+                    print(" " + image)
 
-                if not found:
-                    print(" -> Not found.", end = "")
-                    self.error = "Image to wait for was not found."
-                    self.breakout = True
+                    while 1:
+                        time_delta = datetime.now() - start_time
+                        if time_delta.total_seconds() >= timeout:
+                            break
+
+                        if self.findImage(image):
+                            t=round(time_delta.total_seconds())
+                            print(" -> found after " + str(t) + "s.",end = "")
+                            found = True
+                            break
+
+                    if not found:
+                        print(" -> Not found.", end = "")
+                        self.error = "Image to wait for was not found."
+                        self.breakout = True
 
             if "write" in order:
                 self.write(line)
@@ -221,6 +271,14 @@ class Clickomat:
             if "scroll" in order:
                 self.scroll(line)
 
+            if "del" in order:
+                file = self.file(line)
+                try:
+                    os.remove(file)
+                except:
+                    pass
+
+
             print()
 
         if self.autoswitch and self.switched == 1:
@@ -228,7 +286,7 @@ class Clickomat:
 
         if not self.breakout:
             print()
-            print ("Loop finished.")
+            print ("Loop finished.\n\n")
 
 if __name__ == "__main__":
 
