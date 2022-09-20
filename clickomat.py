@@ -34,9 +34,10 @@ class Clickomat:
         self.input_file_path      = f"{self.case_path}/{self.input_file_name}"
         self.confidence           = 0.98
         self.autoswitch           = False
+        self.autoswitch_pause     = 1
 
         self.logging              = False
-        self.step_pause_min       = 0.03
+        self.step_pause           = 0.03
         self.switch_pause         = 0
         self.switched             = 0
         self.breakout             = False
@@ -49,8 +50,8 @@ class Clickomat:
             pause = re.search(r"^[0-9]+$", line).group(0)
             time.sleep(int(pause))
         except:
-            if self.step_pause_min > 0:
-                time.sleep(self.step_pause_min)
+            if self.step_pause > 0:
+                time.sleep(self.step_pause)
 
     def getImage(self,line):
 
@@ -308,6 +309,7 @@ class Clickomat:
             if self.logging: print()
 
         if self.autoswitch and self.switched == 1:
+            time.sleep(self.autoswitch_pause)
             self.switch()
 
         if not self.breakout:
