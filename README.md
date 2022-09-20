@@ -50,7 +50,7 @@ Python-Script for automated click-sequences and text entry.
 ---
 
 ## Examples:
-- examplescript.txt
+- [examplescript.txt](https://github.com/skilleven/clickomat/blob/main/examplescript.txt)
 - Testcase: checkboxolympics
 
 On the Website https://checkboxolympics.com/ you can run the very simplyfied script of the testcase and get a score around 2.2 seconds...
