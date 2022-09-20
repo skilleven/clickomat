@@ -21,6 +21,7 @@ Python-Script for automated click-sequences and text entry.
 | **stop**                  |  breaks the script (for debugging)
 | **del**                   |  deletes file
 | **[number]**              |  pauses for [number] seconds
+| #                         |  you can comment-out lines by using hash (no space)
 
 ## Todo
 | Command | Result
