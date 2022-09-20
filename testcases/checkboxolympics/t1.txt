@@ -1,0 +1,61 @@
+switch
+await -refresh
+click ! -refresh
+await -ready
+click ! -ready
+await -go
+click -first
+right 20
+click
+right 20
+click
+right 20
+click
+right 20
+click
+right 25
+click
+right 20
+click
+right 20
+click
+right 25
+click
+right 20
+click
+right 20
+click
+right 20
+click
+right 20
+click
+right 23
+click
+right 20
+click
+right 20
+click
+right 23
+click
+right 20
+click
+right 20
+click
+right 20
+click
+right 25
+click
+right 20
+click
+right 20
+click
+right 20
+click
+right 20
+click
+right 24
+click
+right 20
+click
+right 20
+click
