@@ -1,0 +1,31 @@
+switch
+await -kontrolle
+#click -py
+click -project
+await 2 -close
+click -close
+click -discard
+
+del "D:/xxxxxxxxx/09_2022/test.qgz"
+del "D:/xxxxxxxxx/09_2022/geopackage.gpkg"
+1
+
+click ! -new
+click ! -save
+await -kontrolle2
+write "D:\xxxxxxxxx\09_2022\test.qgz"
+enter
+click ! -import
+await -textfield
+click ! -textfield
+write "D:\xxxxxxxxx\09_2022\OL2022-024.49b.txt"
+enter
+await -sel3
+drag up -sel3
+click ! -step2
+await -sel4
+click ! -import
+await -textfield
+click ! -textfield
+write "D:\xxxxxxxxx\09_2022\OL2022-024.49b.txt"
+enter
