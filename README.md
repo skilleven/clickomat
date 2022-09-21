@@ -2,6 +2,13 @@
 
 Python-Script for automated click-sequences and text entry.
 
+Building on top of the brilliant lib "pyautogui" by [Al Sweigart](https://github.com/asweigart)
+it offers the possibility to perform mouse clicks, text input and more with very simplified commands.
+
+The purpose of Clickomat is to map the sometimes relatively long python commands from pyautogui with short,
+single-line commands that are processed in a simple text list.
+
+
 ## Commands
 | Command | Result
 |---|---
