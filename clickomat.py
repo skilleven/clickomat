@@ -1,7 +1,7 @@
-import pyautogui, re, time, keyboard, os
+import pyautogui, re, time, keyboard, os, shutil
 from datetime import datetime
 from os.path import exists
-import easygui as e
+import easygui as easygui
 
 class Clickomat:
 
@@ -140,11 +140,11 @@ class Clickomat:
             self.breakout = True
             return False
 
-    def file(self,line):
+    def getPath(self,line):
         try:
-            file = re.search(r" \"[a-zA-Z0-9_:\-\.\/\\]+\"", line).group(0)
-            file = file[2:len(file)-1]
-            return file
+            path = re.search(r" \"[a-zA-Z0-9_:\-\.\/\\]+\"", line).group(0)
+            path = path[2:len(path)-1]
+            return path
         except:
             return False
 
@@ -178,7 +178,7 @@ class Clickomat:
 
             if self.breakout:
                 if self.logging: print ("Loop broken!\n\n")
-                e.msgbox("An error has occured: " + self.error, self.error)
+                easygui.msgbox("An error has occured: " + self.error, self.error)
                 break
             if self.stopped:
                 if self.logging: print ("Loop stopped!\n\n")
@@ -306,12 +306,27 @@ class Clickomat:
                 self.scroll(line)
 
             if "del" in order:
-                file = self.file(line)
-                try:
-                    os.remove(file)
-                except:
-                    pass
+                path = self.getPath(line)
 
+                if not path: return
+
+                if "dir" in order:
+
+                    try:
+                        shutil.rmtree(path)
+                    except OSError as e:
+                        print(e)
+                    else:
+                        print("The directory is deleted successfully", end = "")
+
+                else:
+
+                    try:
+                        os.remove(path)
+                    except OSError as e:
+                        print(e)
+                    else:
+                        print("The File is deleted successfully", end = "")
 
             if self.logging: print()
 
