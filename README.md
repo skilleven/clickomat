@@ -1,3 +1,5 @@
+![Clickomat](https://repository-images.githubusercontent.com/538182878/848e85a0-25ec-49ee-8da3-37e597b04a89)
+
 # Clickomat
 
 Python-Script for automated click-sequences and text entry.
