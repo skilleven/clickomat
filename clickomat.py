@@ -5,7 +5,7 @@ import easygui as e
 
 class Clickomat:
 
-    def __init__(self, case_path=None, input_file_name=None, images=None):
+    def __init__(self, case_path=None, input_file=None, images=None):
 
         if case_path is None:
             self.case_path = "."
@@ -15,13 +15,16 @@ class Clickomat:
                 print("given case path is not existing.")
                 exit()
 
-        if input_file_name is None:
-            self.input_file_name = "t1.txt"
+        if input_file is None:
+            self.input_file = "t1.txt"
         else:
-            self.input_file_name = input_file_name
-            if not exists( self.input_file_name):
-                print("given clicklist is not existing.")
-                exit()
+            self.input_file = input_file
+            if ".txt" not in self.case_path:
+                self.commands = self.input_file
+            else:
+                if not exists( self.input_file):
+                    print("given clicklist is not existing.")
+                    exit()
 
         if images is None:
             self.images = "."
@@ -31,7 +34,7 @@ class Clickomat:
                 print("given case path is not existing.")
                 exit()
 
-        self.input_file_path      = f"{self.case_path}/{self.input_file_name}"
+        self.input_file_path      = f"{self.case_path}/{self.input_file}"
         self.confidence           = 0.98
         self.autoswitch           = False
         self.autoswitch_pause     = 1
@@ -160,9 +163,13 @@ class Clickomat:
 
     def main(self):
 
-        with open(self.input_file_path, 'r', encoding='UTF-8') as file:
-            lines = file.readlines()
-            lines = [line.rstrip() for line in lines]
+        if self.commands:
+            lines = iter(self.commands.splitlines())
+        else:
+            with open(self.input_file_path, 'r', encoding='UTF-8') as file:
+                lines = file.readlines()
+
+        lines = [line.rstrip() for line in lines]
 
         pyautogui.PAUSE = 0
         if self.logging: print("\n\n\n\n\n---------------------------------------------------")
