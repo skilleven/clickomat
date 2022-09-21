@@ -1,7 +1,7 @@
-import pyautogui, re, time, keyboard, os, shutil
+import pyautogui, re, time, keyboard, os, shutil # type: ignore
+import easygui as easygui # type: ignore
 from datetime import datetime
 from os.path import exists
-import easygui as easygui
 
 class Clickomat:
 
@@ -40,7 +40,7 @@ class Clickomat:
         self.autoswitch_pause     = 1
 
         self.logging              = False
-        self.step_pause           = 0.03
+        self.step_pause           = 0.1
         self.switch_pause         = 0
         self.switched             = 0
         self.breakout             = False
@@ -107,10 +107,11 @@ class Clickomat:
         except:
             return False
 
-    def clickImage(self,image):
+    def clickImage(self,image,mode):
         try:
             x, y = pyautogui.locateCenterOnScreen(image, confidence=self.confidence)
-            pyautogui.click(x, y)
+            if mode == 1: pyautogui.click(x, y)
+            if mode == 2: pyautogui.doubleClick(x, y)
             return True
         except:
             return False
@@ -156,10 +157,12 @@ class Clickomat:
         if self.logging: print(" -> Target image not existing! Check directory for screenshot-snippet.")
         self.breakout = True
 
-    def right(self,line):
-        amount = re.search(r" [0-9]+", line).group(0)
-        amount = int(amount)
-        pyautogui.moveRel(amount, 0)
+    def push(self,order):
+        amount = int(order[1])
+        if order[0] == "up":    pyautogui.moveRel(0,amount*-1)
+        if order[0] == "down":  pyautogui.moveRel(0,amount)
+        if order[0] == "right": pyautogui.moveRel(amount,0)
+        if order[0] == "left":  pyautogui.moveRel(amount*-1,0)
 
     def main(self):
 
@@ -192,32 +195,32 @@ class Clickomat:
 
             order = line.split(" ")
 
-            if "stop" in order:
-                self.stop()
+            if "stop" in order: self.stop()
 
             if "switch" in order:
                 self.switch()
                 self.switched += 1
 
-            if "right" in order:
-                self.right(line)
+            if "right" in order or "left" in order or "up" in order or "down" in order: self.push(order)
 
-            if "click" in order:
+            if "click" in order or "doubleclick" in order:
                 image = self.getImage(line)
+
+                if "click" in order:       mode = 1
+                if "doubleclick" in order: mode = 2
 
                 if image == "Click":
                     pyautogui.click()
-                    if self.logging: print(" -> clicked!", end="")
-
+                    if self.logging:
+                        print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="") 
                 else:
-
                     if not image:
                         self.image_not_found()
                         if self.logging: print("Loop Broke!\n\n")
                         self.breakout = True
                         break
 
-                    if not self.clickImage(image):
+                    if not self.clickImage(image,mode):
                         if self.logging: print(" -> not clicked!", end="")
                         if "!" in order:
                             if self.logging: print()
@@ -226,7 +229,8 @@ class Clickomat:
                             self.breakout = True
                             break
                     else:
-                        if self.logging: print(" -> clicked!", end="")
+                        if self.logging:
+                            print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="") 
 
             if "pos" in order:
                 image = self.getImage(line)
@@ -296,29 +300,22 @@ class Clickomat:
                         self.error = "Image to wait for was not found."
                         self.breakout = True
 
-            if "write" in order:
-                self.write(line)
+            if "write" in order: self.write(line)
 
-            if "enter" in order:
-                keyboard.press('enter')
+            if "enter" in order: keyboard.press('enter')
 
-            if "scroll" in order:
-                self.scroll(line)
+            if "scroll" in order: self.scroll(line)
 
             if "del" in order:
                 path = self.getPath(line)
-
                 if not path: return
-
                 if "dir" in order:
-
                     try:
                         shutil.rmtree(path)
                     except OSError as e:
                         print(e)
                     else:
                         print("The directory is deleted successfully", end = "")
-
                 else:
 
                     try:
