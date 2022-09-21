@@ -6,7 +6,7 @@ import easygui as e
 class Clickomat:
 
     def __init__(self, case_path=None, input_file=None, images=None):
-
+        self.commands = None
         if case_path is None:
             self.case_path = "."
         else:
@@ -19,7 +19,7 @@ class Clickomat:
             self.input_file = "t1.txt"
         else:
             self.input_file = input_file
-            if ".txt" not in self.case_path:
+            if ".txt" not in self.input_file:
                 self.commands = self.input_file
             else:
                 if not exists( self.input_file):
@@ -163,7 +163,7 @@ class Clickomat:
 
     def main(self):
 
-        if self.commands:
+        if self.commands is not None:
             lines = iter(self.commands.splitlines())
         else:
             with open(self.input_file_path, 'r', encoding='UTF-8') as file:
