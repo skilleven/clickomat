@@ -5,10 +5,12 @@ from clickomat import *
 input_file = """
 switch
 await -refresh
+
 click ! -refresh
-await -ready
-click ! -ready
-await -go
+await -ready/ready_mac
+click ! -ready/ready_mac
+await -go/go_mac
+1
 click -first
 right 20
 click
