@@ -39,11 +39,11 @@ single-line commands that are processed in a simple text list.
 | **[number]**                              |  pauses for [number] seconds
 | #                                         |  you can comment-out lines by using hash as first char
 
-## Todo
-| Command | Result
-|---|---
-| ...  |  ...
+### Images:
+-imagename can either be a single image or a list of images separated by '/'. The list will be iterated and the first finding will be used. See example in checkboxolympics testcase.
 
+
+More commands coming...
 
 ---
 
