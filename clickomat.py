@@ -57,21 +57,26 @@ class Clickomat:
                 time.sleep(self.step_pause)
 
     def getImage(self,line):
-
-        image = False
-        try: image = re.search(r" -[a-zA-Z0-9_-]+", line).group(0)
-        except: pass
-        if not image: return "Click"
+        needle = " -[a-zA-Z0-9_\-/]+"
+        img = False
+        result = []
+        try: img = re.search(needle, line).group(0)
+        except: return "Click"
 
         try:
-            image = re.search(r" -[a-zA-Z0-9_-]+", line).group(0)
-            image = image[2:len(image)]
-            image = f"{self.images}/{image}.png"
+            img = re.search(needle, line).group(0)
+            img = img[2:len(img)]
+            img = img.split("/")
 
-            if not exists(image):
+            for i in img:
+                this = f"{self.images}/{i}.png"
+                if exists(this):
+                    result.append(this)
+
+            if not len(result):
                 return False
 
-            return image
+            return result
 
         except:
             return False
@@ -94,11 +99,13 @@ class Clickomat:
             return 10
 
     def findImage(self,image):
-        try:
-            x, y = pyautogui.locateCenterOnScreen(image, confidence=self.confidence)
-            return True
-        except:
-            return False
+        x = False
+        for i in image:
+            try:
+                x, y = pyautogui.locateCenterOnScreen(i, confidence=self.confidence)
+            except: pass
+            if x: return i
+        return False
 
     def locateImage(self,image):
         try:
@@ -121,7 +128,7 @@ class Clickomat:
             pyautogui.keyDown('alt')
             pyautogui.press('tab')
             pyautogui.keyUp('alt')
-        else:   
+        else:
             pyautogui.keyDown('command')
             pyautogui.press('tab')
             pyautogui.keyUp('command')
@@ -205,6 +212,10 @@ class Clickomat:
 
             if "click" in order or "doubleclick" in order:
                 image = self.getImage(line)
+                if image != "Click":
+                    image = self.findImage(image)
+
+                print (image)
 
                 if "click" in order:       mode = 1
                 if "doubleclick" in order: mode = 2
@@ -212,7 +223,7 @@ class Clickomat:
                 if image == "Click":
                     pyautogui.click()
                     if self.logging:
-                        print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="") 
+                        print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
                 else:
                     if not image:
                         self.image_not_found()
@@ -230,10 +241,10 @@ class Clickomat:
                             break
                     else:
                         if self.logging:
-                            print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="") 
+                            print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
 
             if "pos" in order:
-                image = self.getImage(line)
+                image = self.getImage(line)[0]
 
                 if not image:
                     self.image_not_found()
@@ -249,12 +260,12 @@ class Clickomat:
                     self.breakout = True
 
             if "drag" in order:
-                image = self.getImage(line)
+                image = self.getImage(line)[0]
 
                 if not image:
                     self.image_not_found()
                     break
-                
+
                 box = self.locateImage(image)
                 if box:
                     if self.logging: print(" -> ", box, end = "")
@@ -278,11 +289,12 @@ class Clickomat:
                 start_time = datetime.now()
 
                 image = self.getImage(line)
+                print(image)
 
                 if not image:
                     self.image_not_found()
                 else:
-                    if self.logging: print(" " + image)
+                    if self.logging: print(" " + str(image))
 
                     while 1:
                         time_delta = datetime.now() - start_time
