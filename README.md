@@ -37,7 +37,7 @@ single-line commands that are processed in a simple text list.
 | **del**                                   |  deletes file
 | **del dir**                               |  deletes directory
 | **[number]**                              |  pauses for [number] seconds
-| #                                         |  you can comment-out lines by using hash (no space)
+| #                                         |  you can comment-out lines by using hash as first char
 
 ## Todo
 | Command | Result
