@@ -13,6 +13,7 @@ The purpose of Clickomat is to map the sometimes relatively long python commands
 single-line commands that are processed in a simple text list.
 
 
+
 ## Commands
 | Command | Result
 |---|---
@@ -49,16 +50,44 @@ More commands coming...
 
 ---
 
-### Dependencies:
+## Dependencies:
 
+```
 * pyautogui
 * keyboard
 * easygui
+```
 
 ### On some systems further dependencies may be needed/updated:
 
+```
 * opencv-python
 * pillow
+```
+
+### Install on Windows:
+
+```
+$ pip install pyautogui keyboard easygui opencv-python pillow
+```
+
+### Install on Mac:
+
+```
+$ pip install pyautogui keyboard easygui
+```
+
+### Run Script:
+
+cd into the testcases/checkboxolympics/ directory 
+```
+$ cd [path-to-clickomat-folder]/testcases/checkboxolympics
+```
+and run the script by typing
+
+```
+$ python c.py
+```
 
 ---
 
