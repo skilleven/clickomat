@@ -162,7 +162,6 @@ class Clickomat:
     def image_not_found(self):
         self.error = "Target image not existing!"
         if self.logging: print(" -> Target image not existing! Check directory for screenshot-snippet.")
-        self.breakout = True
 
     def push(self,order):
         amount = int(order[1])
@@ -217,8 +216,6 @@ class Clickomat:
                 if image != "Click":
                     image = self.findImage(image)
 
-                print (image)
-
                 if "click" in order:       mode = 1
                 if "doubleclick" in order: mode = 2
 
@@ -229,9 +226,6 @@ class Clickomat:
                 else:
                     if not image:
                         self.image_not_found()
-                        if self.logging: print("Loop Broke!\n\n")
-                        self.breakout = True
-                        break
 
                     if not self.clickImage(image,mode):
                         if self.logging: print(" -> not clicked!", end="")
@@ -291,7 +285,6 @@ class Clickomat:
                 start_time = datetime.now()
 
                 image = self.getImage(line)
-                print(image)
 
                 if not image:
                     self.image_not_found()
