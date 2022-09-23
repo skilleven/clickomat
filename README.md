@@ -12,7 +12,6 @@ The purpose of Clickomat is to map the sometimes relatively long python commands
 single-line commands that are processed in a simple text list.
 
 
-
 ## Commands
 | Command | Result
 |---|---
@@ -46,6 +45,8 @@ single-line commands that are processed in a simple text list.
 
 
 More commands coming...
+
+[Documentation](https://github.com/skilleven/clickomat/wiki) is under construction.
 
 ---
 
