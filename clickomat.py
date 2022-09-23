@@ -202,6 +202,8 @@ class Clickomat:
 
             order = line.split(" ")
 
+            if order[0] == "#": continue
+
             if "stop" in order: self.stop()
 
             if "switch" in order:
