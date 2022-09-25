@@ -13,7 +13,9 @@ setup(
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
-    packages=find_packages(),
+    py_modules=['clickomat'],
+    package_dir={'':'src'},
+    # packages=find_packages(),
     install_requires=['pyautogui', 'keyboard', 'easygui', 'opencv-python', 'pillow'],
     keywords=['python', 'mouse-automation', 'gui-testing', 'automation'],
     classifiers=[

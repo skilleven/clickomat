@@ -12,6 +12,7 @@ class Clickomat:
         else:
             self.case_path = case_path
             if not os.path.isdir(self.case_path):
+                print(self.case_path)
                 print("given case path is not existing.")
                 exit()
 
@@ -20,21 +21,26 @@ class Clickomat:
         else:
             self.input_file = input_file
             if ".txt" not in self.input_file:
+                # this means there was not a txt file specified
+                # but an actual list (lines) of commands
                 self.commands = self.input_file
             else:
-                if not exists( self.input_file):
+                self.input_file = f"{self.case_path}/{self.input_file}"
+                if not exists(self.input_file):
+                    print(self.input_file)
                     print("given clicklist is not existing.")
                     exit()
 
         if images is None:
             self.images = "."
         else:
-            self.images = images
+            self.images = f"{self.case_path}/{images}"
+
             if not os.path.isdir(self.images):
-                print("given case path is not existing.")
+                print(self.input_file)
+                print("given image location is not existing.")
                 exit()
 
-        self.input_file_path      = f"{self.case_path}/{self.input_file}"
         self.confidence           = 0.98
         self.autoswitch           = False
         self.autoswitch_pause     = 1
@@ -175,7 +181,7 @@ class Clickomat:
         if self.commands is not None:
             lines = iter(self.commands.splitlines())
         else:
-            with open(self.input_file_path, 'r', encoding='UTF-8') as file:
+            with open(self.input_file, 'r', encoding='UTF-8') as file:
                 lines = file.readlines()
 
         lines = [line.rstrip() for line in lines]

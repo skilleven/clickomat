@@ -1,17 +1,20 @@
 import sys
-sys.path.append('../../')
+sys.path.append('../../src/')
 from clickomat import *
 
 input_file = """
 switch
-await -refresh
 
-click ! -refresh
-await -ready/ready_mac
-click ! -ready/ready_mac
-await -go/go_mac
-1
-click -first
+await -refresh
+click -refresh-ff/refresh-chrome-win
+
+await --ready-ff-win/ready-ff-mac/ready-chrome-win
+click ! -ready-ff-win/ready-ff-mac/ready-chrome-win
+
+await -go-ff-win/go-ff-mac/go-chrome-win
+2
+click -first-ff/first-chrome-win
+
 right 20
 click
 right 20
