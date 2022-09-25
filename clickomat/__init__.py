@@ -1,0 +1,1 @@
+from .clickomat import Clickomat
