@@ -10,6 +10,26 @@ it offers the possibility to perform mouse clicks, text input and more with very
 The purpose of Clickomat is to map the sometimes relatively long python commands from pyautogui with short,
 single-line commands that are processed in a simple text list.
 
+## Installation
+```
+pip install clickomat
+```
+
+### Run Testscript:
+
+Open https://checkboxolympics.com/ in Firefox (Chrome should work also). \
+It must now be ensured that ALT-TAB (Win) or CMD-TAB () can be used to switch directly back and forth between the terminal and the website.
+
+Change directory into testcases/checkboxolympics/ 
+```
+cd [path-to-clickomat-folder]/testcases/checkboxolympics
+```
+and run the script by typing
+
+```
+python c.py
+```
+
 
 ## Commands
 | Command | Result
@@ -55,38 +75,10 @@ More commands coming...
 * pyautogui
 * keyboard
 * easygui
+* opencv-python (on windows pyautogui works only with opencv)
+* pillow (on windows pyautogui works only with pillow)
 ```
 
-### On some systems further dependencies may be needed/updated:
-
-```
-* opencv-python
-* pillow
-```
-
-### Install on Windows:
-
-```
-$ pip install pyautogui keyboard easygui opencv-python pillow
-```
-
-### Install on Mac:
-
-```
-$ pip install pyautogui keyboard easygui
-```
-
-### Run Script:
-
-cd into the testcases/checkboxolympics/ directory 
-```
-$ cd [path-to-clickomat-folder]/testcases/checkboxolympics
-```
-and run the script by typing
-
-```
-$ python c.py
-```
 
 ---
 
