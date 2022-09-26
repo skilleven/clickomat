@@ -176,6 +176,131 @@ class Clickomat:
         if order[0] == "right": pyautogui.moveRel(amount,0)
         if order[0] == "left":  pyautogui.moveRel(amount*-1,0)
 
+    def click(self,line,mode):
+            image = self.getImage(line)
+            if image != "Click":
+                image = self.findImage(image)
+
+            if image == "Click":
+                pyautogui.click()
+                if self.logging:
+                    print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
+            else:
+                if not image:
+                    self.image_not_found()
+
+                if not self.clickImage(image,mode):
+                    if self.logging: print(" -> not clicked!", end="")
+
+                    order = line.split(" ")
+
+                    if " ! " in order:
+                        if self.logging: print()
+                        self.error = "Forced image-click could not be executed"
+                        if self.logging: print("Loop Broke!\n\n")
+                        self.breakout = True
+                        return
+                else:
+                    if self.logging:
+                        print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
+
+    def pos(self,line):
+                image = self.getImage(line)[0]
+                if not image:
+                    self.image_not_found()
+                    return
+                box = self.locateImage(image)
+                if box:
+                    if self.logging: print(" -> ", box, end = "")
+                    pyautogui.moveTo((box[0]+(box[2]/2)),(box[1]+(box[3]/2)))
+                else:
+                    if self.logging: print(" -> Position not found!", end="")
+                    self.error = "Position not found!"
+                    self.breakout = True
+
+    def drag(self,line):
+        order = line.split(" ")
+        image = self.getImage(line)[0]
+        if not image:
+            self.image_not_found()
+            return
+        box = self.locateImage(image)
+        if box:
+            if self.logging: print(" -> ", box, end = "")
+
+            if "up" in order:
+                pyautogui.moveTo((box[0]),(box[1]+box[3]))
+                pyautogui.dragTo((box[0]+box[2]),(box[1]), button='left')
+            else:
+                pyautogui.moveTo(box[0],box[1])
+                pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), button='left')
+        else:
+            if self.logging: print(" -> nothing to drag!", end="")
+            self.error = "Nothing to drag!"
+            self.breakout = True
+
+
+    def _await(self,line):
+        found = False
+        timeout = self.getTimeout(line)
+        if self.logging: print(" -> timeout: " + str(timeout) + "s", end = "")
+        start_time = datetime.now()
+
+        image = self.getImage(line)
+
+        if not image:
+            self.image_not_found()
+        else:
+            if self.logging: print(" " + str(image))
+
+            while 1:
+                time_delta = datetime.now() - start_time
+                if time_delta.total_seconds() >= timeout:
+                    break
+
+                if self.findImage(image):
+                    t=round(time_delta.total_seconds())
+                    if self.logging: print(" -> found after " + str(t) + "s.",end = "")
+                    found = True
+                    break
+
+            if not found:
+                if self.logging: print(" -> Not found.", end = "")
+                self.error = "Image to wait for was not found."
+                self.breakout = True
+
+    def _del(self,line):
+        order = line.split(" ")
+
+        path = self.getPath(line)
+        if not path: return
+        if "dir" in order:
+            try:
+                shutil.rmtree(path)
+            except OSError as e:
+                print(e)
+            else:
+                print("The directory is deleted successfully", end = "")
+        else:
+            try:
+                os.remove(path)
+            except OSError as e:
+                print(e)
+            else:
+                print("The File is deleted successfully", end = "")
+
+    def stopLoop(self):
+        if self.breakout:
+            if self.logging: print ("Loop broken!\n\n")
+            easygui.msgbox("An error has occured: " + self.error, self.error)
+            return
+        if self.stopped:
+            if self.logging: print ("Loop stopped!\n\n")
+            return
+
+
+
+
     def main(self):
 
         if self.commands is not None:
@@ -191,13 +316,7 @@ class Clickomat:
 
         for line in lines:
 
-            if self.breakout:
-                if self.logging: print ("Loop broken!\n\n")
-                easygui.msgbox("An error has occured: " + self.error, self.error)
-                break
-            if self.stopped:
-                if self.logging: print ("Loop stopped!\n\n")
-                break
+            self.stopLoop()
 
             self.linenumber += 1
             if self.logging: print(self.linenumber, end = " " )
@@ -218,100 +337,15 @@ class Clickomat:
             if "right" in order or "left" in order or "up" in order or "down" in order: self.push(order)
 
             if "click" in order or "doubleclick" in order:
-                image = self.getImage(line)
-                if image != "Click":
-                    image = self.findImage(image)
-
                 if "click" in order:       mode = 1
                 if "doubleclick" in order: mode = 2
+                self.click(line,mode)
 
-                if image == "Click":
-                    pyautogui.click()
-                    if self.logging:
-                        print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
-                else:
-                    if not image:
-                        self.image_not_found()
+            if "pos" in order: self.pos(line)
 
-                    if not self.clickImage(image,mode):
-                        if self.logging: print(" -> not clicked!", end="")
-                        if "!" in order:
-                            if self.logging: print()
-                            self.error = "Forced image-click could not be executed"
-                            if self.logging: print("Loop Broke!\n\n")
-                            self.breakout = True
-                            break
-                    else:
-                        if self.logging:
-                            print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
+            if "drag" in order: self.drag(line)
 
-            if "pos" in order:
-                image = self.getImage(line)[0]
-
-                if not image:
-                    self.image_not_found()
-                    break
-
-                box = self.locateImage(image)
-                if box:
-                    if self.logging: print(" -> ", box, end = "")
-                    pyautogui.moveTo((box[0]+(box[2]/2)),(box[1]+(box[3]/2)))
-                else:
-                    if self.logging: print(" -> Position not found!", end="")
-                    self.error = "Position not found!"
-                    self.breakout = True
-
-            if "drag" in order:
-                image = self.getImage(line)[0]
-
-                if not image:
-                    self.image_not_found()
-                    break
-
-                box = self.locateImage(image)
-                if box:
-                    if self.logging: print(" -> ", box, end = "")
-
-                    if "up" in order:
-                        pyautogui.moveTo((box[0]),(box[1]+box[3]))
-                        pyautogui.dragTo((box[0]+box[2]),(box[1]), button='left')
-                    else:
-                        pyautogui.moveTo(box[0],box[1])
-                        pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), button='left')
-                else:
-                    if self.logging: print(" -> nothing to drag!", end="")
-                    self.error = "Nothing to drag!"
-                    self.breakout = True
-
-            if "await" in order:
-
-                found = False
-                timeout = self.getTimeout(line)
-                if self.logging: print(" -> timeout: " + str(timeout) + "s", end = "")
-                start_time = datetime.now()
-
-                image = self.getImage(line)
-
-                if not image:
-                    self.image_not_found()
-                else:
-                    if self.logging: print(" " + str(image))
-
-                    while 1:
-                        time_delta = datetime.now() - start_time
-                        if time_delta.total_seconds() >= timeout:
-                            break
-
-                        if self.findImage(image):
-                            t=round(time_delta.total_seconds())
-                            if self.logging: print(" -> found after " + str(t) + "s.",end = "")
-                            found = True
-                            break
-
-                    if not found:
-                        if self.logging: print(" -> Not found.", end = "")
-                        self.error = "Image to wait for was not found."
-                        self.breakout = True
+            if "await" in order: self._await(line)
 
             if "write" in order: self.write(line)
 
@@ -319,24 +353,7 @@ class Clickomat:
 
             if "scroll" in order: self.scroll(line)
 
-            if "del" in order:
-                path = self.getPath(line)
-                if not path: return
-                if "dir" in order:
-                    try:
-                        shutil.rmtree(path)
-                    except OSError as e:
-                        print(e)
-                    else:
-                        print("The directory is deleted successfully", end = "")
-                else:
-
-                    try:
-                        os.remove(path)
-                    except OSError as e:
-                        print(e)
-                    else:
-                        print("The File is deleted successfully", end = "")
+            if "del" in order: self._del(line)
 
             if self.logging: print()
 

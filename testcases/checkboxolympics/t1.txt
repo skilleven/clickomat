@@ -7,6 +7,7 @@ await 4 -ready-ff-win/ready-ff-mac/ready-chrome-win
 click ! -ready-ff-win/ready-ff-mac/ready-chrome-win
 
 await 4 -go-ff-win/go-ff-mac/go-chrome-win
+1
 click -first-ff/first-chrome-win
 
 right 20

@@ -1,13 +1,12 @@
 from setuptools import setup
 
-VERSION = '0.1.2'
 DESCRIPTION = 'Python-Script for automated click-sequences and text entry'
 LONG_DESCRIPTION = 'The purpose of Clickomat is to map the sometimes relatively long python commands from pyautogui with short, single-line commands that are processed in a simple text list.'
 
 # Setting up
 setup(
     name="clickomat",
-    version=VERSION,
+    version='0.1.2',
     author="skilleven (Torsten Hoeltge)",
     author_email="<hello@skilleven.com>",
     url="https://github.com/skilleven/clickomat",
