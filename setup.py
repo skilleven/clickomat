@@ -10,6 +10,7 @@ setup(
     version=VERSION,
     author="skilleven (Torsten Hoeltge)",
     author_email="<hello@skilleven.com>",
+    url="https://github.com/skilleven/clickomat",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
