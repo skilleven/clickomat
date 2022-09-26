@@ -10,7 +10,12 @@ it offers the possibility to perform mouse clicks, text input and more with very
 The purpose of Clickomat is to map the sometimes relatively long python commands from pyautogui with short,
 single-line commands that are processed in a simple text list.
 
-## Installation
+## Installation 
+[<img src="https://badge.fury.io/py/clickomat.svg"  width="200">](https://badge.fury.io/py/clickomat)
+
+
+
+
 ```
 pip install clickomat
 ```
