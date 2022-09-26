@@ -1,5 +1,4 @@
-https://user-images.githubusercontent.com/11266793/191956166-ffa28ab7-bdab-4475-a061-6f6d7678b510.mp4
-
+![Clickomat](https://repository-images.githubusercontent.com/538182878/848e85a0-25ec-49ee-8da3-37e597b04a89)
 
 # Clickomat
 
