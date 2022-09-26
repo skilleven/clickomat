@@ -18,7 +18,7 @@ pip install clickomat
 ### Run Testscript:
 
 Open https://checkboxolympics.com/ in Firefox (Chrome should work also). \
-It must now be ensured that ALT-TAB (Win) or CMD-TAB () can be used to switch directly back and forth between the terminal and the website.
+It must now be ensured that ALT-TAB (Win) or CMD-TAB (Mac) can be used to switch directly back and forth between the terminal and the website.
 
 Change directory into testcases/checkboxolympics/ 
 ```
