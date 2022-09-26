@@ -1,6 +1,4 @@
-import sys
-sys.path.append('../../src/')
-from clickomat import *
+from clickomat import Clickomat
 c = Clickomat('.','t1.txt',"images")
 c.step_pause = 0.03
 c.logging = True

@@ -1,6 +1,4 @@
-import sys
-sys.path.append('../../src/')
-from clickomat import *
+from clickomat import Clickomat
 
 input_file = """
 switch
