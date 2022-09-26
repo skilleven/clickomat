@@ -1,7 +1,7 @@
 from setuptools import setup
 
 DESCRIPTION = 'Python-Script for automated click-sequences and text entry'
-LONG_DESCRIPTION = 'The purpose of Clickomat is to map the sometimes relatively long python commands from pyautogui with short, single-line commands that are processed in a simple text list.'
+LONG_DESCRIPTION = 'The purpose of Clickomat is to map the sometimes relatively long python commands from pyautogui with short, single-line commands that are processed in a simple text list. For more information visit https://github.com/skilleven/clickomat .'
 
 # Setting up
 setup(
