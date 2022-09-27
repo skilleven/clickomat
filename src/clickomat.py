@@ -52,7 +52,7 @@ class Clickomat:
         self.autoswitch_pause     = 1
 
         self.logging              = False
-        self.step_pause           = 0.1
+        self.step_pause           = 0.06
         self.switch_pause         = 0
         self.switched             = 0
         self.switch               = True
@@ -67,14 +67,22 @@ class Clickomat:
     # endregion
     # region pause(line)
     def pause(self,line):
-        if len(line) < 3:
-            pause = re.search(r"^[0-9]+$", line)
+        if len(line) < 4:
+            pause = re.search(r"^[0-9\.]+$", line)
             if pause:
                 pause = pause.group(0)
-                return int(pause)
+                return float(pause)
             else:
-                if self.step_pause > 0:
-                    return self.step_pause
+                return self.sp()
+
+        else:
+            return self.sp()
+
+    def sp(self):
+        if self.step_pause > 0: 
+            return float(self.step_pause)
+        else:
+            return False
     # endregion
     # region getImage(line)
     def getImage(self,line):
@@ -397,9 +405,11 @@ class Clickomat:
         for line in lines:
 
             if line: 
-                pause = self.pause(line)
-                if pause:
-                    time.sleep(pause)
+                p = self.pause(line)
+                print(p)
+                if p: time.sleep(p)
+            else:
+                continue
 
             self.stopLoop()
 
@@ -418,9 +428,10 @@ class Clickomat:
 
             if "stop" in order: self.stop()
 
-            if "switch" in order and self.switch:
-                self.do_switch()
-                self.switched += 1
+            if "switch" in order:
+                if self.switch or "!" in order:
+                    self.do_switch()
+                    self.switched += 1
 
             if "right" in order or "left" in order or "up" in order or "down" in order: self.push(order)
 
