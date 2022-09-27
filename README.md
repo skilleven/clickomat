@@ -38,7 +38,8 @@ python c.py
 ## Commands
 | Command | Result
 |---|---
-| **switch**                                | Alt-Tab on WIN / Command-Tab on Mac
+| ##SECTION                                 |  you can divide your script into sections
+| **switch**                                |  Alt-Tab on WIN / Command-Tab on Mac
 | **click**                                 |  normal click at current position
 | **click -_images_**                       |  click on imagename.png if present
 | **click ! -_images_**                     |  forced click on imagename.png
@@ -62,7 +63,7 @@ python c.py
 | **del dir**                               |  deletes directory
 | **[number]**                              |  pauses for [number] seconds
 | #                                         |  you can comment-out lines by using hash as first char
-| **lookup -image script.py**               |  set a target to lookout for the entire runtime. If found start script.
+| **lookup -image ->SECTION**               |  set a target to lookout for the entire runtime. If found -> end current section, start SECTION (name).
 
 ### Images:
 -imagename can either be a single image or a list of images separated by '/'. The list will be iterated and the first finding will be used. See example in checkboxolympics testcase.
