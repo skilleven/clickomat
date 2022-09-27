@@ -41,15 +41,15 @@ python c.py
 |---|---
 | **switch**                                | Alt-Tab on WIN / Command-Tab on Mac
 | **click**                                 |  normal click at current position
-| **click -_imagename_**                    |  click on imagename.png if present
-| **click ! -_imagename_**                  |  forced click on imagename.png
+| **click -_images_**                       |  click on imagename.png if present
+| **click ! -_images_**                     |  forced click on imagename.png
 | **doubleclick**                           |  normal doubleclick at current position
-| **doubleclick -_imagename_**              |  doubleclick on imagename.png if present
-| **doubleclick ! -_imagename_**            |  forced doubleclick on imagename.png
-| **pos -_imagename_**                      |  place mouse on imagename.png
-| **drag -_imagename_**                     |  click-drag across imagename.png (top/left to bottom/right)
-| **drag up -_imagename_**                  |  click-drag across imagename.png (bottom/left to top/right)
-| **await -_imagename_**                    |  waits for image to appear
+| **doubleclick -_images_**                 |  doubleclick on imagename.png if present
+| **doubleclick ! -_images_**               |  forced doubleclick on imagename.png
+| **pos -image**                            |  place mouse on imagename.png
+| **drag -image**                           |  click-drag across imagename.png (top/left to bottom/right)
+| **drag up -image**                        |  click-drag across imagename.png (bottom/left to top/right)
+| **await -_images_**                       |  waits for image to appear
 | **write "text"**                          |  types text
 | **enter**                                 |  press enter
 | **scroll _20_**                           |  scroll 20 steps up
@@ -63,6 +63,7 @@ python c.py
 | **del dir**                               |  deletes directory
 | **[number]**                              |  pauses for [number] seconds
 | #                                         |  you can comment-out lines by using hash as first char
+| **lookup -image script.py**               |  set a target to lookout for the entire runtime. If found start script.
 
 ### Images:
 -imagename can either be a single image or a list of images separated by '/'. The list will be iterated and the first finding will be used. See example in checkboxolympics testcase.
