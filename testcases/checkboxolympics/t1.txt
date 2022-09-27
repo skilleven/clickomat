@@ -1,4 +1,7 @@
+##SECTION1
 switch
+
+1
 
 await 2 -refresh
 click -refresh-ff/refresh-chrome-win
@@ -6,10 +9,10 @@ click -refresh-ff/refresh-chrome-win
 await 4 -ready-ff-win/ready-ff-mac/ready-chrome-win
 click ! -ready-ff-win/ready-ff-mac/ready-chrome-win
 
+lookup -chain ->NAMEDSECTION99
 await 4 -go-ff-win/go-ff-mac/go-chrome-win
 2
 click -first-ff/first-chrome-win
-#lookup -chain test.py
 
 right 20
 click
@@ -65,3 +68,22 @@ right 20
 click
 right 20
 click
+
+##SECTION2
+2
+left 24
+click
+left 20
+click
+left 20
+click
+down 50
+
+##NAMEDSECTION99
+down 24
+click
+down 20
+click
+down 20
+click
+down 50

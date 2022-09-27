@@ -55,7 +55,7 @@ class Clickomat:
         self.step_pause           = 0.06
         self.switch_pause         = 0
         self.switched             = 0
-        self.switch               = True
+        self.switch               = False
         
         self.breakout             = False
         self.stopped              = False
@@ -110,28 +110,20 @@ class Clickomat:
         except:
             return False
     # endregion
-    # region getScript(line)
-    def getScript(self,line):
-        needle = r" [a-zA-Z0-9_\-]+\.py"
-        script = False
+    # region getSection(line)
+    def getSection(self,line):
+        needle = r"->[a-zA-Z0-9_\-]+"
+        section = False
         try: 
-            script = re.search(needle, line).group(0)
+            section = re.search(needle, line).group(0)
         except: 
-            print("kein script gefunden")
+            print("keine section gefunden")
             return False
-
         try:
-            script = re.search(needle, line).group(0)
-            script = script[1:len(script)]
-
-            this = f"{self.case_path}/{script}"
-
-            if exists(this):
-                return this
-
-            if not len(this):
-                return False
-
+            section = re.search(needle, line).group(0)
+            section = section[2:len(section)]
+            if self.sections[section]:
+                return section
         except:
             return False
     # endregion
@@ -367,20 +359,23 @@ class Clickomat:
     def set_lookup(self,line):
         if self.logging: print("Set Lookup!", end=" -> ")
         # only one image can be used for lookup so far...
-        image  = self.getImage(line)[0]
-        script = self.getScript(line)
-        if image and script:
-            self.lookupTarget = [image,script]
+        image   = self.getImage(line)[0]
+        sec     = self.getSection(line)
+        if image and sec:
+            self.lookupTarget = [image,sec]
         if self.logging: print(self.lookupTarget)
+        print(self.lookupTarget)
         return
     # endregion
     # region check_lookup()
     def check_lookup(self):
         if len(self.lookupTarget):
-            if self.findImage(self.lookupTarget):
+            if self.findImage([self.lookupTarget[0]]):
                 print("\n\n\nImage lookup found!\n\n\n")
-                os.system(self.lookupTarget[1])
-                exit()
+
+                self.section = self.lookupTarget[1]
+
+                self.main_loop(self.section)
     # endregion
     # region abort()
     def abort(self):
@@ -399,17 +394,39 @@ class Clickomat:
 
         lines = [line.rstrip() for line in lines]
 
+        self.sections = {}
+        self.section = "SECTION1"
+        self.sections[self.section] = []
+        for line in lines:
+            if line[:2] == "##":
+                self.section = line[2:]
+                print(self.section)
+                self.sections[self.section]= []
+                continue
+            if line:
+                self.sections[self.section].append(line)
+        print(self.sections)
+        print(self.section)
+
+        self.section = list(self.sections.keys())[0]
+
         pyautogui.PAUSE = 0
         if self.logging: print("\n\n\n\n\n---------------------------------------------------")
 
-        for line in lines:
+        self.main_loop(self.section)
 
-            if line: 
-                p = self.pause(line)
-                print(p)
-                if p: time.sleep(p)
-            else:
-                continue
+
+    def main_loop(self,sec):
+
+        self.lookupTarget = []
+
+        for line in self.sections[sec]:
+            if sec != self.section: break
+
+            p = self.pause(line)
+            if p: time.sleep(p)
+
+            print("line:"+line)
 
             self.stopLoop()
 
@@ -417,6 +434,8 @@ class Clickomat:
             if self.logging: print(self.linenumber, end = " " )
 
             if self.logging: print(line, end = "" )
+            
+            if sec != self.section: break
 
             order = line.split(" ")
 
@@ -426,12 +445,16 @@ class Clickomat:
 
             self.check_lookup()
 
+            if sec != self.section: break
+
             if "stop" in order: self.stop()
 
             if "switch" in order:
                 if self.switch or "!" in order:
                     self.do_switch()
                     self.switched += 1
+
+            if sec != self.section: break
 
             if "right" in order or "left" in order or "up" in order or "down" in order: self.push(order)
 
@@ -466,5 +489,5 @@ class Clickomat:
     # endregion
 
 if __name__ == "__main__":
-    c = Clickomat('.','t1.txt',"images")
+    c = Clickomat('D:/Projekte/clickomat/testcases/checkboxolympics','t1.txt',"images")
     c.main()
