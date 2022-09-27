@@ -1,5 +1,6 @@
 from clickomat import Clickomat
 c = Clickomat('.','t1.txt',"images")
+# c.switch = False <- you can turn off switch commands completely
 c.step_pause = 0.03
 c.logging = True
 c.autoswitch = False
