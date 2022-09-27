@@ -3,6 +3,12 @@ import easygui as easygui # type: ignore
 from datetime import datetime
 from os.path import exists
 
+#-----------------------------------------------------
+#
+# Clickomat v0.1.4 
+# 
+#-----------------------------------------------------
+
 class Clickomat:
     # region __init__
     def __init__(self, case_path=None, input_file=None, images=None):
