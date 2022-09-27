@@ -446,6 +446,5 @@ class Clickomat:
     # endregion
 
 if __name__ == "__main__":
-
-    c = Clickomat('D:/Projekte/clickomat/testcases/checkboxolympics','t1.txt',"images")
+    c = Clickomat('.','t1.txt',"images")
     c.main()
