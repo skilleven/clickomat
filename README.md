@@ -11,7 +11,7 @@ The purpose of Clickomat is to map the sometimes relatively long python commands
 single-line commands that are processed in a simple text list.
 
 ## Installation 
-[<img src="https://badge.fury.io/py/clickomat.svg" width="200">](https://badge.fury.io/py/clickomat)
+[https://img.shields.io/badge/PyPI%20package-0.1.3-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white](https://pypi.org/project/clickomat/)
 
 
 
