@@ -366,10 +366,11 @@ class Clickomat:
                 os.system(self.lookupTarget[1])
                 exit()
     # endregion
-
+    # region abort()
     def abort(self):
         if msvcrt.kbhit() and msvcrt.getch().decode() == chr(27):
             exit()
+    # endregion
 
     # region main()
     def main(self):
