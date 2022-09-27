@@ -1,4 +1,4 @@
-import pyautogui, re, time, keyboard, os, shutil # type: ignore
+import pyautogui, re, time, keyboard, os, shutil, msvcrt # type: ignore
 import easygui as easygui # type: ignore
 from datetime import datetime
 from os.path import exists
@@ -41,7 +41,7 @@ class Clickomat:
                 print("given image location is not existing.")
                 exit()
 
-        self.confidence           = 0.98
+        self.confidence           = 0.8
         self.autoswitch           = False
         self.autoswitch_pause     = 1
 
@@ -53,15 +53,20 @@ class Clickomat:
         self.stopped              = False
         self.linenumber           = 0
         self.error                = ""
+
+        self.lookupTarget         = []
+
     # endregion
     # region pause(line)
     def pause(self,line):
-        try:
-            pause = re.search(r"^[0-9]+$", line).group(0)
-            time.sleep(int(pause))
-        except:
-            if self.step_pause > 0:
-                time.sleep(self.step_pause)
+        if len(line) < 3:
+            pause = re.search(r"^[0-9]+$", line)
+            if pause:
+                pause = pause.group(0)
+                return int(pause)
+            else:
+                if self.step_pause > 0:
+                    return self.step_pause
     # endregion
     # region getImage(line)
     def getImage(self,line):
@@ -85,6 +90,31 @@ class Clickomat:
                 return False
 
             return result
+
+        except:
+            return False
+    # endregion
+    # region getScript(line)
+    def getScript(self,line):
+        needle = r" [a-zA-Z0-9_\-]+\.py"
+        script = False
+        try: 
+            script = re.search(needle, line).group(0)
+        except: 
+            print("kein script gefunden")
+            return False
+
+        try:
+            script = re.search(needle, line).group(0)
+            script = script[1:len(script)]
+
+            this = f"{self.case_path}/{script}"
+
+            if exists(this):
+                return this
+
+            if not len(this):
+                return False
 
         except:
             return False
@@ -308,15 +338,40 @@ class Clickomat:
     # endregion
     # region stopLoop()
     def stopLoop(self):
+        self.abort()
         if self.breakout:
             if self.logging: print ("Loop broken!\n\n")
             easygui.msgbox("An error has occured: " + self.error, self.error)
-            return
+            exit()
         if self.stopped:
             if self.logging: print ("Loop stopped!\n\n")
-            return
+            exit()
     # endregion
-    # region main(self)
+    # region set_lookup()
+    def set_lookup(self,line):
+        if self.logging: print("Set Lookup!", end=" -> ")
+        # only one image can be used for lookup so far...
+        image  = self.getImage(line)[0]
+        script = self.getScript(line)
+        if image and script:
+            self.lookupTarget = [image,script]
+        if self.logging: print(self.lookupTarget)
+        return
+    # endregion
+    # region check_lookup()
+    def check_lookup(self):
+        if len(self.lookupTarget):
+            if self.findImage(self.lookupTarget):
+                print("\n\n\nImage lookup found!\n\n\n")
+                os.system(self.lookupTarget[1])
+                exit()
+    # endregion
+
+    def abort(self):
+        if msvcrt.kbhit() and msvcrt.getch().decode() == chr(27):
+            exit()
+
+    # region main()
     def main(self):
 
         if self.commands is not None:
@@ -332,17 +387,25 @@ class Clickomat:
 
         for line in lines:
 
+            if line: 
+                pause = self.pause(line)
+                if pause:
+                    time.sleep(pause)
+
             self.stopLoop()
 
             self.linenumber += 1
             if self.logging: print(self.linenumber, end = " " )
 
             if self.logging: print(line, end = "" )
-            self.pause(line)
 
             order = line.split(" ")
 
             if order[0] == "#": continue
+
+            if "lookup" in order: self.set_lookup(line)
+
+            self.check_lookup()
 
             if "stop" in order: self.stop()
 
@@ -384,5 +447,5 @@ class Clickomat:
 
 if __name__ == "__main__":
 
-    c = Clickomat()
+    c = Clickomat('D:/Projekte/clickomat/testcases/checkboxolympics','t1.txt',"images")
     c.main()

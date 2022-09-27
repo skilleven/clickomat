@@ -7,8 +7,9 @@ await 4 -ready-ff-win/ready-ff-mac/ready-chrome-win
 click ! -ready-ff-win/ready-ff-mac/ready-chrome-win
 
 await 4 -go-ff-win/go-ff-mac/go-chrome-win
-1
+2
 click -first-ff/first-chrome-win
+#lookup -chain test.py
 
 right 20
 click
