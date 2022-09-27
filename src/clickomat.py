@@ -55,6 +55,8 @@ class Clickomat:
         self.step_pause           = 0.1
         self.switch_pause         = 0
         self.switched             = 0
+        self.switch               = True
+        
         self.breakout             = False
         self.stopped              = False
         self.linenumber           = 0
@@ -172,8 +174,8 @@ class Clickomat:
         except:
             return False
     # endregion
-    # region switch()
-    def switch(self):
+    # region do_switch()
+    def do_switch(self):
         if os.name == 'nt':
             pyautogui.keyDown('alt')
             pyautogui.press('tab')
@@ -416,8 +418,8 @@ class Clickomat:
 
             if "stop" in order: self.stop()
 
-            if "switch" in order:
-                self.switch()
+            if "switch" in order and self.switch:
+                self.do_switch()
                 self.switched += 1
 
             if "right" in order or "left" in order or "up" in order or "down" in order: self.push(order)
@@ -445,7 +447,7 @@ class Clickomat:
 
         if self.autoswitch and self.switched == 1:
             time.sleep(self.autoswitch_pause)
-            self.switch()
+            self.do_switch()
 
         if not self.breakout:
             if self.logging: print()
