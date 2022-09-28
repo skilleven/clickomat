@@ -84,7 +84,6 @@ More commands coming...
 ```
 * pyautogui
 * keyboard
-* easygui
 * opencv-python (on windows pyautogui works only with opencv)
 * pillow (on windows pyautogui works only with pillow)
 ```
