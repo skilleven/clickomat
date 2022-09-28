@@ -121,9 +121,11 @@ c.switch               = True
 
 More commands coming...
 
-<form action="https://github.com/skilleven/clickomat/wiki">
-    <input type="submit" value="-> Full Documentation" />
-</form>
+
+<button onclick="window.location.href='https://github.com/skilleven/clickomat/wiki';">
+-> Full Documentation
+</button>
+
 
 
 ---
