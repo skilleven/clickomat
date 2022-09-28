@@ -2,9 +2,6 @@
 
 
 
-
-
-
 # Clickomat 0.1.5 beta
 
 Python-Script for automated click-sequences and text entry.
@@ -38,6 +35,19 @@ and run the script by typing
 ```
 python c.py
 ```
+
+### Test with own Clickomat script:
+
+To run a script you need to have at least this construct:
+```
+from clickomat import Clickomat
+c = Clickomat('.','t1.txt',"images")
+c.main()
+```
+* You have to specify the location of your Clickomat script with the first param. Here it is a dot because the python file is in the same directory as the Clickomat script txt-file.
+* Next name the text-file to read instructions from (`t1.txt`)
+* You CAN specify a folder for your target-images but those can also be located on txt-file level. Then you would write a dot here.
+
 
 
 ## Commands
@@ -85,6 +95,23 @@ python c.py
 More commands coming...
 
 [Documentation](https://github.com/skilleven/clickomat/wiki) is under construction.
+
+---
+
+## Parameters:
+
+You can change some default parameters:
+
+c.confidence           = 0.95
+c.autoswitch           = False
+c.autoswitch_pause     = 1
+c.logging              = True
+c.step_pause           = 0.06
+c.switch_pause         = 0
+c.switched             = 0
+c.switch               = True
+
+
 
 ---
 
