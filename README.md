@@ -62,8 +62,11 @@ python c.py
 | **del**                                   |  deletes file
 | **del dir**                               |  deletes directory
 | **[number]**                              |  pauses for [number] seconds
-| #                                         |  you can comment-out lines by using hash as first char
+| #                                         |  you can comment-out lines by using hash as first char (followed by space)
+| #command                                  |  you can also comment-out lines by using hash as first char followed by command (no space)
 | **lookup -image ->SECTION**               |  set a target to lookout for the entire runtime. If found -> end current section, start SECTION (name).
+| **if -_images_ ->SECTION**                |  If (multiple possible) target found -> end current section, start SECTION (name).
+| **go ->SECTION**                          |  end current section, start SECTION (name).
 
 ### Images:
 -imagename can either be a single image or a list of images separated by '/'. The list will be iterated and the first finding will be used. See example in checkboxolympics testcase.

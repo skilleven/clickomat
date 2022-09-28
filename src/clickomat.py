@@ -65,8 +65,8 @@ class Clickomat:
         self.lookupTarget         = []
 
     # endregion
-    # region pause(line)
-    def pause(self,line):
+    # region _pause(line)
+    def _pause(self,line):
         if len(line) < 4:
             pause = re.search(r"^[0-9\.]+$", line)
             if pause:
@@ -84,8 +84,8 @@ class Clickomat:
         else:
             return False
     # endregion
-    # region getImage(line)
-    def getImage(self,line):
+    # region _getImage(line)
+    def _getImage(self,line):
         needle = " -[a-zA-Z0-9_\-/]+"
         img = False
         result = []
@@ -110,8 +110,8 @@ class Clickomat:
         except:
             return False
     # endregion
-    # region getSection(line)
-    def getSection(self,line):
+    # region _getSection(line)
+    def _getSection(self,line):
         needle = r"->[a-zA-Z0-9_\-]+"
         section = False
         try: 
@@ -127,8 +127,8 @@ class Clickomat:
         except:
             return False
     # endregion
-    # region scroll(line)
-    def scroll(self,line):
+    # region _scroll(line)
+    def _scroll(self,line):
         try:
             amount = re.search(r" -?[0-9]+", line).group(0)
             amount = amount[1:len(amount)]
@@ -138,16 +138,16 @@ class Clickomat:
         except:
             return False
     # endregion
-    # region getTimeout(line)
-    def getTimeout(self,line):
+    # region _getTimeout(line)
+    def _getTimeout(self,line):
         try:
             timeout = re.search(r" [0-9]+ ", line).group(0)
             return int(timeout)
         except:
             return 10
     # endregion
-    # region findImage(image)
-    def findImage(self,image):
+    # region _findImage(image)
+    def _findImage(self,image):
         x = False
         for i in image:
             try:
@@ -156,16 +156,16 @@ class Clickomat:
             if x: return i
         return False
     # endregion
-    # region locateImage(image)
-    def locateImage(self,image):
+    # region _locateImage(image)
+    def _locateImage(self,image):
         try:
             box = pyautogui.locateOnScreen(image, confidence=self.confidence)
             return box
         except:
             return False
     # endregion
-    # region clickImage(image,mode)
-    def clickImage(self,image,mode):
+    # region _clickImage(image,mode)
+    def _clickImage(self,image,mode):
         try:
             x, y = pyautogui.locateCenterOnScreen(image, confidence=self.confidence)
             if mode == 1: pyautogui.click(x, y)
@@ -174,8 +174,8 @@ class Clickomat:
         except:
             return False
     # endregion
-    # region do_switch()
-    def do_switch(self):
+    # region _switch()
+    def _switch(self):
         if os.name == 'nt':
             pyautogui.keyDown('alt')
             pyautogui.press('tab')
@@ -187,8 +187,8 @@ class Clickomat:
         if self.switch_pause > 0:
             time.sleep(self.switch_pause)
     # endregion
-    # region write(line)
-    def write(self,line):
+    # region _write(line)
+    def _write(self,line):
         try:
             text = re.search(r" \"[a-zA-Z0-9_:\-\.\/\\]+\"", line).group(0)
             text = text[2:len(text)-1]
@@ -201,8 +201,8 @@ class Clickomat:
             self.breakout = True
             return False
     # endregion
-    # region getPath(line)
-    def getPath(self,line):
+    # region _getPath(line)
+    def _getPath(self,line):
         try:
             path = re.search(r" \"[a-zA-Z0-9_:\-\.\/\\]+\"", line).group(0)
             path = path[2:len(path)-1]
@@ -210,28 +210,28 @@ class Clickomat:
         except:
             return False
     # endregion
-    # region stop()
-    def stop(self):
+    # region _stop()
+    def _stop(self):
         self.stopped = True
     # endregion
-    # region image_not_found()
-    def image_not_found(self):
+    # region _imageNotFound()
+    def _imageNotFound(self):
         self.error = "Target image not existing!"
         if self.logging: print(" -> Target image not existing! Check directory for screenshot-snippet.")
     # endregion
-    # region push(order)
-    def push(self,order):
+    # region _push(order)
+    def _push(self,order):
         amount = int(order[1])
         if order[0] == "up":    pyautogui.moveRel(0,amount*-1)
         if order[0] == "down":  pyautogui.moveRel(0,amount)
         if order[0] == "right": pyautogui.moveRel(amount,0)
         if order[0] == "left":  pyautogui.moveRel(amount*-1,0)
     # endregion
-    # region click(line,mode)
-    def click(self,line,mode):
-            image = self.getImage(line)
+    # region _click(line,mode)
+    def _click(self,line,mode):
+            image = self._getImage(line)
             if image != "Click":
-                image = self.findImage(image)
+                image = self._findImage(image)
 
             if image == "Click":
                 pyautogui.click()
@@ -239,9 +239,9 @@ class Clickomat:
                     print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
             else:
                 if not image:
-                    self.image_not_found()
+                    self._imageNotFound()
 
-                if not self.clickImage(image,mode):
+                if not self._clickImage(image,mode):
                     if self.logging: print(" -> not clicked!", end="")
 
                     order = line.split(" ")
@@ -256,13 +256,13 @@ class Clickomat:
                     if self.logging:
                         print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
     # endregion
-    # region pos(line)
-    def pos(self,line):
-                image = self.getImage(line)[0]
+    # region _pos(line)
+    def _pos(self,line):
+                image = self._getImage(line)[0]
                 if not image:
-                    self.image_not_found()
+                    self._imageNotFound()
                     return
-                box = self.locateImage(image)
+                box = self._locateImage(image)
                 if box:
                     if self.logging: print(" -> ", box, end = "")
                     pyautogui.moveTo((box[0]+(box[2]/2)),(box[1]+(box[3]/2)))
@@ -271,14 +271,14 @@ class Clickomat:
                     self.error = "Position not found!"
                     self.breakout = True
     # endregion
-    # region drag(line)
-    def drag(self,line):
+    # region _drag(line)
+    def _drag(self,line):
         order = line.split(" ")
-        image = self.getImage(line)[0]
+        image = self._getImage(line)[0]
         if not image:
-            self.image_not_found()
+            self._imageNotFound()
             return
-        box = self.locateImage(image)
+        box = self._locateImage(image)
         if box:
             if self.logging: print(" -> ", box, end = "")
 
@@ -296,14 +296,14 @@ class Clickomat:
     # region _await(line)
     def _await(self,line):
         found = False
-        timeout = self.getTimeout(line)
+        timeout = self._getTimeout(line)
         if self.logging: print(" -> timeout: " + str(timeout) + "s", end = "")
         start_time = datetime.now()
 
-        image = self.getImage(line)
+        image = self._getImage(line)
 
         if not image:
-            self.image_not_found()
+            self._imageNotFound()
         else:
             if self.logging: print(" " + str(image))
 
@@ -312,7 +312,7 @@ class Clickomat:
                 if time_delta.total_seconds() >= timeout:
                     break
 
-                if self.findImage(image):
+                if self._findImage(image):
                     t=round(time_delta.total_seconds())
                     if self.logging: print(" -> found after " + str(t) + "s.",end = "")
                     found = True
@@ -327,7 +327,7 @@ class Clickomat:
     def _del(self,line):
         order = line.split(" ")
 
-        path = self.getPath(line)
+        path = self._getPath(line)
         if not path: return
         if "dir" in order:
             try:
@@ -344,9 +344,9 @@ class Clickomat:
             else:
                 print("The File is deleted successfully", end = "")
     # endregion
-    # region stopLoop()
-    def stopLoop(self):
-        self.abort()
+    # region _stopLoop()
+    def _stopLoop(self):
+        self._abort()
         if self.breakout:
             if self.logging: print ("Loop broken!\n\n")
             easygui.msgbox("An error has occured: " + self.error, self.error)
@@ -355,30 +355,45 @@ class Clickomat:
             if self.logging: print ("Loop stopped!\n\n")
             exit()
     # endregion
-    # region set_lookup()
-    def set_lookup(self,line):
+    # region _setLookup()
+    def _setLookup(self,line):
         if self.logging: print("Set Lookup!", end=" -> ")
         # only one image can be used for lookup so far...
-        image   = self.getImage(line)[0]
-        sec     = self.getSection(line)
+        image   = self._getImage(line)[0]
+        sec     = self._getSection(line)
         if image and sec:
             self.lookupTarget = [image,sec]
         if self.logging: print(self.lookupTarget)
         print(self.lookupTarget)
         return
     # endregion
-    # region check_lookup()
-    def check_lookup(self):
+    # region _checkLookup()
+    def _checkLookup(self):
         if len(self.lookupTarget):
-            if self.findImage([self.lookupTarget[0]]):
-                print("\n\n\nImage lookup found!\n\n\n")
-
+            if self._findImage([self.lookupTarget[0]]):
                 self.section = self.lookupTarget[1]
-
+                if self.logging: print("\n\n\nImage lookup found -> Go Section {self.section}!\n\n\n")
                 self.main_loop(self.section)
     # endregion
-    # region abort()
-    def abort(self):
+    # region _if(line)
+    def _if(self,line):
+        image = self._getImage(line)
+        sec = self._getSection(line)
+        if self._findImage(image):
+            if self.logging: print(f"\n\n\nImage (if) found -> Go Section {sec}!\n\n\n")
+            self.section = sec
+            self.main_loop(self.section)
+    # endregion
+    # region _go(line)
+    def _go(self,line):
+        sec = self._getSection(line)
+        if sec:
+            if self.logging: print(f"\n\n\nGo Section {sec}!\n\n\n")
+            self.section = sec
+            self.main_loop(self.section)
+    # endregion
+    # region _abort()
+    def _abort(self):
         if msvcrt.kbhit() and msvcrt.getch().decode() == chr(27):
             exit()
     # endregion
@@ -423,12 +438,12 @@ class Clickomat:
         for line in self.sections[sec]:
             if sec != self.section: break
 
-            p = self.pause(line)
+            p = self._pause(line)
             if p: time.sleep(p)
 
             print("line:"+line)
 
-            self.stopLoop()
+            self._stopLoop()
 
             self.linenumber += 1
             if self.logging: print(self.linenumber, end = " " )
@@ -441,39 +456,39 @@ class Clickomat:
 
             if order[0] == "#": continue
 
-            if "lookup" in order: self.set_lookup(line)
+            if "lookup" in order: self._setLookup(line)
 
-            self.check_lookup()
+            self._checkLookup()
 
             if sec != self.section: break
 
-            if "stop" in order: self.stop()
+            if "stop" in order: self._stop()
 
             if "switch" in order:
                 if self.switch or "!" in order:
-                    self.do_switch()
+                    self._switch()
                     self.switched += 1
 
             if sec != self.section: break
 
-            if "right" in order or "left" in order or "up" in order or "down" in order: self.push(order)
+            if "right" in order or "left" in order or "up" in order or "down" in order: self._push(order)
 
             if "click" in order or "doubleclick" in order:
                 if "click" in order:       mode = 1
                 if "doubleclick" in order: mode = 2
-                self.click(line,mode)
+                self._click(line,mode)
 
-            if "pos" in order: self.pos(line)
+            if "pos" in order: self._pos(line)
 
-            if "drag" in order: self.drag(line)
+            if "drag" in order: self._drag(line)
 
             if "await" in order: self._await(line)
 
-            if "write" in order: self.write(line)
+            if "write" in order: self._write(line)
 
             if "enter" in order: keyboard.press('enter')
 
-            if "scroll" in order: self.scroll(line)
+            if "scroll" in order: self._scroll(line)
 
             if "del" in order: self._del(line)
 
@@ -481,7 +496,7 @@ class Clickomat:
 
         if self.autoswitch and self.switched == 1:
             time.sleep(self.autoswitch_pause)
-            self.do_switch()
+            self._switch()
 
         if not self.breakout:
             if self.logging: print()
