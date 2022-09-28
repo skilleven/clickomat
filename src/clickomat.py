@@ -7,7 +7,7 @@ from os.path import exists
 
 #-----------------------------------------------------
 #
-# Clickomat v0.1.4 
+# Clickomat v0.1.5 
 # 
 #-----------------------------------------------------
 
@@ -118,7 +118,7 @@ class Clickomat:
         try: 
             section = re.search(needle, line).group(0)
         except: 
-            print("keine section gefunden")
+            print("no section found")
             return False
         try:
             section = re.search(needle, line).group(0)
@@ -271,6 +271,27 @@ class Clickomat:
                     if self.logging: print(" -> Position not found!", end="")
                     self.error = "Position not found!"
                     self.breakout = True
+    # endregion
+    # region _posy(line)
+    def _posxy(self,line,mode):
+        needle = r" [0-9]+"
+        x, y = pyautogui.position()
+        try: 
+            if mode == 'y': y = int(re.search(needle, line).group(0)[1:])
+            if mode == 'x': x = int(re.search(needle, line).group(0)[1:])
+        except: 
+            print("no value assigned!")
+            return False
+        try:
+            pyautogui.moveTo(x,y)
+            return True
+        except:
+            return False
+    # endregion
+    # region _mDownUp(line)
+    def _mDownUp(self,line):
+        if line == "mdown" : pyautogui.mouseDown()
+        if line == "mup"   : pyautogui.mouseUp()
     # endregion
     # region _drag(line)
     def _drag(self,line):
@@ -493,7 +514,11 @@ class Clickomat:
                 self._click(line,mode)
 
             if "drag"   in order: self._drag(line)
+            if "mdown"  in order: self._mDownUp(line)
+            if "mup"    in order: self._mDownUp(line)
             if "pos"    in order: self._pos(line)
+            if "posX"   in order: self._posxy(line,'x')
+            if "posY"   in order: self._posxy(line,'y')
             if "if"     in order: self._if(line)
             if "go"     in order: self._go(line)
             if "await"  in order: self._await(line)
@@ -515,5 +540,5 @@ class Clickomat:
     # endregion
 
 if __name__ == "__main__":
-    c = Clickomat('.','t1.txt',"images")
+    c = Clickomat('D:/Projekte/clickomat/testcases/qgis','test.txt',"images")
     c.main()
