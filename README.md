@@ -21,7 +21,7 @@ single-line commands that are processed in a simple text list.
 pip install clickomat
 ```
 
-### Run Testscript:
+### Run Testscript
 
 Open https://checkboxolympics.com/ in Firefox (Chrome should work also). \
 It must now be ensured that ALT-TAB (Win) or CMD-TAB (Mac) can be used to switch directly back and forth between the terminal and the website.
@@ -36,7 +36,7 @@ and run the script by typing
 python c.py
 ```
 
-### Test with own Clickomat script:
+### Test with own Clickomat script
 
 To run a script you need to have at least this construct:
 ```
@@ -48,6 +48,33 @@ c.main()
 * Next name the text-file to read instructions from (`t1.txt`)
 * You CAN specify a folder for your target-images but those can also be located on txt-file level. Then you would write a dot here.
 
+
+
+## Parameters
+
+You can change some default parameters:
+
+
+```
+c.confidence           = 0.95
+c.autoswitch           = False
+c.autoswitch_pause     = 1
+c.logging              = True
+c.step_pause           = 0.06
+c.switch_pause         = 0
+c.switch               = True
+```
+* `confidence` - how accurate the target detector works
+* `autoswitch` - if True a TAB-switch is performed after script execution
+* `autoswitch_pause` - pause before autoswitch in seconds
+* `logging` - if True a detailed log of the activities is printed while execution
+* `step_pause` - minimum pause between every step in seconds 
+* `switch_pause` - pause after a normal switch command in seconds
+* `switch` - if False no switches are performed at all
+
+
+
+---
 
 
 ## Commands
@@ -98,22 +125,7 @@ More commands coming...
 
 ---
 
-## Parameters:
 
-You can change some default parameters:
-
-c.confidence           = 0.95
-c.autoswitch           = False
-c.autoswitch_pause     = 1
-c.logging              = True
-c.step_pause           = 0.06
-c.switch_pause         = 0
-c.switched             = 0
-c.switch               = True
-
-
-
----
 
 ## Dependencies:
 
