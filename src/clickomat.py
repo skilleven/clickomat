@@ -478,7 +478,6 @@ class Clickomat:
             p = self._pause(line)
             if p: time.sleep(p)
 
-
             self._stopLoop()
 
             if self.logging: print(lnr, end = " " )
@@ -540,5 +539,5 @@ class Clickomat:
     # endregion
 
 if __name__ == "__main__":
-    c = Clickomat('D:/Projekte/clickomat/testcases/qgis','test.txt',"images")
+    c = Clickomat('.','test.txt',"images")
     c.main()

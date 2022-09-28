@@ -102,6 +102,6 @@ More commands coming...
 
 ## Examples:
 - [examplescript.txt](https://github.com/skilleven/clickomat/blob/main/examplescript.txt)
-- Testcase: checkboxolympics
+- Testcase: [checkboxolympics](https://github.com/skilleven/clickomat/tree/main/testcases/checkboxolympics)
 
 On the Website https://checkboxolympics.com/ you can run the very simplyfied script of the testcase and get a score around 2.2 seconds...
