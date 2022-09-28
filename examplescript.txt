@@ -1,4 +1,13 @@
+#---------------------------------------
+##SECTION1
+
 switch
+go ->MAIN
+
+
+#---------------------------------------
+##MAIN
+
 await -kontrolle
 #click -py
 click -project
@@ -6,26 +15,41 @@ await 2 -close
 click -close
 click -discard
 
+# delete files
 del "D:/xxxxxxxxx/09_2022/test.qgz"
 del "D:/xxxxxxxxx/09_2022/geopackage.gpkg"
 1
 
+# new project
 click ! -new
 click ! -save
 await -kontrolle2
+
+# write into textfield
 write "D:\xxxxxxxxx\09_2022\test.qgz"
 enter
+
+# click import button and fill in the import-form
 click ! -import
 await -textfield
 click ! -textfield
-write "D:\xxxxxxxxx\09_2022\OL2022-024.49b.txt"
+write "D:\xxxxxxxxx\09_2022\xxxxxxxxxxx.txt"
 enter
+
+# await specific screen-state
 await -sel3
+# select elements
 drag up -sel3
+# click a button
 click ! -step2
 await -sel4
+
+# start another import ...
 click ! -import
 await -textfield
 click ! -textfield
-write "D:\xxxxxxxxx\09_2022\OL2022-024.49b.txt"
+write "D:\xxxxxxxxx\09_2022\xxxxxxxxxxx.txt"
 enter
+
+# display message-box that the script finished
+end
