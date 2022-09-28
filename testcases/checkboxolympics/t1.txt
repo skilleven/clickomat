@@ -1,5 +1,12 @@
+# ---------------------------------------
 ##SECTION1
+
 switch
+go ->MAIN
+
+
+# ---------------------------------------
+##MAIN
 
 1
 
@@ -9,7 +16,6 @@ click -refresh-ff/refresh-chrome-win
 await 4 -ready-ff-win/ready-ff-mac/ready-chrome-win
 click ! -ready-ff-win/ready-ff-mac/ready-chrome-win
 
-lookup -chain ->NAMEDSECTION99
 await 4 -go-ff-win/go-ff-mac/go-chrome-win
 2
 click -first-ff/first-chrome-win
@@ -69,21 +75,24 @@ click
 right 20
 click
 
-##SECTION2
+end
+
+
+# ---------------------------------------
+# this section is never called ;)
+##SECTION1MILL
+
 2
 left 24
 click
 left 20
+
+# section not defined ...
+lookup -chain ->NAMEDSECTION99
+
 click
 left 20
 click
 down 50
 
-##NAMEDSECTION99
-down 24
-click
-down 20
-click
-down 20
-click
-down 50
+
