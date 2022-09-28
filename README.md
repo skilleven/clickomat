@@ -121,12 +121,7 @@ c.switch               = True
 
 More commands coming...
 
-
-<button onclick="window.location.href='https://github.com/skilleven/clickomat/wiki';">
--> Full Documentation
-</button>
-
-
+# [Full Documentation](https://github.com/skilleven/clickomat/wiki)
 
 ---
 
