@@ -121,7 +121,10 @@ c.switch               = True
 
 More commands coming...
 
-[Documentation](https://github.com/skilleven/clickomat/wiki) is under construction.
+<form action="https://github.com/skilleven/clickomat/wiki">
+    <input type="submit" value="-> Full Documentation" />
+</form>
+
 
 ---
 
