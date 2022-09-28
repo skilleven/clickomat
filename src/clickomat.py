@@ -1,14 +1,16 @@
-import pyautogui, re, time, keyboard, os, shutil, msvcrt # type: ignore
+import pyautogui, re, time, keyboard, os, shutil # type: ignore
 from tkinter import *
 import tkinter.messagebox as tkmb
 from datetime import datetime
 from os.path import exists
+from datetime import datetime
+if os.name == 'nt': import msvcrt
 
 
 #-----------------------------------------------------
 #
-# Clickomat v0.1.5 
-# 
+# Clickomat v0.1.5
+#
 #-----------------------------------------------------
 
 class Clickomat:
@@ -58,7 +60,7 @@ class Clickomat:
         self.switch_pause         = 0
         self.switched             = 0
         self.switch               = True
-        
+
         self.breakout             = False
         self.stopped              = False
         self.error                = ""
@@ -80,7 +82,7 @@ class Clickomat:
             return self.sp()
 
     def sp(self):
-        if self.step_pause > 0: 
+        if self.step_pause > 0:
             return float(self.step_pause)
         else:
             return False
@@ -115,9 +117,9 @@ class Clickomat:
     def _getSection(self,line):
         needle = r"->[a-zA-Z0-9_\-]+"
         section = False
-        try: 
+        try:
             section = re.search(needle, line).group(0)
-        except: 
+        except:
             print("no section found")
             return False
         try:
@@ -276,10 +278,10 @@ class Clickomat:
     def _posxy(self,line,mode):
         needle = r" [0-9]+"
         x, y = pyautogui.position()
-        try: 
+        try:
             if mode == 'y': y = int(re.search(needle, line).group(0)[1:])
             if mode == 'x': x = int(re.search(needle, line).group(0)[1:])
-        except: 
+        except:
             print("no value assigned!")
             return False
         try:
@@ -423,17 +425,32 @@ class Clickomat:
     # endregion
     # region _abort()
     def _abort(self):
-        if msvcrt.kbhit() and msvcrt.getch().decode() == chr(27):
-            exit()
+        try:
+            if msvcrt.kbhit() and msvcrt.getch().decode() == chr(27):
+                exit()
+        except:
+            pass
     # endregion
-
+    # region _popupMessage(message,t='info') t -> type
     def _popupMessage(self,message,t='info'):
         title = "Clickomat"
         if t == "info":    tkmb.showinfo(title=title, message=message)
         if t == "error":   tkmb.showerror(title=title, message=message)
         if t == "warning": tkmb.showwarning(title=title, message=message)
-
-    # region main() 
+    # endregion
+    # region _screenshot()
+    def _screenshot(self):
+        dest = self.case_path + '/screenshots'
+        if not os.path.exists(dest):
+            # if the screenshot folder directory is not present
+            # then create it.
+            os.makedirs(dest)
+        now = datetime.now()
+        timestamp = str(now.strftime("%Y%m%d_%H-%M-%S"))
+        filename = f"{dest}/screenshot_{timestamp}.png"
+        pyautogui.screenshot(filename)
+    # endregion
+    # region main()
     def main(self):
         if self.commands is not None:
             lines = iter(self.commands.splitlines())
@@ -443,7 +460,6 @@ class Clickomat:
 
         lines = [line.rstrip() for line in lines]
         linenumber = 0
-
 
         self.sections = {}
         self.section = "SECTION1"
@@ -483,7 +499,7 @@ class Clickomat:
             if self.logging: print(lnr, end = " " )
 
             if self.logging: print(line, end = "" )
-            
+
             if sec != self.section: break
 
             order = line.split(" ")
@@ -512,20 +528,21 @@ class Clickomat:
                 if "doubleclick" in order: mode = 2
                 self._click(line,mode)
 
-            if "drag"   in order: self._drag(line)
-            if "mdown"  in order: self._mDownUp(line)
-            if "mup"    in order: self._mDownUp(line)
-            if "pos"    in order: self._pos(line)
-            if "posX"   in order: self._posxy(line,'x')
-            if "posY"   in order: self._posxy(line,'y')
-            if "if"     in order: self._if(line)
-            if "go"     in order: self._go(line)
-            if "await"  in order: self._await(line)
-            if "write"  in order: self._write(line)
-            if "enter"  in order: keyboard.press('enter')
-            if "scroll" in order: self._scroll(line)
-            if "del"    in order: self._del(line)
-            if "end"    in order: self._end()
+            if "screenshot" in order: self._screenshot()
+            if "drag"       in order: self._drag(line)
+            if "mdown"      in order: self._mDownUp(line)
+            if "mup"        in order: self._mDownUp(line)
+            if "pos"        in order: self._pos(line)
+            if "posX"       in order: self._posxy(line,'x')
+            if "posY"       in order: self._posxy(line,'y')
+            if "if"         in order: self._if(line)
+            if "go"         in order: self._go(line)
+            if "await"      in order: self._await(line)
+            if "write"      in order: self._write(line)
+            if "enter"      in order: keyboard.press('enter')
+            if "scroll"     in order: self._scroll(line)
+            if "del"        in order: self._del(line)
+            if "end"        in order: self._end()
 
             if self.logging: print()
 
