@@ -548,7 +548,7 @@ class Clickomat:
 
             if command == "#": continue
 
-            if command == "lookup": self._setLookup(line)
+            if command == "lookup" or command == "lu": self._setLookup(line)
 
             self._checkLookup()
 

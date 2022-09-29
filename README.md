@@ -165,6 +165,7 @@ c.switch               = True
 | **scroll**                                |  sl
 | **del**                                   |  d
 | **del dir**                               |  dd
+| **lookup**                                |  lu
 
 
 More commands coming...
