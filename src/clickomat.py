@@ -70,6 +70,7 @@ class Clickomat:
     # endregion
     # region _pause(line)
     def _pause(self,line):
+        if line == ".": return
         if len(line) < 4:
             pause = re.search(r"^[0-9\.]+$", line)
             if pause:
@@ -348,25 +349,33 @@ class Clickomat:
                 self.breakout = True
     # endregion
     # region _del(line)
-    def _del(self,line):
+    def _del(self,line,mode="file"):
+
         order = line.split(" ")
 
-        path = self._getPath(line)
-        if not path: return
         if "dir" in order:
-            try:
-                shutil.rmtree(path)
-            except OSError as e:
-                print(e)
-            else:
-                print("The directory is deleted successfully", end = "")
-        else:
+            mode = "dir"
+
+        path = self._getPath(line)
+
+        if not path: return
+
+        if mode == "file":
             try:
                 os.remove(path)
             except OSError as e:
                 print(e)
             else:
                 print("The File is deleted successfully", end = "")
+
+        if mode == "dir":
+            try:
+                shutil.rmtree(path)
+            except OSError as e:
+                print(e)
+            else:
+                print("The directory is deleted successfully", end = "")
+
     # endregion
     # region _stopLoop()
     def _stopLoop(self):
@@ -506,7 +515,7 @@ class Clickomat:
 
             if command == "#": continue
 
-            if command == "lookup": self._setLookup(line)
+            if command == "lookup" or command == "l" : self._setLookup(line)
 
             self._checkLookup()
 
@@ -521,7 +530,8 @@ class Clickomat:
 
             if sec != self.section: break
 
-            if (command=="right" or command=="left" or command=="up" or command=="down"): self._push(order)
+            if (command=="right" or command=="left" or command=="up" or command=="down") \
+            or (command=="r"     or command=="l"    or command=="u"  or command=="d")    : self._push(order)
 
             if command=="click" \
             or command=="doubleclick" \
@@ -547,11 +557,14 @@ class Clickomat:
             if command == "await"     : self._await(line)
             if command == "a"         : self._await(line)
             if command == "write"     : self._write(line)
+            if command == "w"         : self._write(line)
             if command == "enter"     : keyboard.press('enter')
             if command == "."         : keyboard.press('enter')
             if command == "scroll"    : self._scroll(line)
             if command == "sc"        : self._scroll(line)
             if command == "del"       : self._del(line)
+            if command == "d"         : self._del(line)
+            if command == "dd"        : self._del(line,'dir')
             if command == "end"       : self._end()
 
             if self.logging: print()
