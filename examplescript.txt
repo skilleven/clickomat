@@ -1,7 +1,8 @@
 #---------------------------------------
 ##SECTION1
 
-switch
+# shorthand for switch:
+>
 go ->MAIN
 
 
@@ -33,16 +34,16 @@ enter
 click ! -import
 await -textfield
 click ! -textfield
-write "D:\xxxxxxxxx\09_2022\xxxxxxxxxxx.txt"
+w "D:\xxxxxxxxx\09_2022\xxxxxxxxxxx.txt"
 enter
 
 # await specific screen-state
-await -sel3
+a -sel3
 # select elements
 drag up -sel3
 # click a button
-click ! -step2
-await -sel4
+c ! -step2
+a -sel4
 
 # start another import ...
 click ! -import
