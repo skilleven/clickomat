@@ -2,7 +2,7 @@
 
 
 
-# Clickomat 0.2.0
+# Clickomat 0.2.1
 
 Python-Script for automated click-sequences and text entry.
 
@@ -13,7 +13,7 @@ The purpose of Clickomat is to map the sometimes relatively long python commands
 single-line commands that are processed in a simple text list.
 
 ## Installation 
-[![PyPI](https://img.shields.io/badge/PyPI%20package-0.2.0-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
+[![PyPI](https://img.shields.io/badge/PyPI%20package-0.2.1-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
 
 
 
