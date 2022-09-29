@@ -38,7 +38,7 @@ python c.py
 
 ### Run Clickomat
 
-## From python-file
+#### From python-file
 
 To run from python-script you need to have at least this construct:
 ```
@@ -50,15 +50,20 @@ c.main()
 * Next name the text-file to read instructions from (`t1.txt`)
 * You CAN specify a folder for your target-images but those can also be located on txt-file level. Then you would write a dot here.
 
-## From command-line
+#### From command-line
 If run direktly from command-line Clickomat takes arguments like this:
 
 
 ```
-$ clickomat C:/path/to/case/dir casefile.txt imagefolder
+$ clickomat C:/path/to/case/dir clicklist.txt imagefolder
 ```
 Defaults would simply be '.','t1.txt',"images" if called w/o arguments.
 
+If you only like to change the clicklist-file:
+
+```
+$ clickomat . clicklist.txt
+```
 
 
 ## Parameters
