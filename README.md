@@ -44,7 +44,7 @@ $ python c.py
 
 
 #### From command-line
-If run direktly from command-line Clickomat takes arguments like this:
+If run direkcly from command-line Clickomat takes arguments like this:
 
 ```
 $ clickomat C:/path/to/case/dir clicklist.txt imagefolder
@@ -110,11 +110,14 @@ c.switch               = True
 | **doubleclick**                           |  normal doubleclick at current position
 | **doubleclick -_images_**                 |  doubleclick on imagename.png if present
 | **doubleclick ! -_images_**               |  forced doubleclick on imagename.png
+| **shiftclick**                            |  shift-click at current position
+| **shiftclick -_images_**                  |  shift-click on imagename.png if present
+| **shiftclick ! -_images_**                |  forced shift-click on imagename.png
 | **mdown**                                 |  Mouse-Down - Stays down until released by `mup` ! 
 | **mup**                                   |  Mouse-Up 
 | **pos -image**                            |  place mouse on imagename.png
 | **posX _20_**                             |  move mouses X-coordinate to 20px from left
-| **posX _20_**                             |  move mouses Y-coordinate to 20px from top
+| **posY _20_**                             |  move mouses Y-coordinate to 20px from top
 | **right _20_**                            |  pushes mouse 20px to the right
 | **left _20_**                             |  pushes mouse 20px to the left
 | **up _20_**                               |  pushes mouse 20px up
@@ -141,13 +144,40 @@ c.switch               = True
 -imagename can either be a single image or a list of images separated by '/'. The list will be iterated and the first finding will be used. See example in checkboxolympics testcase.
 
 
+## Shorthands
+| Command | Shorthand
+|---|---
+| **switch**                                |  >
+| **click**                                 |  c
+| **click -_images_**                       |  c -images
+| **click ! -_images_**                     |  c ! -images
+| **doubleclick**                           |  dc
+| **doubleclick -_images_**                 |  dc -images
+| **doubleclick ! -_images_**               |  dc ! -images
+| **shiftclick**                            |  sc
+| **shiftclick -_images_**                  |  sc -images
+| **shiftclick ! -_images_**                |  sc ! -images
+| **mdown**                                 |  md 
+| **mup**                                   |  mu 
+| **posX _20_**                             |  x
+| **posY _20_**                             |  y
+| **right _20_**                            |  r
+| **left _20_**                             |  l
+| **up _20_**                               |  u
+| **down _20_**                             |  d
+| **await -_images_**                       |  a
+| **write "text"**                          |  w
+| **enter**                                 |  .
+| **scroll**                                |  sl
+| **del**                                   |  d
+| **del dir**                               |  dd
+
+
 More commands coming...
 
 # [Full Documentation](https://github.com/skilleven/clickomat/wiki)
 
 ---
-
-
 
 ## Dependencies:
 
@@ -157,7 +187,6 @@ More commands coming...
 * opencv-python (on windows pyautogui works only with opencv)
 * pillow (on windows pyautogui works only with pillow)
 ```
-
 
 ---
 

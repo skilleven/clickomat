@@ -548,7 +548,7 @@ class Clickomat:
 
             if command == "#": continue
 
-            if command == "lookup" or command == "l" : self._setLookup(line)
+            if command == "lookup": self._setLookup(line)
 
             self._checkLookup()
 
@@ -605,7 +605,7 @@ class Clickomat:
             if command == "enter"     : keyboard.press('enter')  ;continue
             if command == "."         : keyboard.press('enter')  ;continue
             if command == "scroll"    : self._scroll(line)       ;continue
-            if command == "sc"        : self._scroll(line)       ;continue
+            if command == "sl"        : self._scroll(line)       ;continue
             if command == "del"       : self._del(line)          ;continue
             if command == "d"         : self._del(line)          ;continue
             if command == "dd"        : self._del(line,'dir')    ;continue
