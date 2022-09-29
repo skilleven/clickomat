@@ -173,6 +173,9 @@ class Clickomat:
             x, y = pyautogui.locateCenterOnScreen(image, confidence=self.confidence)
             if mode == 1: pyautogui.click(x, y)
             if mode == 2: pyautogui.doubleClick(x, y)
+            if mode == 3: self._shiftclick(x, y)
+
+            
             return True
         except:
             return False
@@ -237,9 +240,18 @@ class Clickomat:
                 image = self._findImage(image)
 
             if image == "Click":
-                pyautogui.click()
-                if self.logging:
-                    print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
+                if mode==1: 
+                    pyautogui.click()
+                    if self.logging: print(" -> clicked!", end="")
+
+                if mode==2: 
+                    pyautogui.doubleclick()
+                    if self.logging: print(" -> doubleclicked!", end="")
+
+                if mode==3: 
+                    self._shiftclick()
+                    if self.logging: print(" -> shift-clicked!", end="")
+
             else:
                 if not image:
                     self._imageNotFound()
@@ -257,7 +269,12 @@ class Clickomat:
                         return
                 else:
                     if self.logging:
-                        print(" -> clicked!", end="") if mode==1 else print(" -> doubleclicked!", end="")
+                        if mode==1: 
+                            print(" -> clicked!", end="") 
+                        if mode==2: 
+                            print(" -> doubleclicked!", end="")
+                        if mode==3: 
+                            print(" -> shift-clicked!", end="")
     # endregion
     # region _pos(line)
     def _pos(self,line):
@@ -410,7 +427,7 @@ class Clickomat:
         if len(self.lookupTarget):
             if self._findImage([self.lookupTarget[0]]):
                 self.section = self.lookupTarget[1]
-                if self.logging: print("\n\n\nImage lookup found -> Go Section {self.section}!\n\n\n")
+                if self.logging: print("\nImage lookup found -> Go Section {self.section}!\n")
                 self.ClickLoop(self.section)
     # endregion
     # region _if(line)
@@ -418,16 +435,15 @@ class Clickomat:
         image = self._getImage(line)
         sec = self._getSection(line)
         if self._findImage(image):
-            if self.logging: print(f"\n\n\nImage (if) found -> Go Section {sec}!\n\n\n")
+            if self.logging: print(f"\nImage (if) found -> Go Section {sec}!\n")
             self.section = sec
             self.ClickLoop(self.section)
     # endregion
     # region _go(line)
     def _go(self,line):
         sec = self._getSection(line)
-        # print("390: "+sec)
         if sec:
-            if self.logging: print(f"\n\n\nGo Section {sec}!\n\n\n")
+            if self.logging: print(f"\nGo Section {sec}!\n")
             self.section = sec
             self.ClickLoop(self.section)
     # endregion
@@ -458,6 +474,15 @@ class Clickomat:
         filename = f"{dest}/screenshot_{timestamp}.png"
         pyautogui.screenshot(filename)
     # endregion
+
+    def _shiftclick(self,x=None,y=None):
+        pyautogui.keyDown('shift')
+        if not x and not y:
+            pyautogui.click()
+        else:
+            pyautogui.click(x,y)
+        pyautogui.keyUp('shift')
+
     # region main()
     def main(self):
         if self.commands is not None:
@@ -478,7 +503,7 @@ class Clickomat:
                 self.section = line[2:]
                 self.sections[self.section]= []
                 continue
-            if line and not line[:2]=="# ":
+            if line:
                 line = [linenumber,line]
                 self.sections[self.section].append(line)
 
@@ -489,15 +514,24 @@ class Clickomat:
 
         self.ClickLoop(self.section)
 
-
+        if not self.breakout:
+            if self.logging: print()
+            if self.logging: print ("Loop finished.\n\n")
+    # endregion
+    
+    # region Clickloop
     def ClickLoop(self,sec):
 
         self.lookupTarget = []
+        if self.logging: print(f"Running section: {sec}")
 
         for line in self.sections[sec]:
+
             if sec != self.section: break
             lnr  = line[0]
             line = line[1]
+
+            if self.logging: print()
 
             p = self._pause(line)
             if p: time.sleep(p)
@@ -520,63 +554,71 @@ class Clickomat:
 
             if sec != self.section: break
 
-            if command == "stop": self._stop()
+            if command == "stop": 
+                self._stop()
+                break
 
             if command == "switch" or command == ">":
                 if self.switch or "!" in order:
                     self._switch()
                     self.switched += 1
+                continue
 
             if sec != self.section: break
+            self._stopLoop()
 
             if (command=="right" or command=="left" or command=="up" or command=="down") \
-            or (command=="r"     or command=="l"    or command=="u"  or command=="d")    : self._push(order)
+            or (command=="r"     or command=="l"    or command=="u"  or command=="d")    : 
+                self._push(order)
+                continue
 
             if command=="click" \
             or command=="doubleclick" \
-            or command=="c" or command=="dc":
+            or command=="shiftclick" \
+            or command=="c" or command=="dc" or command=="sc":
                 if command=="click" or command=="c"        : mode = 1
                 if command=="doubleclick" or command=="dc" : mode = 2
+                if command=="shiftclick" or command=="sc"  : mode = 3
                 self._click(line,mode)
+                continue
 
-            if command == "screenshot": self._screenshot()
-            if command == "shot"      : self._screenshot()
-            if command == "drag"      : self._drag(line)
-            if command == "mdown"     : self._mDownUp(line)
-            if command == "md"        : self._mDownUp(line)
-            if command == "mup"       : self._mDownUp(line)
-            if command == "mu"        : self._mDownUp(line)
-            if command == "pos"       : self._pos(line)
-            if command == "posX"      : self._posxy(line,'x')
-            if command == "X"         : self._posxy(line,'x')
-            if command == "posY"      : self._posxy(line,'y')
-            if command == "Y"         : self._posxy(line,'y')
-            if command == "if"        : self._if(line)
-            if command == "go"        : self._go(line)
-            if command == "await"     : self._await(line)
-            if command == "a"         : self._await(line)
-            if command == "write"     : self._write(line)
-            if command == "w"         : self._write(line)
-            if command == "enter"     : keyboard.press('enter')
-            if command == "."         : keyboard.press('enter')
-            if command == "scroll"    : self._scroll(line)
-            if command == "sc"        : self._scroll(line)
-            if command == "del"       : self._del(line)
-            if command == "d"         : self._del(line)
-            if command == "dd"        : self._del(line,'dir')
+
+            self._stopLoop()
+            if command == "screenshot": self._screenshot()       ;continue
+            if command == "shot"      : self._screenshot()       ;continue
+            if command == "drag"      : self._drag(line)         ;continue
+            if command == "mdown"     : self._mDownUp(line)      ;continue
+            if command == "md"        : self._mDownUp(line)      ;continue
+            if command == "mup"       : self._mDownUp(line)      ;continue
+            if command == "mu"        : self._mDownUp(line)      ;continue
+            if command == "pos"       : self._pos(line)          ;continue
+            if command == "posX"      : self._posxy(line,'x')    ;continue
+            if command == "X"         : self._posxy(line,'x')    ;continue
+            if command == "posY"      : self._posxy(line,'y')    ;continue
+            if command == "Y"         : self._posxy(line,'y')    ;continue
+            if command == "if"        : self._if(line)           ;continue
+            if command == "go"        : self._go(line)           ;continue
+            if command == "await"     : self._await(line)        ;continue
+            if command == "a"         : self._await(line)        ;continue
+            if command == "write"     : self._write(line)        ;continue
+            if command == "w"         : self._write(line)        ;continue
+            if command == "enter"     : keyboard.press('enter')  ;continue
+            if command == "."         : keyboard.press('enter')  ;continue
+            if command == "scroll"    : self._scroll(line)       ;continue
+            if command == "sc"        : self._scroll(line)       ;continue
+            if command == "del"       : self._del(line)          ;continue
+            if command == "d"         : self._del(line)          ;continue
+            if command == "dd"        : self._del(line,'dir')    ;continue
             if command == "end"       : self._end()
-
-            if self.logging: print()
+            self._stopLoop()
 
         if self.autoswitch and self.switched == 1:
             time.sleep(self.autoswitch_pause)
             self._switch()
 
-        if not self.breakout:
-            if self.logging: print()
-            if self.logging: print ("Loop finished.\n\n")
     # endregion
 
+#region Run
 def run():
 
     try: case_path = sys.argv[1]
@@ -590,6 +632,6 @@ def run():
 
     c = Clickomat(case_path,input_file,images)
     c.main()
-
+# endregion
 if __name__ == "__main__":
     run()
