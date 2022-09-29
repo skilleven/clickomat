@@ -45,7 +45,7 @@ $ python c.py
 #### From python-file
 
 To run from python-script you need to have at least this construct:
-```
+```python
 from clickomat import Clickomat
 c = Clickomat('.','t1.txt',"images")
 c.main()
