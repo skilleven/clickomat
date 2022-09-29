@@ -6,7 +6,6 @@ from os.path import exists
 from datetime import datetime
 if os.name == 'nt': import msvcrt
 
-
 #-----------------------------------------------------
 #
 # Clickomat v0.1.7
