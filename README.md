@@ -2,7 +2,7 @@
 
 
 
-# Clickomat 0.1.6 beta
+# Clickomat 0.1.7 beta
 
 Python-Script for automated click-sequences and text entry.
 
@@ -13,7 +13,7 @@ The purpose of Clickomat is to map the sometimes relatively long python commands
 single-line commands that are processed in a simple text list.
 
 ## Installation 
-[![PyPI](https://img.shields.io/badge/PyPI%20package-0.1.6-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
+[![PyPI](https://img.shields.io/badge/PyPI%20package-0.1.7-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
 
 
 
@@ -36,9 +36,11 @@ and run the script by typing
 python c.py
 ```
 
-### Test with own Clickomat script
+### Run Clickomat
 
-To run a script you need to have at least this construct:
+## From python-file
+
+To run from python-script you need to have at least this construct:
 ```
 from clickomat import Clickomat
 c = Clickomat('.','t1.txt',"images")
@@ -47,6 +49,15 @@ c.main()
 * You have to specify the location of your Clickomat script with the first param. Here it is a dot because the python file is in the same directory as the Clickomat script txt-file.
 * Next name the text-file to read instructions from (`t1.txt`)
 * You CAN specify a folder for your target-images but those can also be located on txt-file level. Then you would write a dot here.
+
+## From command-line
+If run direktly from command-line Clickomat takes arguments like this:
+
+
+```
+$ python clickomat.py C:/path/to/case/dir casefile.txt imagefolder
+```
+Defaults would simply be '.','t1.txt',"images" if called w/o arguments.
 
 
 
