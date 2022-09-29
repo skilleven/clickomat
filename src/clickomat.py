@@ -596,8 +596,10 @@ class Clickomat:
             if command == "pos"       : self._pos(line)          ;continue
             if command == "posX"      : self._posxy(line,'x')    ;continue
             if command == "X"         : self._posxy(line,'x')    ;continue
+            if command == "x"         : self._posxy(line,'x')    ;continue
             if command == "posY"      : self._posxy(line,'y')    ;continue
             if command == "Y"         : self._posxy(line,'y')    ;continue
+            if command == "y"         : self._posxy(line,'y')    ;continue
             if command == "if"        : self._if(line)           ;continue
             if command == "go"        : self._go(line)           ;continue
             if command == "await"     : self._await(line)        ;continue
