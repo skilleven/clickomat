@@ -18,7 +18,7 @@ single-line commands that are processed in a simple text list.
 
 
 ```
-pip install clickomat
+$ pip install clickomat
 ```
 
 ### Run Testscript
@@ -26,14 +26,18 @@ pip install clickomat
 Open https://checkboxolympics.com/ in Firefox (Chrome should work also). \
 It must now be ensured that ALT-TAB (Win) or CMD-TAB (Mac) can be used to switch directly back and forth between the terminal and the website.
 
-Change directory into testcases/checkboxolympics/ 
+1) Install Clickomat package
 ```
-cd [path-to-clickomat-folder]/testcases/checkboxolympics
+$ pip install clickomat
 ```
-and run the script by typing
+2) Change directory into testcases/checkboxolympics/ 
+```
+$ cd [path-to-clickomat-folder]/testcases/checkboxolympics
+```
+3) Run the script by typing
 
 ```
-python c.py
+$ python c.py
 ```
 
 ### Run Clickomat
