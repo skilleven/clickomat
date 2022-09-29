@@ -160,7 +160,7 @@ c.switch               = True
 | **up**                                    |  u
 | **down**                                  |  d
 | **await**                                 |  a
-| **write"**                                |  w
+| **write**                                 |  w
 | **enter**                                 |  .
 | **scroll**                                |  sl
 | **del**                                   |  d
