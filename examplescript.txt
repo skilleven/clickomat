@@ -35,7 +35,7 @@ click ! -import
 await -textfield
 click ! -textfield
 w "D:\xxxxxxxxx\09_2022\xxxxxxxxxxx.txt"
-enter
+.
 
 # await specific screen-state
 a -sel3
@@ -46,11 +46,11 @@ c ! -step2
 a -sel4
 
 # start another import ...
-click ! -import
-await -textfield
-click ! -textfield
-write "D:\xxxxxxxxx\09_2022\xxxxxxxxxxx.txt"
-enter
+c ! -import
+a -textfield
+c ! -textfield
+w "D:\xxxxxxxxx\09_2022\xxxxxxxxxxx.txt"
+.
 
 # display message-box that the script finished
 end
