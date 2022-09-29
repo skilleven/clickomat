@@ -149,24 +149,18 @@ c.switch               = True
 |---|---
 | **switch**                                |  >
 | **click**                                 |  c
-| **click -_images_**                       |  c -images
-| **click ! -_images_**                     |  c ! -images
 | **doubleclick**                           |  dc
-| **doubleclick -_images_**                 |  dc -images
-| **doubleclick ! -_images_**               |  dc ! -images
 | **shiftclick**                            |  sc
-| **shiftclick -_images_**                  |  sc -images
-| **shiftclick ! -_images_**                |  sc ! -images
 | **mdown**                                 |  md 
 | **mup**                                   |  mu 
-| **posX _20_**                             |  x
-| **posY _20_**                             |  y
-| **right _20_**                            |  r
-| **left _20_**                             |  l
-| **up _20_**                               |  u
-| **down _20_**                             |  d
-| **await -_images_**                       |  a
-| **write "text"**                          |  w
+| **posX**                                  |  x
+| **posY**                                  |  y
+| **right**                                 |  r
+| **left**                                  |  l
+| **up**                                    |  u
+| **down**                                  |  d
+| **await**                                 |  a
+| **write"**                                |  w
 | **enter**                                 |  .
 | **scroll**                                |  sl
 | **del**                                   |  d
