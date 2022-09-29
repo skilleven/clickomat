@@ -24,7 +24,7 @@ $ pip install clickomat
 ### Run Testscript
 
 Open https://checkboxolympics.com/ in Firefox (Chrome should work also). \
-It must now be ensured that ALT-TAB (Win) or CMD-TAB (Mac) can be used to switch directly back and forth between the terminal and the website.
+It must now be ensured that ALT-TAB (Win) or CMD-TAB (Mac) can be used to switch directly back and forth between the terminal and the website. 
 
 1) Install Clickomat package
 ```
@@ -49,7 +49,7 @@ If run directly from command-line Clickomat takes arguments like this:
 ```
 $ clickomat C:/path/to/case/dir clicklist.txt imagefolder
 ```
-Defaults would simply be '.','t1.txt',"images" if called w/o arguments.
+Defaults would simply be '.','t1.txt','images' if called w/o arguments.
 
 If you only like to change the clicklist-file:
 

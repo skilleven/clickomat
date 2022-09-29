@@ -223,7 +223,7 @@ class Clickomat:
     # region _imageNotFound()
     def _imageNotFound(self):
         self.error = "Target image not existing!"
-        if self.logging: print(" -> Target image not existing! Check directory for screenshot-snippet.")
+        if self.logging: print(" -> Target image not existing! Check directory for screenshot-snippet.", end = "")
     # endregion
     # region _push(order)
     def _push(self,order):
@@ -346,9 +346,10 @@ class Clickomat:
         if not image:
             self._imageNotFound()
         else:
-            if self.logging: print(" " + str(image))
+            if self.logging: print(f" on {str(image)}", end = "")
 
             while 1:
+                self._stopLoop()
                 time_delta = datetime.now() - start_time
                 if time_delta.total_seconds() >= timeout:
                     break
@@ -474,7 +475,7 @@ class Clickomat:
         filename = f"{dest}/screenshot_{timestamp}.png"
         pyautogui.screenshot(filename)
     # endregion
-
+    # region _shiftclick(x,y)
     def _shiftclick(self,x=None,y=None):
         pyautogui.keyDown('shift')
         if not x and not y:
@@ -482,7 +483,8 @@ class Clickomat:
         else:
             pyautogui.click(x,y)
         pyautogui.keyUp('shift')
-
+    #end region
+    
     # region main()
     def main(self):
         if self.commands is not None:
@@ -620,6 +622,22 @@ class Clickomat:
 
 #region Run
 def run():
+    try:
+        v = sys.argv[1]
+        if v == "--version" \
+        or v == "-version" \
+        or v == "version" \
+        or v == "-v" \
+        : print("Clickomat 0.2.2 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+
+        if v == "--help" \
+        or v == "-help" \
+        or v == "help" \
+        or v == "-h" \
+        : print("Clickomat Documentation is available under https://github.com/skilleven/clickomat/wiki")
+
+    except:
+        pass
 
     try: case_path = sys.argv[1]
     except: case_path = '.'
