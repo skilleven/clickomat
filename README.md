@@ -2,7 +2,7 @@
 
 
 
-# Clickomat 0.1.7 beta
+# Clickomat 0.2.0
 
 Python-Script for automated click-sequences and text entry.
 
@@ -13,7 +13,7 @@ The purpose of Clickomat is to map the sometimes relatively long python commands
 single-line commands that are processed in a simple text list.
 
 ## Installation 
-[![PyPI](https://img.shields.io/badge/PyPI%20package-0.1.7-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
+[![PyPI](https://img.shields.io/badge/PyPI%20package-0.2.0-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
 
 
 
@@ -42,21 +42,9 @@ $ python c.py
 
 ### Run Clickomat
 
-#### From python-file
-
-To run from python-script you need to have at least this construct:
-```python
-from clickomat import Clickomat
-c = Clickomat('.','t1.txt',"images")
-c.main()
-```
-* You have to specify the location of your Clickomat script with the first param. Here it is a dot because the python file is in the same directory as the Clickomat script txt-file (clicklist).
-* Next is the name of the clicklist (text-file) to read instructions from `t1.txt`
-* You CAN specify a folder for your target-images but those can also be located on txt-file level. Then you would write a dot here.
 
 #### From command-line
 If run direktly from command-line Clickomat takes arguments like this:
-
 
 ```
 $ clickomat C:/path/to/case/dir clicklist.txt imagefolder
@@ -68,6 +56,20 @@ If you only like to change the clicklist-file:
 ```
 $ clickomat . clicklist.txt
 ```
+
+
+#### From python-file
+
+To run from python-script you need to have at least this construct:
+```python
+from clickomat import Clickomat
+c = Clickomat('.','t1.txt',"images")
+c.main()
+```
+* You have to specify the location of your clicklist with the first param. Here it is a dot because the python file is in the same directory as the Clickomat script txt-file (clicklist).
+* Next is the name of the clicklist (text-file) to read instructions from `t1.txt`
+* You CAN specify a folder for your target-images but those can also be located on txt-file level. Then you would write a dot here.
+
 
 
 ## Parameters
