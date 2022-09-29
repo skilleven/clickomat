@@ -514,7 +514,7 @@ class Clickomat:
 
             if command == "stop": self._stop()
 
-            if command == "switch":
+            if command == "switch" or command == ">":
                 if self.switch or "!" in order:
                     self._switch()
                     self.switched += 1
