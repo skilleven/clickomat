@@ -55,7 +55,7 @@ If run direktly from command-line Clickomat takes arguments like this:
 
 
 ```
-$ python clickomat.py C:/path/to/case/dir casefile.txt imagefolder
+$ clickomat C:/path/to/case/dir casefile.txt imagefolder
 ```
 Defaults would simply be '.','t1.txt',"images" if called w/o arguments.
 
