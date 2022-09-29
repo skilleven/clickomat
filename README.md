@@ -44,7 +44,7 @@ $ python c.py
 
 
 #### From command-line
-If run direkcly from command-line Clickomat takes arguments like this:
+If run directly from command-line Clickomat takes arguments like this:
 
 ```
 $ clickomat C:/path/to/case/dir clicklist.txt imagefolder
@@ -141,7 +141,7 @@ c.switch               = True
 | **end**                                   |  you CAN pop a message when script is finished - optional
 
 ### Images:
--imagename can either be a single image or a list of images separated by '/'. The list will be iterated and the first finding will be used. See example in checkboxolympics testcase.
+-imagename can either be a single image or a list of images separated by `/` . The list will be iterated and the first finding will be used. See example in [checkboxolympics testcase](https://github.com/skilleven/clickomat/tree/main/testcases/checkboxolympics).
 
 
 ## Shorthands
