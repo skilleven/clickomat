@@ -50,7 +50,7 @@ from clickomat import Clickomat
 c = Clickomat('.','t1.txt',"images")
 c.main()
 ```
-* You have to specify the location of your Clickomat script with the first param. Here it is a dot because the python file is in the same directory as the Clickomat script txt-file.
+* You have to specify the location of your Clickomat script with the first param. Here it is a dot because the python file is in the same directory as the Clickomat script txt-file (clicklist).
 * Next is the name of the clicklist (text-file) to read instructions from `t1.txt`
 * You CAN specify a folder for your target-images but those can also be located on txt-file level. Then you would write a dot here.
 
