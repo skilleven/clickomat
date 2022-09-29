@@ -310,7 +310,9 @@ class Clickomat:
     # region _mDownUp(line)
     def _mDownUp(self,line):
         if line == "mdown" : pyautogui.mouseDown()
+        if line == "md"    : pyautogui.mouseDown()
         if line == "mup"   : pyautogui.mouseUp()
+        if line == "mu"    : pyautogui.mouseUp()
     # endregion
     # region _drag(line)
     def _drag(self,line):
