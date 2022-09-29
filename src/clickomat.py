@@ -634,7 +634,7 @@ def run():
         or v == "-help" \
         or v == "help" \
         or v == "-h" \
-        : print("Clickomat Documentation is available under https://github.com/skilleven/clickomat/wiki")
+        : print("Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki")
 
     except:
         pass
