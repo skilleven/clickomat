@@ -1,4 +1,4 @@
-import pyautogui, re, time, keyboard, os, shutil # type: ignore
+import pyautogui, re, time, keyboard, os, shutil, sys # type: ignore
 from tkinter import *
 import tkinter.messagebox as tkmb
 from datetime import datetime
@@ -497,52 +497,62 @@ class Clickomat:
             self._stopLoop()
 
             if self.logging: print(lnr, end = " " )
-
             if self.logging: print(line, end = "" )
 
             if sec != self.section: break
 
-            order = line.split(" ")
+            order   = line.split(" ")
+            command = order[0]
 
-            if order[0] == "#": continue
+            if command == "#": continue
 
-            if "lookup" in order: self._setLookup(line)
+            if command == "lookup": self._setLookup(line)
 
             self._checkLookup()
 
             if sec != self.section: break
 
-            if "stop" in order: self._stop()
+            if command == "stop": self._stop()
 
-            if "switch" in order:
+            if command == "switch":
                 if self.switch or "!" in order:
                     self._switch()
                     self.switched += 1
 
             if sec != self.section: break
 
-            if ("right" in order or "left" in order or "up" in order or "down" in order) and not "up" in order : self._push(order)
+            if (command=="right" or command=="left" or command=="up" or command=="down"): self._push(order)
 
-            if "click" in order or "doubleclick" in order:
-                if "click" in order:       mode = 1
-                if "doubleclick" in order: mode = 2
+            if command=="click" \
+            or command=="doubleclick" \
+            or command=="c" or command=="dc":
+                if command=="click" or command=="c"        : mode = 1
+                if command=="doubleclick" or command=="dc" : mode = 2
                 self._click(line,mode)
 
-            if "screenshot" in order: self._screenshot()
-            if "drag"       in order: self._drag(line)
-            if "mdown"      in order: self._mDownUp(line)
-            if "mup"        in order: self._mDownUp(line)
-            if "pos"        in order: self._pos(line)
-            if "posX"       in order: self._posxy(line,'x')
-            if "posY"       in order: self._posxy(line,'y')
-            if "if"         in order: self._if(line)
-            if "go"         in order: self._go(line)
-            if "await"      in order: self._await(line)
-            if "write"      in order: self._write(line)
-            if "enter"      in order: keyboard.press('enter')
-            if "scroll"     in order: self._scroll(line)
-            if "del"        in order: self._del(line)
-            if "end"        in order: self._end()
+            if command == "screenshot": self._screenshot()
+            if command == "shot"      : self._screenshot()
+            if command == "drag"      : self._drag(line)
+            if command == "mdown"     : self._mDownUp(line)
+            if command == "md"        : self._mDownUp(line)
+            if command == "mup"       : self._mDownUp(line)
+            if command == "mu"        : self._mDownUp(line)
+            if command == "pos"       : self._pos(line)
+            if command == "posX"      : self._posxy(line,'x')
+            if command == "X"         : self._posxy(line,'x')
+            if command == "posY"      : self._posxy(line,'y')
+            if command == "Y"         : self._posxy(line,'y')
+            if command == "if"        : self._if(line)
+            if command == "go"        : self._go(line)
+            if command == "await"     : self._await(line)
+            if command == "a"         : self._await(line)
+            if command == "write"     : self._write(line)
+            if command == "enter"     : keyboard.press('enter')
+            if command == "."         : keyboard.press('enter')
+            if command == "scroll"    : self._scroll(line)
+            if command == "sc"        : self._scroll(line)
+            if command == "del"       : self._del(line)
+            if command == "end"       : self._end()
 
             if self.logging: print()
 
@@ -555,6 +565,19 @@ class Clickomat:
             if self.logging: print ("Loop finished.\n\n")
     # endregion
 
-if __name__ == "__main__":
-    c = Clickomat('.','test.txt',"images")
+def run():
+
+    try: case_path = sys.argv[1]
+    except: case_path = '.'
+
+    try: input_file = sys.argv[2]
+    except: input_file = 't1.txt'
+
+    try: images = sys.argv[3]
+    except: images = 'images'
+
+    c = Clickomat(case_path,input_file,images)
     c.main()
+
+if __name__ == "__main__":
+    run()

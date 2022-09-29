@@ -2,6 +2,11 @@ from setuptools import setup
 setup(
     name="clickomat",
     version='0.1.5',
+    entry_points={
+        'console_scripts': [
+            'clickomat=clickomat:run'
+        ]
+    },
     author="skilleven (Torsten Hoeltge)",
     author_email="<hello@skilleven.com>",
     url="https://github.com/skilleven/clickomat",
