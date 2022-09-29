@@ -8,7 +8,7 @@ if os.name == 'nt': import msvcrt
 
 #-----------------------------------------------------
 #
-# Clickomat v0.2.2
+# Clickomat v0.2.3
 #
 #-----------------------------------------------------
 
@@ -632,7 +632,7 @@ def run():
         or v == "-version" \
         or v == "version" \
         or v == "-v" \
-        : print("Clickomat 0.2.2 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+        : print("Clickomat 0.2.3 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
 
         if v == "--help" \
         or v == "-help" \
