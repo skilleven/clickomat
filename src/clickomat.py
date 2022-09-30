@@ -640,6 +640,8 @@ def run():
         or v == "-h" \
         : print("Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki")
 
+        exit()
+
     except:
         pass
 
