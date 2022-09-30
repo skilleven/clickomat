@@ -629,19 +629,18 @@ def run():
     try:
         v = sys.argv[1]
         if v == "--version" \
-        or v == "-version" \
-        or v == "version" \
-        or v == "-v" \
-        : print("Clickomat 0.2.3 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+        or v == "-version"  \
+        or v == "version"   \
+        or v == "-v"        : 
+            print("Clickomat 0.2.3 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+            exit()
 
         if v == "--help" \
-        or v == "-help" \
-        or v == "help" \
-        or v == "-h" \
-        : print("Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki")
-
-        exit()
-
+        or v == "-help"  \
+        or v == "help"   \
+        or v == "-h"     : 
+            print("Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki")
+            exit()
     except:
         pass
 
