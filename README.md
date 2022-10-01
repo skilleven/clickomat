@@ -12,14 +12,20 @@ it offers the possibility to perform mouse clicks, text input and more with very
 The purpose of Clickomat is to map the sometimes relatively long python commands from pyautogui with short,
 single-line commands that are processed in a simple text list.
 
+
+<br><br>
+
+
 ## Installation 
 [![PyPI](https://img.shields.io/badge/PyPI%20package-0.3.2-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
-
 
 
 ```
 $ pip install clickomat
 ```
+
+<br><br>
+
 
 ### Run Testscript
 
@@ -48,6 +54,7 @@ $ clickomat -p [path-to-clickomat-folder]/testcases/checkboxolympics
 
 ```
 
+<br><br>
 
 ### Run Clickomat
 
@@ -67,6 +74,7 @@ $ clickomat -c clicklist.txt
 ```
 More details in the [Docs](https://github.com/skilleven/clickomat/wiki/CLI)
 
+<br>
 
 #### From python-file
 
@@ -83,8 +91,11 @@ c.main()
 More details in the [Docs](https://github.com/skilleven/clickomat/wiki/Python)
 
 
+<br>
+
 ---
 
+<br>
 
 ## Commands
 | Command | Result
@@ -160,6 +171,8 @@ More commands coming...
 # [Full Documentation](https://github.com/skilleven/clickomat/wiki)
 
 ---
+
+<br><br>
 
 ## Dependencies:
 
