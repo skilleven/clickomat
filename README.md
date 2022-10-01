@@ -72,7 +72,7 @@ If you only like to change the clicklist-file:
 ```
 $ clickomat -c clicklist.txt
 ```
-More details in the [Docs](https://github.com/skilleven/clickomat/wiki/CLI)
+More details in the [Docs -> CLI](https://github.com/skilleven/clickomat/wiki/CLI)
 
 <br>
 
@@ -88,7 +88,7 @@ c.main()
 * Next is the name of the clicklist (text-file) to read instructions from `t1.txt`
 * You CAN specify a folder for your target-images but those can also be located on txt-file level. Then you would write a dot here.
 
-More details in the [Docs](https://github.com/skilleven/clickomat/wiki/Python)
+More details in the [Docs -> Python](https://github.com/skilleven/clickomat/wiki/Python)
 
 
 <br>
