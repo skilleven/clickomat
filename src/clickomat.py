@@ -496,13 +496,12 @@ class Clickomat:
                 lines = file.readlines()
 
         lines = [line.rstrip() for line in lines]
-        linenumber = 0
 
         self.sections = {}
         self.section = "SECTION1"
         self.sections[self.section] = []
-        for line in lines:
-            linenumber += 1
+
+        for linenumber, line in enumerate(lines, start=1):
             if line[:2] == "##":
                 self.section = line[2:]
                 self.sections[self.section]= []
