@@ -59,29 +59,29 @@ $ clickomat -c clicklist.txt
 
 Options:
 ```
-  -version, -v, --version                 show version number
+  -version, -v, --version           show version number
 
-  -path, -p, --path                       set path of case, default: `.`
+  -path, -p, --path                 set path of case, default: `.`
 
-  -clicklist, -c, --clicklist             set clicklist file of case, default:`t1.txt`
+  -clicklist, -c, --clicklist       set clicklist file of case, default:`t1.txt`
 
-  -images, -i, --images                   set image directory of case, default: `images`
+  -images, -i, --images             set image directory of case, default: `images`
 
-  -confidence, -co, --confidence          set the accuracy of target detection - 
-                                          only values from 0.0 to 1.0 allowed, default: 0.95
+  -confidence, -co, --confidence    set the accuracy of target detection - 
+                                    only values from 0.0 to 1.0 allowed, default: 0.95
 
-  -autoswitch, -a, --autoswitch           if set Clickomat will switch back to terminal
-                                          after execution, default: False
+  -autoswitch, -a, --autoswitch     if set Clickomat will switch back to terminal
+                                    after execution, default: False
 
-  -silent, -s, --silent                   if set Clickomat gives no terminal feedback,
-                                          default: False
+  -silent, -s, --silent             if set Clickomat gives no terminal feedback,
+                                    default: False
 
-  -step, -st, --step                      set the pause length between each command, default: 0.06
+  -step, -st, --step                set the pause length between each command, default: 0.06
 
-  -noswitch, -n, --noswitch               if set Clickomat will not execute switch commands
-                                          unless they are marked with `!`
+  -noswitch, -n, --noswitch         if set Clickomat will not execute switch commands
+                                    unless they are marked with `!`
 
-  -help, -h, --help                       Show help
+  -help, -h, --help                 Show help
 ```
 
 #### From python-file
