@@ -40,6 +40,15 @@ $ cd [path-to-clickomat-folder]/testcases/checkboxolympics
 $ python c.py
 ```
 
+OR simply put
+```
+$ pip install clickomat
+...
+$ clickomat -p [path-to-clickomat-folder]/testcases/checkboxolympics
+
+```
+
+
 ### Run Clickomat
 
 
