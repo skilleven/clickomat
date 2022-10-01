@@ -1,7 +1,7 @@
 from setuptools import setup
 setup(
     name="clickomat",
-    version='0.2.3',
+    version='0.3.0',
     entry_points={
         'console_scripts': [
             'clickomat=clickomat:run'
@@ -16,7 +16,7 @@ setup(
     license="MIT",
     py_modules=['clickomat'],
     package_dir={'':'src'},
-    install_requires=['pyautogui', 'keyboard', 'opencv-python', 'pillow'],
+    install_requires=['pyautogui', 'keyboard', 'opencv-python', 'pillow', 'click'],
     keywords=['python', 'mouse-automation', 'gui-testing', 'automation'],
     classifiers=[
         "Programming Language :: Python :: 3",

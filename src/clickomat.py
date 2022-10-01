@@ -1,4 +1,4 @@
-import pyautogui, re, time, keyboard, os, shutil, sys # type: ignore
+import pyautogui, re, time, keyboard, os, shutil, click # type: ignore
 from tkinter import *
 import tkinter.messagebox as tkmb
 from datetime import datetime
@@ -8,7 +8,7 @@ if os.name == 'nt': import msvcrt
 
 #-----------------------------------------------------
 #
-# Clickomat v0.2.3
+# Clickomat v0.3.0
 #
 #-----------------------------------------------------
 
@@ -489,6 +489,12 @@ class Clickomat:
     
     # region main()
     def main(self):
+
+        if self.logging: print(f"Case Path: {self.case_path}")
+        if self.logging: print(f"Clicklist: {self.input_file}")
+        if self.logging: print(f"Image Directory: {self.images}")
+        if self.logging: print("---")
+
         if self.commands is not None:
             lines = iter(self.commands.splitlines())
         else:
@@ -585,7 +591,6 @@ class Clickomat:
                 self._click(line,mode)
                 continue
 
-
             self._stopLoop()
             if command == "screenshot": self._screenshot()       ;continue
             if command == "shot"      : self._screenshot()       ;continue
@@ -623,37 +628,67 @@ class Clickomat:
 
     # endregion
 
+# region click arguments
+
+CONTEXT_SETTINGS = dict(help_option_names=['-h','-help','--help'],max_content_width=400)
+
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--version', '-version', '-v', flag_value=True, default=False, help='show version number')
+@click.option('--path', '-path', '-p', default='.', type=click.Path(dir_okay=True,file_okay=False,exists=True), help='set path of case, default: `.`')
+@click.option('--clicklist', '-clicklist', '-c', default='t1.txt', type=click.STRING, help='set clicklist file of case, default:`t1.txt`')
+@click.option('--images', '-images', '-i', default='images', type=click.STRING, help='set image directory of case, default: `images`')
+@click.option('--confidence', '-confidence', '-co', default=0.95, type=click.FLOAT, help='set the accuracy of target detection - only values from 0.0 to 1.0 allowed, default: 0.95')
+@click.option('--autoswitch','-autoswitch', '-a', flag_value=True, default=False, help='if set Clickomat will switch back to terminal after execution, default: False')
+@click.option('--silent', '-silent', '-s', flag_value=True, default=False, help='if set Clickomat gives no terminal feedback, default: False')
+@click.option('--step', '-step', '-st', default=0.06, type=click.FLOAT, help='set the pause length between each command, default: 0.06')
+@click.option('--noswitch','-noswitch', '-n', flag_value=True, default=False, help='if set Clickomat will not execute switch commands unless they are marked with `!`')
+
+def arguments(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch):
+
+    """Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki"""
+
+    if version:
+        print("Clickomat 0.3.0 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+        exit()
+
+    case_path = path
+
+    # check if clicklist parameter is correct
+    if not ".txt" in clicklist:
+        input_file = f"{clicklist}.txt"
+    input_file = os.path.join(case_path, clicklist)
+    if not os.path.exists(input_file): 
+        print(f"Specified clicklist is not existing: {input_file}")
+        exit()
+
+    # check if image folder parameter is correct
+    if not images == ".":
+        images_checkpath = os.path.join(case_path, images)
+    else:
+        images_checkpath = case_path
+    if not os.path.exists(images_checkpath): 
+        print(f"Specified image directory is not existing: {images_checkpath}")
+        exit()
+
+    if confidence > 1: 
+        print("Confidence can have a maximum of 1.0!")
+        exit()
+
+    run(case_path,clicklist,images,confidence,autoswitch,silent,step,noswitch)
+# endregion
+
 #region Run
-def run():
-    try:
-        v = sys.argv[1]
-        if v == "--version" \
-        or v == "-version"  \
-        or v == "version"   \
-        or v == "-v"        : 
-            print("Clickomat 0.2.3 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
-            exit()
-
-        if v == "--help" \
-        or v == "-help"  \
-        or v == "help"   \
-        or v == "-h"     : 
-            print("Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki")
-            exit()
-    except:
-        pass
-
-    try: case_path = sys.argv[1]
-    except: case_path = '.'
-
-    try: input_file = sys.argv[2]
-    except: input_file = 't1.txt'
-
-    try: images = sys.argv[3]
-    except: images = 'images'
-
+def run(case_path,input_file,images,confidence,autoswitch,silent,step,noswitch):
     c = Clickomat(case_path,input_file,images)
+
+    c.confidence = confidence
+    c.autoswitch = autoswitch
+    c.step_pause = step
+    if silent: c.logging = False
+    if noswitch: c.switch = False
+
     c.main()
 # endregion
+
 if __name__ == "__main__":
-    run()
+    arguments()
