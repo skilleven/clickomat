@@ -631,7 +631,6 @@ class Clickomat:
 # region click arguments
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h','-help','--help'],max_content_width=400)
-
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--version', '-version', '-v', flag_value=True, default=False, help='show version number')
 @click.option('--path', '-path', '-p', default='.', type=click.Path(dir_okay=True,file_okay=False,exists=True), help='set path of case, default: `.`')
@@ -642,8 +641,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h','-help','--help'],max_content_wi
 @click.option('--silent', '-silent', '-s', flag_value=True, default=False, help='if set Clickomat gives no terminal feedback, default: False')
 @click.option('--step', '-step', '-st', default=0.06, type=click.FLOAT, help='set the pause length between each command, default: 0.06')
 @click.option('--noswitch','-noswitch', '-n', flag_value=True, default=False, help='if set Clickomat will not execute switch commands unless they are marked with `!`')
-
-def arguments(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch):
+def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch):
 
     """Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki"""
 
@@ -674,11 +672,12 @@ def arguments(version,path,clicklist,images,confidence,autoswitch,silent,step,no
         print("Confidence can have a maximum of 1.0!")
         exit()
 
-    run(case_path,clicklist,images,confidence,autoswitch,silent,step,noswitch)
+    go(case_path,clicklist,images,confidence,autoswitch,silent,step,noswitch)
 # endregion
 
 #region Run
-def run(case_path,input_file,images,confidence,autoswitch,silent,step,noswitch):
+def go(case_path,input_file,images,confidence,autoswitch,silent,step,noswitch):
+
     c = Clickomat(case_path,input_file,images)
 
     c.confidence = confidence
@@ -691,4 +690,4 @@ def run(case_path,input_file,images,confidence,autoswitch,silent,step,noswitch):
 # endregion
 
 if __name__ == "__main__":
-    arguments()
+    run()
