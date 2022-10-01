@@ -15,17 +15,26 @@ if os.name == 'nt': import msvcrt
 class Clickomat:
     # region __init__
     def __init__(self, case_path=None, input_file=None, images=None):
+        # If ran from Python we grab the params here
+        # self.commands is used if a multiline string is given instead a clicklist filename
         self.commands = None
+        # case_path is the path to the root of the click-project
+        # this is where the clicklist file and the image target folder is located under
+        # default is the path of the calling python script (.)
         if case_path is None:
             self.case_path = "."
         else:
             self.case_path = case_path
+            # we check if the path is even existing
+            # if not -> abort
             if not os.path.isdir(self.case_path):
                 print(self.case_path)
                 print("given case path is not existing.")
                 exit()
 
         if input_file is None:
+            # input_file is the name of the clicklist - not the path
+            # default is "t1.txt"
             self.input_file = "t1.txt"
         else:
             self.input_file = input_file
@@ -34,22 +43,26 @@ class Clickomat:
                 # but an actual list (lines) of commands
                 self.commands = self.input_file
             else:
+                # we also test the existence of the text file
+                # if not present -> abort
                 self.input_file = f"{self.case_path}/{self.input_file}"
                 if not exists(self.input_file):
                     print(self.input_file)
                     print("given clicklist is not existing.")
                     exit()
 
+        # images contains the name of the folder where the targets (PNGs) are stored
         if images is None:
             self.images = "."
         else:
+            # ... and of course we check for existence
             self.images = f"{self.case_path}/{images}"
-
             if not os.path.isdir(self.images):
                 print(self.input_file)
                 print("given image location is not existing.")
                 exit()
 
+        # Default Parameters
         self.confidence           = 0.95
         self.autoswitch           = False
         self.autoswitch_pause     = 1
@@ -60,15 +73,26 @@ class Clickomat:
         self.switched             = 0
         self.switch               = True
 
+        # Flags
         self.breakout             = False
         self.stopped              = False
         self.error                = ""
 
+        # List of image targets for the lookup command
         self.lookupTarget         = []
-
     # endregion
     # region _pause(line)
     def _pause(self,line):
+        # pause method is run before every command
+        # this method is only checking if the current command line contains a pause command
+        # if yes the amount of that pause is returned
+        # if not the default step pause is returned IF it is >0
+        # when False is returned the actual pause in the clickloop is skipped 
+        def sp():
+            if self.step_pause > 0:
+                return float(self.step_pause)
+            else:
+                return False
         if line == ".": return
         if len(line) < 4:
             pause = re.search(r"^[0-9\.]+$", line)
@@ -76,19 +100,16 @@ class Clickomat:
                 pause = pause.group(0)
                 return float(pause)
             else:
-                return self.sp()
-
+                return sp()
         else:
-            return self.sp()
-
-    def sp(self):
-        if self.step_pause > 0:
-            return float(self.step_pause)
-        else:
-            return False
+            return sp()
     # endregion
     # region _getImage(line)
     def _getImage(self,line):
+        # looks if 1 or more images can be found in the command line
+        # and returns a list with png images 
+        # if no image(s) found 'Click' is returned and that causes the
+        # click method to just click whereever the mause is located
         needle = " -[a-zA-Z0-9_\-/]+"
         img = False
         result = []
@@ -96,6 +117,9 @@ class Clickomat:
         except: return "Click"
 
         try:
+            # if images pass the grep above
+            # they are checked for existence here
+            # if they can't be found False is returned 
             img = re.search(needle, line).group(0)
             img = img[2:len(img)]
             img = img.split("/")
@@ -109,7 +133,6 @@ class Clickomat:
                 return False
 
             return result
-
         except:
             return False
     # endregion
