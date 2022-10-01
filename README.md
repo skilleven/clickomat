@@ -143,27 +143,18 @@ More details in the [Docs -> Python](https://github.com/skilleven/clickomat/wiki
 
 
 ## Shorthands
-| Command | Shorthand
-|---|---
-| **switch**                                |  >
-| **click**                                 |  c
-| **doubleclick**                           |  dc
-| **shiftclick**                            |  sc
-| **mdown**                                 |  md 
-| **mup**                                   |  mu 
-| **posX**                                  |  x
-| **posY**                                  |  y
-| **right**                                 |  r
-| **left**                                  |  l
-| **up**                                    |  u
-| **down**                                  |  d
-| **await**                                 |  a
-| **write**                                 |  w
-| **enter**                                 |  .
-| **scroll**                                |  sl
-| **del**                                   |  d
-| **del dir**                               |  dd
-| **lookup**                                |  lu
+| Command | Shorthand | | Command | Shorthand
+|---|---|---|---|----
+| **switch**          |  >   || **up**              |  u  
+| **click**           |  c   || **down**            |  d  
+| **doubleclick**     |  dc  || **await**           |  a  
+| **shiftclick**      |  sc  || **write**           |  w  
+| **mdown**           |  md  || **enter**           |  .  
+| **mup**             |  mu  || **scroll**          |  sl 
+| **posX**            |  x   || **del**             |  d  
+| **posY**            |  y   || **del dir**         |  dd 
+| **right**           |  r   || **lookup**          |  lu 
+| **left**            |  l   ||
 
 
 More commands coming...
