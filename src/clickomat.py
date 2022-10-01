@@ -8,7 +8,7 @@ if os.name == 'nt': import msvcrt
 
 #-----------------------------------------------------
 #
-# Clickomat v0.3.1
+# Clickomat v0.3.2
 #
 #-----------------------------------------------------
 
@@ -646,7 +646,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
     """Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki"""
 
     if version:
-        print("Clickomat 0.3.1 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+        print("Clickomat 0.3.2 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
         exit()
 
     case_path = path
