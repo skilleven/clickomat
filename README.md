@@ -47,7 +47,7 @@ $ python c.py
 If run directly from command-line Clickomat takes arguments like this:
 
 ```
-$ clickomat -d C:/path/to/case/dir -c clicklist.txt -i imagefolder
+$ clickomat -p C:/path/to/case/dir -c clicklist.txt -i imagefolder
 ```
 Defaults would simply be '.','t1.txt','images' if called w/o arguments.
 
