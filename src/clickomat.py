@@ -93,16 +93,14 @@ class Clickomat:
                 return float(self.step_pause)
             else:
                 return False
-        if line == ".": return
-        if len(line) < 4:
-            pause = re.search(r"^[0-9\.]+$", line)
-            if pause:
-                pause = pause.group(0)
-                return float(pause)
-            else:
-                return sp()
+        if line == ".": sp()
+        pause = re.search(r"^[0-9\.]+$", line)
+        if pause:
+            pause = pause.group(0)
+            return float(pause)
         else:
             return sp()
+
     # endregion
     # region _getImage(line)
     def _getImage(self,line):
@@ -110,6 +108,12 @@ class Clickomat:
         # and returns a list with png images 
         # if no image(s) found 'Click' is returned and that causes the
         # click method to just click whereever the mause is located
+
+        # TODO: DeprecationWarning: invalid escape sequence '\-'
+        #       needle = " -[a-zA-Z0-9_\-/]+"
+        #
+        # without hyphen it wont work ... what do do??
+
         needle = " -[a-zA-Z0-9_\-/]+"
         img = False
         result = []
@@ -138,7 +142,18 @@ class Clickomat:
     # endregion
     # region _getSection(line)
     def _getSection(self,line):
-        needle = r"->[a-zA-Z0-9_\-]+"
+        # commands if, go and lookup are using target sections
+        # this gives back such a section if the line contains either:
+        # ->SECTION
+        # -> SECTION
+        # ->##SECTION
+        # ->#SECTION
+        # ...
+
+        # sort out potential syntax errors
+        line = line.replace("#","")
+
+        needle = r"-> ?[a-zA-Z0-9_\-]+"
         section = False
         try:
             section = re.search(needle, line).group(0)
@@ -147,6 +162,11 @@ class Clickomat:
             return False
         try:
             section = re.search(needle, line).group(0)
+
+            # sort out potential syntax errors
+            section = section.replace(" ","")
+
+            #         cut off the ->
             section = section[2:len(section)]
             if self.sections[section]:
                 return section
@@ -508,15 +528,9 @@ class Clickomat:
         else:
             pyautogui.click(x,y)
         pyautogui.keyUp('shift')
-    #end region
+    #endregion
     
-    # region main()
-    def main(self):
-
-        if self.logging: print(f"Case Path: {self.case_path}")
-        if self.logging: print(f"Clicklist: {self.input_file}")
-        if self.logging: print(f"Image Directory: {self.images}")
-        if self.logging: print("---")
+    def _getClicklist(self):
 
         if self.commands is not None:
             lines = iter(self.commands.splitlines())
@@ -541,6 +555,17 @@ class Clickomat:
 
         self.section = list(self.sections.keys())[0]
 
+
+    # region main()
+    def main(self):
+
+        if self.logging: print(f"Case Path: {self.case_path}")
+        if self.logging: print(f"Clicklist: {self.input_file}")
+        if self.logging: print(f"Image Directory: {self.images}")
+        if self.logging: print("---")
+
+        self._getClicklist()
+
         pyautogui.PAUSE = 0
         if self.logging: print("\n\n\n\n\n---------------------------------------------------")
 
@@ -551,7 +576,7 @@ class Clickomat:
             if self.logging: print ("Loop finished.\n\n")
     # endregion
     
-    # region Clickloop
+    # region clickloop
     def ClickLoop(self,sec):
 
         self.lookupTarget = []
@@ -648,11 +673,9 @@ class Clickomat:
         if self.autoswitch and self.switched == 1:
             time.sleep(self.autoswitch_pause)
             self._switch()
-
     # endregion
 
 # region click arguments
-
 CONTEXT_SETTINGS = dict(help_option_names=['-h','-help','--help'],max_content_width=400)
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--version', '-version', '-v', flag_value=True, default=False, help='show version number')
@@ -698,17 +721,14 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
     go(case_path,clicklist,images,confidence,autoswitch,silent,step,noswitch)
 # endregion
 
-#region Run
+#region go
 def go(case_path,input_file,images,confidence,autoswitch,silent,step,noswitch):
-
     c = Clickomat(case_path,input_file,images)
-
     c.confidence = confidence
     c.autoswitch = autoswitch
     c.step_pause = step
     if silent: c.logging = False
     if noswitch: c.switch = False
-
     c.main()
 # endregion
 
