@@ -449,7 +449,7 @@ class Clickomat:
 
         order = line.split(" ")
         path  = self._getPath(line)
-        if not path: return
+        if not path: return ("noPath")
 
         if "dir" in order: mode = "dir"
 
@@ -458,8 +458,10 @@ class Clickomat:
                 os.remove(path)
             except OSError as e:
                 print(e)
+                return("delFail")
             else:
                 print("The File is deleted successfully", end = "")
+                return("delSuccess")
 
         if mode == "dir":
             try:
@@ -468,6 +470,7 @@ class Clickomat:
                 print(e)
             else:
                 print("The directory is deleted successfully", end = "")
+                return("delDirSuccess")
     # endregion
     # region _stopLoop()
     def _stopLoop(self):
