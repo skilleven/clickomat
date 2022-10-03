@@ -272,53 +272,68 @@ class Clickomat:
     # region _push(order)
     def _push(self,order):
         amount = int(order[1])
-        if order[0] == "up":    pyautogui.moveRel(0,amount*-1)
-        if order[0] == "down":  pyautogui.moveRel(0,amount)
-        if order[0] == "right": pyautogui.moveRel(amount,0)
-        if order[0] == "left":  pyautogui.moveRel(amount*-1,0)
+        if order[0] == "up":    
+            if not self.test: pyautogui.moveRel(0,amount*-1)
+            return 'up'
+        if order[0] == "down":  
+            if not self.test: pyautogui.moveRel(0,amount)
+            return 'down'
+        if order[0] == "right": 
+            if not self.test: pyautogui.moveRel(amount,0)
+            return 'right'
+        if order[0] == "left":  
+            if not self.test: pyautogui.moveRel(amount*-1,0)
+            return 'left'
+        return False
     # endregion
     # region _click(line,mode)
     def _click(self,line,mode):
             image = self._getImage(line)
+
+            if not image: 
+                self._imageNotFound()
+                return("imageNotFound")
+
             if image != "Click":
                 image = self._findImage(image)
 
             if image == "Click":
                 if mode==1: 
-                    pyautogui.click()
+                    if not self.test: pyautogui.click()
                     if self.logging: print(" -> clicked!", end="")
+                    return("normalClickExecuted")
 
                 if mode==2: 
-                    pyautogui.doubleclick()
+                    if not self.test: pyautogui.doubleclick()
                     if self.logging: print(" -> doubleclicked!", end="")
+                    return("normalDoubleClickExecuted")
 
                 if mode==3: 
-                    self._shiftclick()
+                    if not self.test: self._shiftclick()
                     if self.logging: print(" -> shift-clicked!", end="")
+                    return("normalShiftClickExecuted")
 
-            else:
-                if not image:
-                    self._imageNotFound()
-
-                if not self._clickImage(image,mode):
-                    if self.logging: print(" -> not clicked!", end="")
-
-                    order = line.split(" ")
-
-                    if " ! " in order:
-                        if self.logging: print()
-                        self.error = "Forced image-click could not be executed"
-                        if self.logging: print("Loop Broke!\n\n")
-                        self.breakout = True
-                        return
+            if not self._clickImage(image,mode):
+                if self.logging: print(" -> not clicked!", end="")
+                order = line.split(" ")
+                if " ! " in order:
+                    if self.logging: print()
+                    self.error = "Forced image-click could not be executed"
+                    if self.logging: print("Loop Broke!\n\n")
+                    self.breakout = True
+                    return ("Forced_ImgClick_could_not_be_executed")
                 else:
-                    if self.logging:
-                        if mode==1: 
-                            print(" -> clicked!", end="") 
-                        if mode==2: 
-                            print(" -> doubleclicked!", end="")
-                        if mode==3: 
-                            print(" -> shift-clicked!", end="")
+                    return ("ImgClick_could_not_be_executed")
+
+            if mode==1: 
+                if self.logging: print(" -> clicked!", end="") 
+                return ("ImgClick_ClickExecuted")
+            if mode==2: 
+                if self.logging: print(" -> doubleclicked!", end="")
+                return ("ImgClick_DoubleClickExecuted")
+            if mode==3: 
+                if self.logging: print(" -> shift-clicked!", end="")
+                return ("ImgClick_ShiftClickExecuted")
     # endregion
     # region _pos(line)
     def _pos(self,line):
