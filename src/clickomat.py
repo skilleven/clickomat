@@ -8,7 +8,7 @@ if os.name == 'nt': import msvcrt
 
 #-----------------------------------------------------
 #
-# Clickomat v0.3.2
+# Clickomat v0.3.3
 #
 #-----------------------------------------------------
 
@@ -180,7 +180,7 @@ class Clickomat:
             amount = re.search(r" -?[0-9]+", line).group(0)
             amount = amount[1:len(amount)]
             amount = int(amount)
-            pyautogui.scroll(amount)
+            if not self.test: pyautogui.scroll(amount)
             return True
         except:
             return False
@@ -226,13 +226,13 @@ class Clickomat:
     def _switch(self):
     # no unittest for this
         if os.name == 'nt':
-            pyautogui.keyDown('alt')
-            pyautogui.press('tab')
-            pyautogui.keyUp('alt')
+            if not self.test: pyautogui.keyDown('alt')
+            if not self.test: pyautogui.press('tab')
+            if not self.test: pyautogui.keyUp('alt')
         else:
-            pyautogui.keyDown('command')
-            pyautogui.press('tab')
-            pyautogui.keyUp('command')
+            if not self.test: pyautogui.keyDown('command')
+            if not self.test: pyautogui.press('tab')
+            if not self.test: pyautogui.keyUp('command')
         if self.switch_pause > 0:
             time.sleep(self.switch_pause)
     # endregion
@@ -385,67 +385,73 @@ class Clickomat:
     # region _drag(line)
     def _drag(self,line):
         order = line.split(" ")
-        image = self._getImage(line)[0]
+        image = self._getImage(line)
+        try: image = image[0]
+        except: pass
         if not image:
             self._imageNotFound()
-            return
+            return("imageNotFound")
+
         box = self._locateImage(image)
         if box:
             if self.logging: print(" -> ", box, end = "")
-
             if "up" in order:
-                pyautogui.moveTo((box[0]),(box[1]+box[3]))
-                pyautogui.dragTo((box[0]+box[2]),(box[1]), button='left')
+                if not self.test: pyautogui.moveTo((box[0]),(box[1]+box[3]))
+                if not self.test: pyautogui.dragTo((box[0]+box[2]),(box[1]), button='left')
+                return ("dragUpSuccess")
             else:
-                pyautogui.moveTo(box[0],box[1])
-                pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), button='left')
+                if not self.test: pyautogui.moveTo(box[0],box[1])
+                if not self.test: pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), button='left')
+                return ("dragSuccess")
         else:
             if self.logging: print(" -> nothing to drag!", end="")
             self.error = "Nothing to drag!"
             self.breakout = True
+            return ("nothingToDrag")
     # endregion
     # region _await(line)
     def _await(self,line):
         found = False
         timeout = self._getTimeout(line)
+        if self.test and timeout > 3: timeout = 2 
         if self.logging: print(" -> timeout: " + str(timeout) + "s", end = "")
         start_time = datetime.now()
 
         image = self._getImage(line)
-
         if not image:
             self._imageNotFound()
-        else:
-            if self.logging: print(f" on {str(image)}", end = "")
+            return("imageNotFound")
 
-            while 1:
-                self._stopLoop()
-                time_delta = datetime.now() - start_time
-                if time_delta.total_seconds() >= timeout:
-                    break
+        if self.logging: print(f" on {str(image)}", end = "")
 
-                if self._findImage(image):
-                    t=round(time_delta.total_seconds())
-                    if self.logging: print(" -> found after " + str(t) + "s.",end = "")
-                    found = True
-                    break
+        while 1:
+            self._stopLoop()
+            time_delta = datetime.now() - start_time
+            if time_delta.total_seconds() >= timeout:
+                break
 
-            if not found:
-                if self.logging: print(" -> Not found.", end = "")
-                self.error = "Image to wait for was not found."
-                self.breakout = True
+            if self._findImage(image):
+                t=round(time_delta.total_seconds())
+                if self.logging: print(" -> found after " + str(t) + "s.",end = "")
+                found = True
+                break
+
+        if not found:
+            if self.logging: print(" -> Not found.", end = "")
+            self.error = "Image to wait for was not found."
+            self.breakout = True
+            return ("imageNotFound")
+        
+        return ("imageFound")
     # endregion
     # region _del(line)
     def _del(self,line,mode="file"):
 
         order = line.split(" ")
-
-        if "dir" in order:
-            mode = "dir"
-
-        path = self._getPath(line)
-
+        path  = self._getPath(line)
         if not path: return
+
+        if "dir" in order: mode = "dir"
 
         if mode == "file":
             try:
@@ -462,12 +468,11 @@ class Clickomat:
                 print(e)
             else:
                 print("The directory is deleted successfully", end = "")
-
     # endregion
     # region _stopLoop()
     def _stopLoop(self):
         self._abort()
-        if self.breakout:
+        if self.breakout and not self.test:
             if self.logging: print ("Loop broken!\n\n")
             message = "An error has occured: " + self.error
             self._popupMessage(message,'error')
@@ -543,16 +548,16 @@ class Clickomat:
         now = datetime.now()
         timestamp = str(now.strftime("%Y%m%d_%H-%M-%S"))
         filename = f"{dest}/screenshot_{timestamp}.png"
-        pyautogui.screenshot(filename)
+        if not self.test: pyautogui.screenshot(filename)
     # endregion
     # region _shiftclick(x,y)
     def _shiftclick(self,x=None,y=None):
-        pyautogui.keyDown('shift')
+        if not self.test: pyautogui.keyDown('shift')
         if not x and not y:
-            pyautogui.click()
+            if not self.test: pyautogui.click()
         else:
-            pyautogui.click(x,y)
-        pyautogui.keyUp('shift')
+            if not self.test: pyautogui.click(x,y)
+        if not self.test: pyautogui.keyUp('shift')
     #endregion
     
     def _getClicklist(self):
@@ -591,7 +596,7 @@ class Clickomat:
 
         self._getClicklist()
 
-        pyautogui.PAUSE = 0
+        if not self.test: pyautogui.PAUSE = 0
         if self.logging: print("\n\n\n\n\n---------------------------------------------------")
 
         self.ClickLoop(self.section)
