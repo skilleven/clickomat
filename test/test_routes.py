@@ -4,7 +4,27 @@ import src as c
 c = c.Clickomat('./testcases/checkboxolympics','t1.txt','images')
 c.test = True
 c.logging = False
-c._getClicklist()
+
+def test_clickRoute():
+    command = "click"
+    line    = "click -pytest"
+    expected = f"self._click('{line}',1)"
+    result = c._clickRoute(command,line)
+    assert result == expected
+
+def test_clickRoute2():
+    command = "doubleclick"
+    line    = "dc -pytest"
+    expected = f"self._click('{line}',2)"
+    result = c._clickRoute(command,line)
+    assert result == expected
+
+def test_pushRoute():
+    command = "right"
+    order = "order"
+    expected = f"self._push({order})"
+    result = c._pushRoute(command,order)
+    assert result == expected
 
 def test_screenshot():
     command = "screenshot"
@@ -95,8 +115,6 @@ def test_go():
     expected = "self._go(line)"
     result = c._routes(command)
     assert result == expected
-
-
 
 def test_await():
     command = "await"

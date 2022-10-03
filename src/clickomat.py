@@ -570,7 +570,7 @@ class Clickomat:
             if not self.test: pyautogui.click(x,y)
         if not self.test: pyautogui.keyUp('shift')
     #endregion
-
+    # region _routes(command)
     def _routes(self,command):
         if command == "screenshot": return("self._screenshot()")
         if command == "shot"      : return("self._screenshot()")
@@ -600,7 +600,25 @@ class Clickomat:
         if command == "d"         : return("self._del(line)")
         if command == "dd"        : return("self._del(line,'dir')")
         return False
-
+    #endregion
+    # region _clickRoute(command,line)
+    def _clickRoute(self,command,line):
+        if command=="click" \
+        or command=="doubleclick" \
+        or command=="shiftclick" \
+        or command=="c" or command=="dc" or command=="sc":
+            if command=="click" or command=="c"        : mode = 1
+            if command=="doubleclick" or command=="dc" : mode = 2
+            if command=="shiftclick" or command=="sc"  : mode = 3
+            return(f"self._click('{line}',{mode})")
+    #endregion
+    # region _pushRoute(command,order)
+    def _pushRoute(self,command,order):
+        if (command=="right" or command=="left" or command=="up" or command=="down") \
+        or (command=="r"     or command=="l"    or command=="u"  or command=="d")    :
+            return(f"self._push({order})")
+    #endregion
+    # region _getClicklist()
     def _getClicklist(self):
 
         if self.commands is not None:
@@ -625,8 +643,7 @@ class Clickomat:
                 self.sections[self.section].append(line)
 
         self.section = list(self.sections.keys())[0]
-
-
+    #endregion
     # region main()
     def main(self):
 
@@ -646,8 +663,8 @@ class Clickomat:
             if self.logging: print()
             if self.logging: print ("Loop finished.\n\n")
     # endregion
-
     # region clickloop
+
     def ClickLoop(self,sec):
 
         self.lookupTarget = []
@@ -664,6 +681,7 @@ class Clickomat:
             p = self._pause(line)
             if p: time.sleep(p)
 
+            # TODO: stoploop as thread?
             self._stopLoop()
 
             if self.logging: print(lnr, end = " " )
@@ -676,10 +694,12 @@ class Clickomat:
 
             if command == "#": continue
 
+            # TODO: lookup as thread?
             if command == "lookup" or command == "lu": self._setLookup(line)
 
             self._checkLookup()
 
+            # TODO: section control as thread?
             if sec != self.section: break
 
             if command == "stop":
@@ -692,37 +712,36 @@ class Clickomat:
                     self.switched += 1
                 continue
 
+            # Threat...
             if sec != self.section: break
+
+            # Threat...
             self._stopLoop()
 
-            if (command=="right" or command=="left" or command=="up" or command=="down") \
-            or (command=="r"     or command=="l"    or command=="u"  or command=="d")    :
-                self._push(order)
-                continue
+            pushroute = self._pushRoute(command,order)
+            if pushroute: eval(pushroute); continue
 
-            if command=="click" \
-            or command=="doubleclick" \
-            or command=="shiftclick" \
-            or command=="c" or command=="dc" or command=="sc":
-                if command=="click" or command=="c"        : mode = 1
-                if command=="doubleclick" or command=="dc" : mode = 2
-                if command=="shiftclick" or command=="sc"  : mode = 3
-                self._click(line,mode)
-                continue
+            # Threat...
+            self._stopLoop()
 
+            clickroute = self._clickRoute(command,line)
+            if clickroute: eval(clickroute); continue
+
+            # Threat...
             self._stopLoop()
 
             route = self._routes(command)
-            if route:
-                eval(route)
-                continue
+            if route: eval(route); continue
 
-            if command == "end"       : self._end()
+            if command == "end": self._end()
+
+            # Threat...
             self._stopLoop()
 
         if self.autoswitch and self.switched == 1:
             time.sleep(self.autoswitch_pause)
             self._switch()
+
     # endregion
 
 # region click arguments
