@@ -513,10 +513,12 @@ class Clickomat:
     def _if(self,line):
         image = self._getImage(line)
         sec = self._getSection(line)
-        if self._findImage(image):
+        if self._findImage(image) and sec:
             if self.logging: print(f"\nImage (if) found -> Go Section {sec}!\n")
             self.section = sec
-            self.ClickLoop(self.section)
+            if not self.test: self.ClickLoop(self.section)
+            return ("success")
+        return ("fail")
     # endregion
     # region _go(line)
     def _go(self,line):
@@ -524,7 +526,9 @@ class Clickomat:
         if sec:
             if self.logging: print(f"\nGo Section {sec}!\n")
             self.section = sec
-            self.ClickLoop(self.section)
+            if not self.test: self.ClickLoop(self.section)
+            return ("success")
+        return ("fail")
     # endregion
     # region _abort()
     def _abort(self):
