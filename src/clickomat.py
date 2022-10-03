@@ -672,7 +672,9 @@ class Clickomat:
 
         for line in self.sections[sec]:
 
+            # TODO: section control as thread?
             if sec != self.section: break
+
             lnr  = line[0]
             line = line[1]
 
@@ -687,6 +689,7 @@ class Clickomat:
             if self.logging: print(lnr, end = " " )
             if self.logging: print(line, end = "" )
 
+            # Thre at...
             if sec != self.section: break
 
             order   = line.split(" ")
@@ -699,7 +702,7 @@ class Clickomat:
 
             self._checkLookup()
 
-            # TODO: section control as thread?
+            # Threat...
             if sec != self.section: break
 
             if command == "stop":
