@@ -88,14 +88,14 @@ class Clickomat:
         # this method is only checking if the current command line contains a pause command
         # if yes the amount of that pause is returned
         # if not the default step pause is returned IF it is >0
-        # when False is returned the actual pause in the clickloop is skipped 
+        # when False is returned the actual pause in the clickloop is skipped
         def sp():
             if self.step_pause > 0:
                 return float(self.step_pause)
             else:
                 return False
         if line == ".": sp()
-        pause = re.search(r"^[0-9\.]+$", line)
+        pause = re.search(r"^[0-9]+(\.?[0-9]+)?$", line)
         if pause:
             pause = pause.group(0)
             return float(pause)
@@ -106,7 +106,7 @@ class Clickomat:
     # region _getImage(line)
     def _getImage(self,line):
         # looks if 1 or more images can be found in the command line
-        # and returns a list with png images 
+        # and returns a list with png images
         # if no image(s) found 'Click' is returned and that causes the
         # click method to just click whereever the mause is located
 
@@ -124,7 +124,7 @@ class Clickomat:
         try:
             # if images pass the grep above
             # they are checked for existence here
-            # if they can't be found False is returned 
+            # if they can't be found False is returned
             img = re.search(needle, line).group(0)
             img = img[2:len(img)]
             img = img.split("/")
@@ -186,12 +186,12 @@ class Clickomat:
             return False
     # endregion
     # region _getTimeout(line)
-    def _getTimeout(self,line):
+    def _getTimeout(self,line,default=10):
         try:
             timeout = re.search(r" [0-9]+ ", line).group(0)
             return int(timeout)
         except:
-            return 10
+            return default
     # endregion
     # region _findImage(image)
     def _findImage(self,image):
@@ -272,16 +272,16 @@ class Clickomat:
     # region _push(order)
     def _push(self,order):
         amount = int(order[1])
-        if order[0] == "up":    
+        if order[0] == "up":
             if not self.test: pyautogui.moveRel(0,amount*-1)
             return 'up'
-        if order[0] == "down":  
+        if order[0] == "down":
             if not self.test: pyautogui.moveRel(0,amount)
             return 'down'
-        if order[0] == "right": 
+        if order[0] == "right":
             if not self.test: pyautogui.moveRel(amount,0)
             return 'right'
-        if order[0] == "left":  
+        if order[0] == "left":
             if not self.test: pyautogui.moveRel(amount*-1,0)
             return 'left'
         return False
@@ -290,7 +290,7 @@ class Clickomat:
     def _click(self,line,mode):
             image = self._getImage(line)
 
-            if not image: 
+            if not image:
                 self._imageNotFound()
                 return("imageNotFound")
 
@@ -298,17 +298,17 @@ class Clickomat:
                 image = self._findImage(image)
 
             if image == "Click":
-                if mode==1: 
+                if mode==1:
                     if not self.test: pyautogui.click()
                     if self.logging: print(" -> clicked!", end="")
                     return("normalClickExecuted")
 
-                if mode==2: 
+                if mode==2:
                     if not self.test: pyautogui.doubleclick()
                     if self.logging: print(" -> doubleclicked!", end="")
                     return("normalDoubleClickExecuted")
 
-                if mode==3: 
+                if mode==3:
                     if not self.test: self._shiftclick()
                     if self.logging: print(" -> shift-clicked!", end="")
                     return("normalShiftClickExecuted")
@@ -325,13 +325,13 @@ class Clickomat:
                 else:
                     return ("ImgClick_could_not_be_executed")
 
-            if mode==1: 
-                if self.logging: print(" -> clicked!", end="") 
+            if mode==1:
+                if self.logging: print(" -> clicked!", end="")
                 return ("ImgClick_ClickExecuted")
-            if mode==2: 
+            if mode==2:
                 if self.logging: print(" -> doubleclicked!", end="")
                 return ("ImgClick_DoubleClickExecuted")
-            if mode==3: 
+            if mode==3:
                 if self.logging: print(" -> shift-clicked!", end="")
                 return ("ImgClick_ShiftClickExecuted")
     # endregion
@@ -375,17 +375,19 @@ class Clickomat:
     # endregion
     # region _mDownUp(line)
     def _mDownUp(self,line):
-        if line == "mdown" or line == "md": 
+        if line == "mdown" or line == "md":
             if not self.test: pyautogui.mouseDown()
             return "mdown"
-        if line == "mup" or line == "mu": 
+        if line == "mup" or line == "mu":
             if not self.test: pyautogui.mouseUp()
             return "mup"
     # endregion
     # region _drag(line)
     def _drag(self,line):
+        # TODO: strange behavior with set duration
         order = line.split(" ")
         image = self._getImage(line)
+        dur   = self._getTimeout(line,1)
         try: image = image[0]
         except: pass
         if not image:
@@ -398,10 +400,12 @@ class Clickomat:
             if "up" in order:
                 if not self.test: pyautogui.moveTo((box[0]),(box[1]+box[3]))
                 if not self.test: pyautogui.dragTo((box[0]+box[2]),(box[1]), button='left')
+                if not self.test and dur: pyautogui.dragTo((box[0]+box[2]),(box[1]), dur , button='left')
                 return ("dragUpSuccess")
             else:
                 if not self.test: pyautogui.moveTo(box[0],box[1])
                 if not self.test: pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), button='left')
+                if not self.test and dur: pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), dur , button='left')
                 return ("dragSuccess")
         else:
             if self.logging: print(" -> nothing to drag!", end="")
@@ -413,7 +417,7 @@ class Clickomat:
     def _await(self,line):
         found = False
         timeout = self._getTimeout(line)
-        if self.test and timeout > 3: timeout = 2 
+        if self.test and timeout > 3: timeout = 2
         if self.logging: print(" -> timeout: " + str(timeout) + "s", end = "")
         start_time = datetime.now()
 
@@ -441,7 +445,7 @@ class Clickomat:
             self.error = "Image to wait for was not found."
             self.breakout = True
             return ("imageNotFound")
-        
+
         return ("imageFound")
     # endregion
     # region _del(line)
@@ -566,7 +570,37 @@ class Clickomat:
             if not self.test: pyautogui.click(x,y)
         if not self.test: pyautogui.keyUp('shift')
     #endregion
-    
+
+    def _routes(self,command):
+        if command == "screenshot": return("self._screenshot()")
+        if command == "shot"      : return("self._screenshot()")
+        if command == "drag"      : return("self._drag(line)")
+        if command == "mdown"     : return("self._mDownUp(line)")
+        if command == "md"        : return("self._mDownUp(line)")
+        if command == "mup"       : return("self._mDownUp(line)")
+        if command == "mu"        : return("self._mDownUp(line)")
+        if command == "pos"       : return("self._pos(line)")
+        if command == "posX"      : return("self._posxy(line,'x')")
+        if command == "X"         : return("self._posxy(line,'x')")
+        if command == "x"         : return("self._posxy(line,'x')")
+        if command == "posY"      : return("self._posxy(line,'y')")
+        if command == "Y"         : return("self._posxy(line,'y')")
+        if command == "y"         : return("self._posxy(line,'y')")
+        if command == "if"        : return("self._if(line)")
+        if command == "go"        : return("self._go(line)")
+        if command == "await"     : return("self._await(line)")
+        if command == "a"         : return("self._await(line)")
+        if command == "write"     : return("self._write(line)")
+        if command == "w"         : return("self._write(line)")
+        if command == "enter"     : return("keyboard.press('enter')")
+        if command == "."         : return("keyboard.press('enter')")
+        if command == "scroll"    : return("self._scroll(line)")
+        if command == "sl"        : return("self._scroll(line)")
+        if command == "del"       : return("self._del(line)")
+        if command == "d"         : return("self._del(line)")
+        if command == "dd"        : return("self._del(line,'dir')")
+        return False
+
     def _getClicklist(self):
 
         if self.commands is not None:
@@ -612,7 +646,7 @@ class Clickomat:
             if self.logging: print()
             if self.logging: print ("Loop finished.\n\n")
     # endregion
-    
+
     # region clickloop
     def ClickLoop(self,sec):
 
@@ -648,7 +682,7 @@ class Clickomat:
 
             if sec != self.section: break
 
-            if command == "stop": 
+            if command == "stop":
                 self._stop()
                 break
 
@@ -662,7 +696,7 @@ class Clickomat:
             self._stopLoop()
 
             if (command=="right" or command=="left" or command=="up" or command=="down") \
-            or (command=="r"     or command=="l"    or command=="u"  or command=="d")    : 
+            or (command=="r"     or command=="l"    or command=="u"  or command=="d")    :
                 self._push(order)
                 continue
 
@@ -677,33 +711,12 @@ class Clickomat:
                 continue
 
             self._stopLoop()
-            if command == "screenshot": self._screenshot()       ;continue
-            if command == "shot"      : self._screenshot()       ;continue
-            if command == "drag"      : self._drag(line)         ;continue
-            if command == "mdown"     : self._mDownUp(line)      ;continue
-            if command == "md"        : self._mDownUp(line)      ;continue
-            if command == "mup"       : self._mDownUp(line)      ;continue
-            if command == "mu"        : self._mDownUp(line)      ;continue
-            if command == "pos"       : self._pos(line)          ;continue
-            if command == "posX"      : self._posxy(line,'x')    ;continue
-            if command == "X"         : self._posxy(line,'x')    ;continue
-            if command == "x"         : self._posxy(line,'x')    ;continue
-            if command == "posY"      : self._posxy(line,'y')    ;continue
-            if command == "Y"         : self._posxy(line,'y')    ;continue
-            if command == "y"         : self._posxy(line,'y')    ;continue
-            if command == "if"        : self._if(line)           ;continue
-            if command == "go"        : self._go(line)           ;continue
-            if command == "await"     : self._await(line)        ;continue
-            if command == "a"         : self._await(line)        ;continue
-            if command == "write"     : self._write(line)        ;continue
-            if command == "w"         : self._write(line)        ;continue
-            if command == "enter"     : keyboard.press('enter')  ;continue
-            if command == "."         : keyboard.press('enter')  ;continue
-            if command == "scroll"    : self._scroll(line)       ;continue
-            if command == "sl"        : self._scroll(line)       ;continue
-            if command == "del"       : self._del(line)          ;continue
-            if command == "d"         : self._del(line)          ;continue
-            if command == "dd"        : self._del(line,'dir')    ;continue
+
+            route = self._routes(command)
+            if route:
+                eval(route)
+                continue
+
             if command == "end"       : self._end()
             self._stopLoop()
 
@@ -738,7 +751,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
     if not ".txt" in clicklist:
         input_file = f"{clicklist}.txt"
     input_file = os.path.join(case_path, clicklist)
-    if not os.path.exists(input_file): 
+    if not os.path.exists(input_file):
         print(f"Specified clicklist is not existing: {input_file}")
         exit()
 
@@ -747,11 +760,11 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
         images_checkpath = os.path.join(case_path, images)
     else:
         images_checkpath = case_path
-    if not os.path.exists(images_checkpath): 
+    if not os.path.exists(images_checkpath):
         print(f"Specified image directory is not existing: {images_checkpath}")
         exit()
 
-    if confidence > 1: 
+    if confidence > 1:
         print("Confidence can have a maximum of 1.0!")
         exit()
 
