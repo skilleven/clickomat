@@ -337,41 +337,50 @@ class Clickomat:
     # endregion
     # region _pos(line)
     def _pos(self,line):
-                image = self._getImage(line)[0]
-                if not image:
-                    self._imageNotFound()
-                    return
-                box = self._locateImage(image)
-                if box:
-                    if self.logging: print(" -> ", box, end = "")
-                    pyautogui.moveTo((box[0]+(box[2]/2)),(box[1]+(box[3]/2)))
-                else:
-                    if self.logging: print(" -> Position not found!", end="")
-                    self.error = "Position not found!"
-                    self.breakout = True
+        image = self._getImage(line)
+        try: image = image[0]
+        except: pass
+
+        if not image:
+            self._imageNotFound()
+            return("imageNotFound")
+
+        box = self._locateImage(image)
+        if box:
+            if self.logging: print(" -> ", box, end = "")
+            if not self.test: pyautogui.moveTo((box[0]+(box[2]/2)),(box[1]+(box[3]/2)))
+            return("positionedSuccessful")
+        else:
+            if self.logging: print(" -> Position not found!", end="")
+            self.error = "Position not found!"
+            self.breakout = True
+            return("positionFail")
     # endregion
-    # region _posy(line)
+    # region _posxy(line)
     def _posxy(self,line,mode):
         needle = r" [0-9]+"
-        x, y = pyautogui.position()
+        if not self.test: x, y = pyautogui.position()
         try:
-            if mode == 'y': y = int(re.search(needle, line).group(0)[1:])
-            if mode == 'x': x = int(re.search(needle, line).group(0)[1:])
+            amount = int(re.search(needle, line).group(0)[1:])
+            if mode == 'y': y = amount
+            if mode == 'x': x = amount
         except:
             print("no value assigned!")
             return False
         try:
-            pyautogui.moveTo(x,y)
+            if not self.test: pyautogui.moveTo(x,y)
             return True
         except:
             return False
     # endregion
     # region _mDownUp(line)
     def _mDownUp(self,line):
-        if line == "mdown" : pyautogui.mouseDown()
-        if line == "md"    : pyautogui.mouseDown()
-        if line == "mup"   : pyautogui.mouseUp()
-        if line == "mu"    : pyautogui.mouseUp()
+        if line == "mdown" or line == "md": 
+            if not self.test: pyautogui.mouseDown()
+            return "mdown"
+        if line == "mup" or line == "mu": 
+            if not self.test: pyautogui.mouseUp()
+            return "mup"
     # endregion
     # region _drag(line)
     def _drag(self,line):
