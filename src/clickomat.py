@@ -77,6 +77,7 @@ class Clickomat:
         self.breakout             = False
         self.stopped              = False
         self.error                = ""
+        self.test                 = False # needed for pytest
 
         # List of image targets for the lookup command
         self.lookupTarget         = []
@@ -197,7 +198,7 @@ class Clickomat:
         x = False
         for i in image:
             try:
-                x, y = pyautogui.locateCenterOnScreen(i, confidence=self.confidence)
+                x,_ = pyautogui.locateCenterOnScreen(i, confidence=self.confidence)
             except: pass
             if x: return i
         return False
@@ -213,18 +214,17 @@ class Clickomat:
     # region _clickImage(image,mode)
     def _clickImage(self,image,mode):
         try:
-            x, y = pyautogui.locateCenterOnScreen(image, confidence=self.confidence)
-            if mode == 1: pyautogui.click(x, y)
-            if mode == 2: pyautogui.doubleClick(x, y)
-            if mode == 3: self._shiftclick(x, y)
-
-            
+            x,y = pyautogui.locateCenterOnScreen(image, confidence=self.confidence)
+            if mode == 1 and not self.test: pyautogui.click(x, y)
+            if mode == 2 and not self.test: pyautogui.doubleClick(x, y)
+            if mode == 3 and not self.test: self._shiftclick(x, y)
             return True
         except:
             return False
     # endregion
     # region _switch()
     def _switch(self):
+    # no unittest for this
         if os.name == 'nt':
             pyautogui.keyDown('alt')
             pyautogui.press('tab')
@@ -239,10 +239,11 @@ class Clickomat:
     # region _write(line)
     def _write(self,line):
         try:
-            text = re.search(r" \"[a-zA-Z0-9_:\-\.\/\\]+\"", line).group(0)
+            # text = re.search(r" \"[a-zA-Z0-9_:@\-\.\/\\ ]+\"", line).group(0)
+            text = re.search(r" \".+\"", line).group(0)
             text = text[2:len(text)-1]
             if self.logging: print(" -> ", text, end = "")
-            keyboard.write(text)
+            if not self.test: keyboard.write(text)
             return True
         except:
             if self.logging: print(" -> not written.", end = "")
