@@ -4,7 +4,6 @@ import src as c
 c = c.Clickomat('./testcases/checkboxolympics','t1.txt','images')
 c.test = True
 c.logging = False
-c._getClicklist()
 
 def test_push_right():
     order = ["right",20]

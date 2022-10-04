@@ -543,11 +543,10 @@ class Clickomat:
             pass
     # endregion
     # region _popupMessage(message,t='info') t -> type
-    def _popupMessage(self,message,t='info'):
-        title = "Clickomat"
-        if t == "info":    tkmb.showinfo(title=title, message=message)
-        if t == "error":   tkmb.showerror(title=title, message=message)
-        if t == "warning": tkmb.showwarning(title=title, message=message)
+    def _popupMessage(self,message,typ='info',title='Clickomat'):
+        if typ == "info":    tkmb.showinfo(title=title, message=message)
+        if typ == "error":   tkmb.showerror(title=title, message=message)
+        if typ == "warning": tkmb.showwarning(title=title, message=message)
     # endregion
     # region _screenshot()
     def _screenshot(self):
@@ -569,6 +568,19 @@ class Clickomat:
         else:
             if not self.test: pyautogui.click(x,y)
         if not self.test: pyautogui.keyUp('shift')
+    #endregion
+    # region _pop(line)
+    def _pop(self,line):
+        try:
+            text = re.search(r" \".+\"", line).group(0)
+            text = text[2:len(text)-1]
+            if self.logging: print(" -> ", text, end = "")
+            if not self.test: self._popupMessage(text,typ='info',title='User Message')
+            return True
+        except:
+            self.error = "No text for popup found"
+            self.breakout = True
+            return False
     #endregion
     # region _routes(command)
     def _routes(self,command):
@@ -599,6 +611,7 @@ class Clickomat:
         if command == "del"       : return("self._del(line)")
         if command == "d"         : return("self._del(line)")
         if command == "dd"        : return("self._del(line,'dir')")
+        if command == "pop"       : return("self._pop(line)")
         return False
     #endregion
     # region _clickRoute(command,line)

@@ -182,6 +182,12 @@ def test_deldir():
     result = c._routes(command)
     assert result == expected
 
+def test_pop():
+    command = "pop"
+    expected = "self._pop(line)"
+    result = c._routes(command)
+    assert result == expected
+
 
 
 

@@ -10,7 +10,6 @@ if not os.path.exists('test7644'):
 c = c.Clickomat('./testcases/checkboxolympics','t1.txt','images')
 c.test = True
 c.logging = False
-c._getClicklist()
 
 def test_del_normal():
     line = 'del "test3344"'

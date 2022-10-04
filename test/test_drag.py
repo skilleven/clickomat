@@ -4,7 +4,6 @@ import src as c
 c = c.Clickomat('./testcases/checkboxolympics','t1.txt','images')
 c.test = True
 c.logging = False
-c._getClicklist()
 
 def test_drag_normal():
     line = "drag -pytest"
@@ -17,7 +16,7 @@ def test_drag_up():
     expected = 'dragUpSuccess'
     result = c._drag(line)
     assert result == expected
-    
+
 def test_drag_image_not_existing():
     line = "drag -turd"
     expected = 'imageNotFound'

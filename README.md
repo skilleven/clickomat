@@ -16,7 +16,7 @@ single-line commands that are processed in a simple text list.
 <br><br>
 
 
-## Installation 
+## Installation
 [![PyPI](https://img.shields.io/badge/PyPI%20package-0.3.2-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
 
 
@@ -30,13 +30,13 @@ $ pip install clickomat
 ### Run Testscript
 
 Open https://checkboxolympics.com/ in Firefox (Chrome should work also). \
-It must now be ensured that ALT-TAB (Win) or CMD-TAB (Mac) can be used to switch directly back and forth between the terminal and the website. 
+It must now be ensured that ALT-TAB (Win) or CMD-TAB (Mac) can be used to switch directly back and forth between the terminal and the website.
 
 1) Install Clickomat package
 ```
 $ pip install clickomat
 ```
-2) Change directory into testcases/checkboxolympics/ 
+2) Change directory into testcases/checkboxolympics/
 ```
 $ cd [path-to-clickomat-folder]/testcases/checkboxolympics
 ```
@@ -111,8 +111,8 @@ More details in the [Docs -> Python](https://github.com/skilleven/clickomat/wiki
 | **shiftclick**                            |  shift-click at current position
 | **shiftclick -_images_**                  |  shift-click on imagename.png if present
 | **shiftclick ! -_images_**                |  forced shift-click on imagename.png
-| **mdown**                                 |  Mouse-Down - Stays down until released by `mup` ! 
-| **mup**                                   |  Mouse-Up 
+| **mdown**                                 |  Mouse-Down - Stays down until released by `mup` !
+| **mup**                                   |  Mouse-Up
 | **pos -image**                            |  place mouse on imagename.png
 | **posX _20_**                             |  move mouses X-coordinate to 20px from left
 | **posY _20_**                             |  move mouses Y-coordinate to 20px from top
@@ -124,6 +124,7 @@ More details in the [Docs -> Python](https://github.com/skilleven/clickomat/wiki
 | **drag up -image**                        |  click-drag across imagename.png (bottom/left to top/right)
 | **await -_images_**                       |  waits for image to appear
 | **write "text"**                          |  types text
+| **pop "text"**                            |  pops up a message, pauses until button is pressed
 | **enter**                                 |  press enter
 | **scroll _20_**                           |  scroll 20 steps up
 | **scroll _-20_**                          |  scroll 20 steps down
