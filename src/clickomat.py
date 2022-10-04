@@ -1,4 +1,4 @@
-import pyautogui, re, time, keyboard, os, shutil, click # type: ignore
+import pyautogui, re, time, keyboard, os, shutil, click, threading # type: ignore
 from tkinter import *
 import tkinter.messagebox as tkmb
 from datetime import datetime
@@ -11,6 +11,41 @@ if os.name == 'nt': import msvcrt
 # Clickomat v0.3.3
 #
 #-----------------------------------------------------
+
+# region LookupThread
+class LookupThread(threading.Thread):
+
+    def __init__(self,parent,lookupTarget):
+        threading.Thread.__init__(self)
+        self.lookupTarget = lookupTarget
+        self._stop_event = threading.Event()
+        self.parent = parent
+
+    def checkLookup(self):
+        if len(self.lookupTarget):
+            if self.parent._findImage([self.lookupTarget[0]]):
+                self.parent.section = self.lookupTarget[1]
+                if self.parent.logging: print(f"\nImage lookup found -> Go Section {self.parent.section}!\n")
+                self.parent.ClickLoop(self.parent.section)
+                self.stop()
+        else:
+            print("LookupThread empty")
+
+    def nullLookupTarget(self):
+        self.lookupTarget = []
+
+    def setLookupTarget(self,lookupTarget):
+        self.lookupTarget = lookupTarget
+
+    def stop(self):
+        self._stop_event.set()
+
+    def run(self):
+        while not self._stop_event.is_set():
+            print("loop: " + str(self.lookupTarget))
+            self.checkLookup()
+        print("\LookupThread stopped!")
+# endregion
 
 class Clickomat:
     # region __init__
@@ -79,8 +114,6 @@ class Clickomat:
         self.error                = ""
         self.test                 = False # needed for pytest
 
-        # List of image targets for the lookup command
-        self.lookupTarget         = []
     # endregion
     # region _pause(line)
     def _pause(self,line):
@@ -110,12 +143,7 @@ class Clickomat:
         # if no image(s) found 'Click' is returned and that causes the
         # click method to just click whereever the mause is located
 
-        # TODO: DeprecationWarning: invalid escape sequence '\-'
-        #       needle = " -[a-zA-Z0-9_\-/]+"
-        #
-        # without hyphen it wont work ... what do do??
-
-        needle = " -[a-zA-Z0-9_\-/]+"
+        needle = " -([a-zA-Z0-9_/]-?)+"
         img = False
         result = []
         try: img = re.search(needle, line).group(0)
@@ -464,7 +492,7 @@ class Clickomat:
                 print(e)
                 return("delFail")
             else:
-                print("The File is deleted successfully", end = "")
+                if self.logging: print("The File is deleted successfully", end = "")
                 return("delSuccess")
 
         if mode == "dir":
@@ -473,7 +501,7 @@ class Clickomat:
             except OSError as e:
                 print(e)
             else:
-                print("The directory is deleted successfully", end = "")
+                if self.logging: print("The directory is deleted successfully", end = "")
                 return("delDirSuccess")
     # endregion
     # region _stopLoop()
@@ -483,9 +511,14 @@ class Clickomat:
             if self.logging: print ("Loop broken!\n\n")
             message = "An error has occured: " + self.error
             self._popupMessage(message,'error')
+            try: self.Lookup.stop()
+            except: pass
             exit()
+
         if self.stopped:
             if self.logging: print ("Loop stopped!\n\n")
+            try: self.Lookup.stop()
+            except: pass
             exit()
     # endregion
     # region _end()
@@ -496,22 +529,24 @@ class Clickomat:
     # region _setLookup()
     def _setLookup(self,line):
         if self.logging: print("Set Lookup!", end=" -> ")
+
         # only one image can be used for lookup so far...
         image   = self._getImage(line)[0]
         sec     = self._getSection(line)
-        if image and sec:
-            self.lookupTarget = [image,sec]
-        if self.logging: print(self.lookupTarget)
-        # print(self.lookupTarget)
+
+        if image and sec: lookupTarget = [image,sec]
+        if self.logging: print(lookupTarget)
+
+        try: self.Lookup = LookupThread.setLookupTarget(lookupTarget)
+        except: self.Lookup = LookupThread(self,lookupTarget)
+
+        self.Lookup.start()
+
+        if self.logging:
+            print("\nThread Started- LookupTarget:")
+            print(lookupTarget)
+            print("\n")
         return
-    # endregion
-    # region _checkLookup()
-    def _checkLookup(self):
-        if len(self.lookupTarget):
-            if self._findImage([self.lookupTarget[0]]):
-                self.section = self.lookupTarget[1]
-                if self.logging: print("\nImage lookup found -> Go Section {self.section}!\n")
-                self.ClickLoop(self.section)
     # endregion
     # region _if(line)
     def _if(self,line):
@@ -538,6 +573,7 @@ class Clickomat:
     def _abort(self):
         try:
             if msvcrt.kbhit() and msvcrt.getch().decode() == chr(27):
+                self.Lookup.stop()
                 exit()
         except:
             pass
@@ -680,7 +716,9 @@ class Clickomat:
 
     def ClickLoop(self,sec):
 
-        self.lookupTarget = []
+        try: self.Lookup = LookupThread.nullLookupTarget()
+        except: pass
+
         if self.logging: print(f"Running section: {sec}")
 
         for line in self.sections[sec]:
@@ -710,10 +748,9 @@ class Clickomat:
 
             if command == "#": continue
 
-            # TODO: lookup as thread?
-            if command == "lookup" or command == "lu": self._setLookup(line)
-
-            self._checkLookup()
+            # lookup is a thread now (>= v0.3.3)
+            if command == "lookup" or command == "lu":
+                self._setLookup(line)
 
             # Threat...
             if sec != self.section: break
@@ -753,6 +790,8 @@ class Clickomat:
 
             # Threat...
             self._stopLoop()
+
+        self.Lookup.stop()
 
         if self.autoswitch and self.switched == 1:
             time.sleep(self.autoswitch_pause)
