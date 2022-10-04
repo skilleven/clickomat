@@ -22,7 +22,7 @@ single-line commands that are processed in a simple text list.
 > **blacklist:** Define target(s) which abort complete script immediately if found. \
 > **whitelist:** Define target(s) which HAVE TO BE visible on screen. If not, script is also aborded immediately.
 >
-> These functions will be executed as separate threads which means they will not slow down the performans of the main running section.
+> These functions will be executed as separate threads which means they will not slow down the performance of the main running section.
 >
 > `blacklist` and `whitelist` can be used to implement panic-switches.
 >
