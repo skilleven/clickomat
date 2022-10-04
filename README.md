@@ -20,7 +20,7 @@ single-line commands that are processed in a simple text list.
 >
 > **lookup**: Multiple targets possible \
 > **blacklist:** Define target(s) which abort complete script immediately if found. \
-> **whitelist:** Define target(s) which HAVE TO BE visible on screen. If not, script is also aborded immediately.
+> **whitelist:** Define target(s) which HAVE TO BE visible on screen. If not, script is also aborted immediately.
 >
 > These functions will be executed as separate threads which means they will not slow down the performance of the main running section.
 >
