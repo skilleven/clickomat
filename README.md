@@ -24,8 +24,11 @@ single-line commands that are processed in a simple text list.
 >
 > These functions will be executed as separate threads which means they will not slow down the performans of the main running section.
 >
+> `blacklist` and `whitelist` can be used to implement panic-switches.
+>
 > **pop:** User defined popup messages.
-
+>
+> Plus: Proper implementation of pyautogui's failsave -> if the mouse is manually positioned in one of the screen corners a panic-switch fires.
 
 
 <br><br>
