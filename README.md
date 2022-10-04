@@ -13,14 +13,17 @@ The purpose of Clickomat is to map the sometimes relatively long python commands
 single-line commands that are processed in a simple text list.
 
 
+<br><br>
+
+
 > ### Coming up in 0.3.3:
-> 
+>
 > **lookup**: Multiple targets possible \
 > **blacklist:** Define target(s) which abort complete script immediately if found. \
 > **whitelist:** Define target(s) which HAVE TO BE visible on screen. If not, script is also aborded immediately.
-> 
+>
 > These functions will be executed as separate threads which means they will not slow down the performans of the main running section.
-> 
+>
 > **pop:** User defined popup messages.
 
 
