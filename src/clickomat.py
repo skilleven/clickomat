@@ -1,4 +1,4 @@
-import pyautogui, re, time, keyboard, os, shutil, click, threading # type: ignore
+import pyautogui, re, time, keyboard, os, shutil, click, threading, pyperclip # type: ignore
 from tkinter import *
 import tkinter.messagebox as tkmb
 from datetime import datetime
@@ -42,16 +42,16 @@ class Watcher(threading.Thread):
         if self.parent.logging: print(f"\nImage lookup found -> Go Section {self.parent.section}!\n")
         self.parent.ClickLoop(self.parent.section)
 
-    def nullTarget(self):
+    def nullTarget(self) -> None:
         self._target = []
 
-    def setTarget(self,target):
+    def setTarget(self,target) -> None:
         self._target = target
 
-    def stop(self):
+    def stop(self) -> None:
         self._stop_event.set()
 
-    def run(self):
+    def run(self) -> None:
         while not self._stop_event.is_set():
             self.check()
 # endregion
@@ -66,7 +66,7 @@ class Failsave(threading.Thread):
         self.height      = size.height
         self.width       = size.width
 
-    def check(self):
+    def check(self) -> None:
         pos = pyautogui.position()
         if (pos.x < 4 and pos.y > self.height-4 ) \
         or (pos.x > self.width-4 and pos.y > self.height-4 ) \
@@ -74,10 +74,10 @@ class Failsave(threading.Thread):
         or (pos.x > self.width-4 and pos.y < 4 ) :
             self.fullPanic()
 
-    def stop(self):
+    def stop(self) -> None:
         self._stop_event.set()
 
-    def fullPanic(self):
+    def fullPanic(self) -> None:
         print("Panic Stopp!!!")
         self.parent.error = "Panic Stopp!!!"
         self.parent.panicked = True
@@ -85,7 +85,7 @@ class Failsave(threading.Thread):
         self.parent.breakout = True
         self.parent._stopAllTreads()
 
-    def run(self):
+    def run(self) -> None:
         while not self._stop_event.is_set():
             self.check()
 # endregion
@@ -324,7 +324,6 @@ class Clickomat:
     # region _write(line)
     def _write(self,line):
         try:
-            # text = re.search(r" \"[a-zA-Z0-9_:@\-\.\/\\ ]+\"", line).group(0)
             text = re.search(r" \".+\"", line).group(0)
             text = text[2:len(text)-1]
             if self.logging: print(" -> ", text, end = "")
@@ -915,9 +914,12 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h','-help','--help'],max_content_wi
 @click.option('--silent', '-silent', '-s', flag_value=True, default=False, help='if set Clickomat gives no terminal feedback, default: False')
 @click.option('--step', '-step', '-st', default=0.06, type=click.FLOAT, help='set the pause length between each command, default: 0.06')
 @click.option('--noswitch','-noswitch', '-n', flag_value=True, default=False, help='if set Clickomat will not execute switch commands unless they are marked with `!`')
-def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch):
+@click.option('--position','-position', '-pos', flag_value=True, default=False, help='lets you copy X/Y coordinates for your clickscript')
+def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch,position):
 
     """Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki"""
+
+    if position: clipPositionLoop()
 
     if version:
         print("Clickomat 0.3.3 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
@@ -946,6 +948,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
         print("Confidence can have a maximum of 1.0!")
         exit()
 
+
     go(case_path,clicklist,images,confidence,autoswitch,silent,step,noswitch)
 # endregion
 
@@ -960,5 +963,24 @@ def go(case_path,input_file,images,confidence,autoswitch,silent,step,noswitch):
     c.main()
 # endregion
 
+def clipPositionLoop():
+    try:
+        oldpos = ''
+        while True:
+            pos = pyautogui.position()
+            printout = f"X:{pos.x}  Y:{pos.y}"
+            clipboard = f"posX {pos.x}\nposY {pos.y}"
+            if pos != oldpos: print(printout)
+            oldpos = pos
+            time.sleep(0.1)
+            if keyboard.is_pressed('c'):
+                pyperclip.copy(clipboard)
+                exit()
+                
+    except KeyboardInterrupt:
+        pyperclip.copy(clipboard)
+        exit()
+
 if __name__ == "__main__":
     run()
+
