@@ -147,7 +147,8 @@ class Clickomat:
 
         self.logging              = True
         self.step_pause           = 0.06
-        self.dflt_drag_duration   = 0.03
+        self.dflt_drag_duration   = 0.3
+        self.dflt_move_duration   = 0.03
         self.switch_pause         = 0
         self.switched             = 0
         self.switch               = True
@@ -155,6 +156,7 @@ class Clickomat:
         # Flags
         self.breakout             = False
         self.stopped              = False
+        self.finished             = False
         self.panicked             = False
         self.error                = ""
         self.test                 = False # needed for pytest
@@ -358,16 +360,16 @@ class Clickomat:
     def _push(self,order):
         amount = int(order[1])
         if order[0] == "up":
-            if not self.test: pyautogui.moveRel(0,amount*-1)
+            if not self.test: pyautogui.moveRel(0,amount*-1,duration=self.dflt_move_duration)
             return 'up'
         if order[0] == "down":
-            if not self.test: pyautogui.moveRel(0,amount)
+            if not self.test: pyautogui.moveRel(0,amount,duration=self.dflt_move_duration)
             return 'down'
         if order[0] == "right":
-            if not self.test: pyautogui.moveRel(amount,0)
+            if not self.test: pyautogui.moveRel(amount,0,duration=self.dflt_move_duration)
             return 'right'
         if order[0] == "left":
-            if not self.test: pyautogui.moveRel(amount*-1,0)
+            if not self.test: pyautogui.moveRel(amount*-1,0,duration=self.dflt_move_duration)
             return 'left'
         return False
     # endregion
@@ -433,7 +435,7 @@ class Clickomat:
         box = self._locateImage(image)
         if box:
             if self.logging: print(" -> ", box, end = "")
-            if not self.test: pyautogui.moveTo((box[0]+(box[2]/2)),(box[1]+(box[3]/2)))
+            if not self.test: pyautogui.moveTo((box[0]+(box[2]/2)),(box[1]+(box[3]/2)),self.dflt_move_duration)
             return("positionedSuccessful")
         else:
             if self.logging: print(" -> Position not found!", end="")
@@ -453,7 +455,7 @@ class Clickomat:
             print("no value assigned!")
             return False
         try:
-            if not self.test: pyautogui.moveTo(x,y)
+            if not self.test: pyautogui.moveTo(x,y,self.dflt_move_duration)
             return True
         except:
             return False
@@ -473,7 +475,6 @@ class Clickomat:
         order = line.split(" ")
         image = self._getImage(line)
         dur   = float(self._getTimeout(line,self.dflt_drag_duration))
-        if dur == float(self.dflt_drag_duration): dur = False
         print()
         print(dur)
         try: image = image[0]
@@ -486,14 +487,12 @@ class Clickomat:
         if box:
             if self.logging: print(" -> ", box, end = "")
             if "up" in order:
-                if not self.test: pyautogui.moveTo((box[0]),(box[1]+box[3]))
-                if not self.test and not dur: pyautogui.dragTo((box[0]+box[2]),(box[1]), self.dflt_drag_duration, button='left')
-                if not self.test and dur: pyautogui.dragTo((box[0]+box[2]),(box[1]), dur , button='left')
+                if not self.test: pyautogui.moveTo((box[0]),(box[1]+box[3]),self.dflt_move_duration)
+                if not self.test: pyautogui.dragTo((box[0]+box[2]),(box[1]),dur,button='left')
                 return ("dragUpSuccess")
             else:
-                if not self.test: pyautogui.moveTo(box[0],box[1])
-                if not self.test and not dur: pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), self.dflt_drag_duration, button='left')
-                if not self.test and dur: pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), dur , button='left')
+                if not self.test: pyautogui.moveTo(box[0],box[1],self.dflt_move_duration)
+                if not self.test: pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]),dur,button='left')
                 return ("dragSuccess")
         else:
             if self.logging: print(" -> nothing to drag!", end="")
@@ -569,7 +568,7 @@ class Clickomat:
         try: self.Lookup.stop()
         except: pass
 
-        if self.breakout or self.stopped:
+        if self.breakout or self.stopped or self.finished:
             try: self.Blacklist.stop()
             except: pass
             try: self.Whitelist.stop()
@@ -898,6 +897,7 @@ class Clickomat:
             # Threat...
             self._stopLoop()
 
+        self.finished = True
         self._stopAllTreads()
 
         if self.autoswitch and self.switched == 1:
