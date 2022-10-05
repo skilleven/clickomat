@@ -5,6 +5,11 @@ from datetime import datetime
 from os.path import exists
 from datetime import datetime
 
+from pynput.keyboard import Key, Controller
+
+kb = Controller()
+
+
 #-----------------------------------------------------
 #
 # Clickomat v1.0.0
@@ -317,9 +322,18 @@ class Clickomat:
             if not self.test: pyautogui.press('tab')
             if not self.test: pyautogui.keyUp('alt')
         else:
-            if not self.test: pyautogui.keyDown('command')
-            if not self.test: pyautogui.press('tab')
-            if not self.test: pyautogui.keyUp('command')
+            # if not self.test: pyautogui.keyDown('command')
+            # if not self.test: pyautogui.press('tab')
+            # if not self.test: pyautogui.keyUp('command')
+
+            # Press and release space
+            kb.press(Key.cmd)
+            kb.press(Key.tab)
+            kb.release(Key.tab)
+            kb.release(Key.cmd)
+
+
+
         if self.switch_pause > 0:
             time.sleep(self.switch_pause)
     # endregion
