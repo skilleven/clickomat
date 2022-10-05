@@ -4,11 +4,10 @@ import tkinter.messagebox as tkmb
 from datetime import datetime
 from os.path import exists
 from datetime import datetime
-if os.name == 'nt': import msvcrt
 
 #-----------------------------------------------------
 #
-# Clickomat v0.3.3
+# Clickomat v1.0.0
 #
 #-----------------------------------------------------
 
@@ -29,7 +28,7 @@ class Watcher(threading.Thread):
                 # _target comes in as list
                 # _target[0]: list of images
                 # _target[1]: target section
-                if self.parent._findImage(self._target[0]):
+                if self.parent._findImages(self._target[0]):
                     return self.jumpSection()
 
         if self.name == "whitelist":
@@ -92,7 +91,7 @@ class Failsave(threading.Thread):
 
 class Clickomat:
     # region __init__
-    def __init__(self, case_path=None, input_file=None, images=None):
+    def __init__(self, case_path=None, input_file=None, targets_folder=None):
         # If ran from Python we grab the params here
         # self.commands is used if a multiline string is given instead a clicklist filename
         self.commands = None
@@ -130,12 +129,12 @@ class Clickomat:
                     exit()
 
         # images contains the name of the folder where the targets (PNGs) are stored
-        if images is None:
-            self.images = "."
+        if targets_folder is None:
+            self.targets_folder = "."
         else:
             # ... and of course we check for existence
-            self.images = f"{self.case_path}/{images}"
-            if not os.path.isdir(self.images):
+            self.targets_folder = f"{self.case_path}/{targets_folder}"
+            if not os.path.isdir(self.targets_folder):
                 print(self.input_file)
                 print("given image location is not existing.")
                 exit()
@@ -183,8 +182,8 @@ class Clickomat:
             return sp()
 
     # endregion
-    # region _getImage(line)
-    def _getImage(self,line):
+    # region _getImages(line)
+    def _getImages(self,line):
         # looks if 1 or more images can be found in the command line
         # and returns a list with png images
         # if no image(s) found 'Click' is returned and that causes the
@@ -205,7 +204,7 @@ class Clickomat:
             img = img.split("/")
 
             for i in img:
-                this = f"{self.images}/{i}.png"
+                this = f"{self.targets_folder}/{i}.png"
                 if exists(this):
                     result.append(this)
 
@@ -268,8 +267,8 @@ class Clickomat:
         except:
             return default
     # endregion
-    # region _findImage(image)
-    def _findImage(self,image):
+    # region _findImages(image)
+    def _findImages(self,image):
         # takes LIST of images!
         x = False
         for i in image:
@@ -375,16 +374,16 @@ class Clickomat:
     # endregion
     # region _click(line,mode)
     def _click(self,line,mode):
-            image = self._getImage(line)
+            images = self._getImages(line)
 
-            if not image:
+            if not images:
                 self._imageNotFound()
                 return("imageNotFound")
 
-            if image != "Click":
-                image = self._findImage(image)
+            if images != "Click":
+                images = self._findImages(images)
 
-            if image == "Click":
+            if images == "Click":
                 if mode==1:
                     if not self.test: pyautogui.click()
                     if self.logging: print(" -> clicked!", end="")
@@ -400,7 +399,7 @@ class Clickomat:
                     if self.logging: print(" -> shift-clicked!", end="")
                     return("normalShiftClickExecuted")
 
-            if not self._clickImage(image,mode):
+            if not self._clickImage(images,mode):
                 if self.logging: print(" -> not clicked!", end="")
                 order = line.split(" ")
                 if " ! " in order:
@@ -424,8 +423,8 @@ class Clickomat:
     # endregion
     # region _pos(line)
     def _pos(self,line):
-        image = self._getImage(line)
-        try: image = image[0]
+        images = self._getImages(line)
+        try: image = images[0]
         except: pass
 
         if not image:
@@ -473,11 +472,11 @@ class Clickomat:
     def _drag(self,line):
         # TODO: strange behavior with set duration
         order = line.split(" ")
-        image = self._getImage(line)
+        images = self._getImages(line)
         dur   = float(self._getTimeout(line,self.dflt_drag_duration))
         print()
         print(dur)
-        try: image = image[0]
+        try: image = images[0]
         except: pass
         if not image:
             self._imageNotFound()
@@ -508,12 +507,12 @@ class Clickomat:
         if self.logging: print(" -> timeout: " + str(timeout) + "s", end = "")
         start_time = datetime.now()
 
-        image = self._getImage(line)
-        if not image:
+        images = self._getImages(line)
+        if not images:
             self._imageNotFound()
             return("imageNotFound")
 
-        if self.logging: print(f" on {str(image)}", end = "")
+        if self.logging: print(f" on {str(images)}", end = "")
 
         while 1:
             self._stopLoop()
@@ -521,7 +520,7 @@ class Clickomat:
             if time_delta.total_seconds() >= timeout:
                 break
 
-            if self._findImage(image):
+            if self._findImages(images):
                 t=round(time_delta.total_seconds())
                 if self.logging: print(" -> found after " + str(t) + "s.",end = "")
                 found = True
@@ -598,9 +597,9 @@ class Clickomat:
     def _setLookup(self,line):
         if self.logging: print("Set Lookup!", end=" -> ")
 
-        image = self._getImage(line)
+        images = self._getImages(line)
         sec   = self._getSection(line)
-        if image and sec: target = [image,sec]
+        if images and sec: target = [images,sec]
         if self.logging: print(target)
 
         try:
@@ -619,9 +618,9 @@ class Clickomat:
     def _setWatcher(self,line,name="lookup"):
         if self.logging: print(f"Set watcher: {name}!", end=" -> ")
 
-        image = self._getImage(line)
+        images = self._getImages(line)
         sec   = self._getSection(line)
-        if image and sec: target = [image,sec]
+        if images and sec: target = [images,sec]
         if self.logging: print(target)
 
         if name == "lookup":
@@ -653,9 +652,9 @@ class Clickomat:
     # endregion
     # region _if(line)
     def _if(self,line):
-        image = self._getImage(line)
+        images = self._getImages(line)
         sec = self._getSection(line)
-        if self._findImage(image) and sec:
+        if self._findImages(images) and sec:
             if self.logging: print(f"\nImage (if) found -> Go Section {sec}!\n")
             self.section = sec
             if not self.test: self.ClickLoop(self.section)
@@ -792,7 +791,7 @@ class Clickomat:
 
         if self.logging: print(f"Case Path: {self.case_path}")
         if self.logging: print(f"Clicklist: {self.input_file}")
-        if self.logging: print(f"Image Directory: {self.images}")
+        if self.logging: print(f"Image Directory: {self.targets_folder}")
         if self.logging: print("---------------------------------------------------")
 
         self._getClicklist()
