@@ -56,6 +56,39 @@ class Watcher(threading.Thread):
             self.check()
 # endregion
 
+# region Panic Thread
+class Failsave(threading.Thread):
+    def __init__(self,parent):
+        threading.Thread.__init__(self)
+        self.parent      = parent
+        self._stop_event = threading.Event()
+        size             = pyautogui.size()
+        self.height      = size.height
+        self.width       = size.width
+
+    def check(self):
+        pos = pyautogui.position()
+        if (pos.x < 4 and pos.y > self.height-4 ) \
+        or (pos.x > self.width-4 and pos.y > self.height-4 ) \
+        or (pos.x < 4 and pos.y < 4 ) \
+        or (pos.x > self.width-4 and pos.y < 4 ) :
+            self.fullPanic()
+
+    def stop(self):
+        self._stop_event.set()
+
+    def fullPanic(self):
+        print("Panic Stopp!!!")
+        self.parent.error = "Panic Stopp!!!"
+        self.parent.panicked = True
+        self.parent.stopped = True
+        self.parent.breakout = True
+        self.parent._stopAllTreads()
+
+    def run(self):
+        while not self._stop_event.is_set():
+            self.check()
+# endregion
 
 class Clickomat:
     # region __init__
@@ -121,6 +154,7 @@ class Clickomat:
         # Flags
         self.breakout             = False
         self.stopped              = False
+        self.panicked             = False
         self.error                = ""
         self.test                 = False # needed for pytest
 
@@ -527,21 +561,28 @@ class Clickomat:
                 if self.logging: print("The directory is deleted successfully", end = "")
                 return("delDirSuccess")
     # endregion
+    # region _stopAllTreads()
+    def _stopAllTreads(self):
+        try: self.Lookup.stop()
+        except: pass
+        try: self.Blacklist.stop()
+        except: pass
+        try: self.Whitelist.stop()
+        except: pass
+        try: self.Panic.stop()
+        except: pass
+    # endregion
     # region _stopLoop()
     def _stopLoop(self):
-        self._abort()
         if self.breakout and not self.test:
-            if self.logging: print ("Loop broken!\n\n")
+            if self.logging and not self.panicked: print ("Loop broken!\n\n")
             message = "An error has occured: " + self.error
             self._popupMessage(message,'error')
-            try: self.Lookup.stop()
-            except: pass
+            self._stopAllTreads()
             exit()
-
         if self.stopped:
             if self.logging: print ("Loop stopped!\n\n")
-            try: self.Lookup.stop()
-            except: pass
+            self._stopAllTreads()
             exit()
     # endregion
     # region _end()
@@ -625,15 +666,6 @@ class Clickomat:
             if not self.test: self.ClickLoop(self.section)
             return ("success")
         return ("fail")
-    # endregion
-    # region _abort()
-    def _abort(self):
-        try:
-            if msvcrt.kbhit() and msvcrt.getch().decode() == chr(27):
-                self.Lookup.stop()
-                exit()
-        except:
-            pass
     # endregion
     # region _popupMessage(message,t='info') t -> type
     def _popupMessage(self,message,typ='info',title='Clickomat'):
@@ -756,12 +788,16 @@ class Clickomat:
         if self.logging: print(f"Case Path: {self.case_path}")
         if self.logging: print(f"Clicklist: {self.input_file}")
         if self.logging: print(f"Image Directory: {self.images}")
-        if self.logging: print("---")
+        if self.logging: print("---------------------------------------------------")
 
         self._getClicklist()
 
         if not self.test: pyautogui.PAUSE = 0
-        if self.logging: print("\n\n\n\n\n---------------------------------------------------")
+        if not self.test: pyautogui.FAILSAFE = False
+
+
+        self.Panic = Failsave(self)
+        self.Panic.start()
 
         self.ClickLoop(self.section)
 
@@ -856,12 +892,7 @@ class Clickomat:
             # Threat...
             self._stopLoop()
 
-        try: self.Lookup.stop()
-        except: pass
-        try: self.Blacklist.stop()
-        except: pass
-        try: self.Whitelist.stop()
-        except: pass
+        self._stopAllTreads()
 
         if self.autoswitch and self.switched == 1:
             time.sleep(self.autoswitch_pause)
@@ -886,7 +917,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
     """Clickomat documentation is available under https://github.com/skilleven/clickomat/wiki"""
 
     if version:
-        print("Clickomat 0.3.2 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+        print("Clickomat 0.3.3 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
         exit()
 
     case_path = path
