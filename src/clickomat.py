@@ -12,40 +12,56 @@ if os.name == 'nt': import msvcrt
 #
 #-----------------------------------------------------
 
-# region LookupThread
-class LookupThread(threading.Thread):
+# region Watcher
+class Watcher(threading.Thread):
 
-    def __init__(self,parent,lookupTarget):
+    def __init__(self,parent,target,name="lookup"):
         threading.Thread.__init__(self)
-        self.lookupTarget = lookupTarget
+
+        self._target      = target
         self._stop_event = threading.Event()
-        self.parent = parent
+        self.parent      = parent
+        self.name        = name
 
-    def checkLookup(self):
-        if len(self.lookupTarget):
-            if self.parent._findImage([self.lookupTarget[0]]):
-                self.parent.section = self.lookupTarget[1]
-                if self.parent.logging: print(f"\nImage lookup found -> Go Section {self.parent.section}!\n")
-                self.parent.ClickLoop(self.parent.section)
-                self.stop()
-        else:
-            print("LookupThread empty")
+    def check(self):
 
-    def nullLookupTarget(self):
-        self.lookupTarget = []
+        if self.name == "lookup" or self.name == "blacklist":
+            if len(self._target):
+                # _target comes in as list
+                # _target[0]: list of images
+                # _target[1]: target section
+                if self.parent._findImage(self._target[0]):
+                    return self.jumpSection()
 
-    def setLookupTarget(self,lookupTarget):
-        self.lookupTarget = lookupTarget
+        if self.name == "whitelist":
+            if len(self._target):
+                if not self.parent._findImage(self._target[0]):
+                    return self.jumpSection()
+
+        # print(f"\nWatcher empty: {self.name}")
+
+    def jumpSection(self) -> None:
+        self.parent.section = self._target[1]
+        if self.parent.logging: print(f"\nImage lookup found -> Go Section {self.parent.section}!\n")
+        self.parent.ClickLoop(self.parent.section)
+        self.stop()
+
+    def nullTarget(self):
+        self._target = []
+
+    def setTarget(self,target):
+        self._target = target
 
     def stop(self):
         self._stop_event.set()
 
     def run(self):
         while not self._stop_event.is_set():
-            print("loop: " + str(self.lookupTarget))
-            self.checkLookup()
-        print("\LookupThread stopped!")
+            # print(f"Watcher-Loop: {self.name} -> {str(self._target[1])}")
+            self.check()
+        # print(f"\nWatcher stopped: {self.name}")
 # endregion
+
 
 class Clickomat:
     # region __init__
@@ -223,12 +239,14 @@ class Clickomat:
     # endregion
     # region _findImage(image)
     def _findImage(self,image):
+        # takes LIST of images!
         x = False
         for i in image:
             try:
                 x,_ = pyautogui.locateCenterOnScreen(i, confidence=self.confidence)
             except: pass
-            if x: return i
+            if x:
+                return i
         return False
     # endregion
     # region _locateImage(image)
@@ -531,21 +549,22 @@ class Clickomat:
         if self.logging: print("Set Lookup!", end=" -> ")
 
         # only one image can be used for lookup so far...
-        image   = self._getImage(line)[0]
-        sec     = self._getSection(line)
+        image = self._getImage(line)
+        sec   = self._getSection(line)
 
-        if image and sec: lookupTarget = [image,sec]
-        if self.logging: print(lookupTarget)
+        if image and sec: target = [image,sec]
+        if self.logging: print(target)
 
-        try: self.Lookup = LookupThread.setLookupTarget(lookupTarget)
-        except: self.Lookup = LookupThread(self,lookupTarget)
+        try:
+            self.Lookup.setTarget(target)
+        except:
+            self.Lookup = Watcher(self,target)
+            self.Lookup.start()
 
-        self.Lookup.start()
-
-        if self.logging:
-            print("\nThread Started- LookupTarget:")
-            print(lookupTarget)
-            print("\n")
+        # if self.logging:
+        #     print("\nWatcher Started- target:")
+        #     print(target)
+        #     print("\n")
         return
     # endregion
     # region _if(line)
@@ -716,14 +735,14 @@ class Clickomat:
 
     def ClickLoop(self,sec):
 
-        try: self.Lookup = LookupThread.nullLookupTarget()
+        try: self.Lookup.nullTarget()
         except: pass
 
         if self.logging: print(f"Running section: {sec}")
 
         for line in self.sections[sec]:
 
-            # TODO: section control as thread?
+            # TODO: section control as Watcher?
             if sec != self.section: break
 
             lnr  = line[0]
@@ -734,7 +753,7 @@ class Clickomat:
             p = self._pause(line)
             if p: time.sleep(p)
 
-            # TODO: stoploop as thread?
+            # TODO: stoploop as Watcher?
             self._stopLoop()
 
             if self.logging: print(lnr, end = " " )
@@ -748,7 +767,7 @@ class Clickomat:
 
             if command == "#": continue
 
-            # lookup is a thread now (>= v0.3.3)
+            # lookup is a Watcher now (>= v0.3.3)
             if command == "lookup" or command == "lu":
                 self._setLookup(line)
 
