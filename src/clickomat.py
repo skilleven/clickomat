@@ -565,12 +565,14 @@ class Clickomat:
     def _stopAllTreads(self):
         try: self.Lookup.stop()
         except: pass
-        try: self.Blacklist.stop()
-        except: pass
-        try: self.Whitelist.stop()
-        except: pass
-        try: self.Panic.stop()
-        except: pass
+
+        if self.breakout or self.stopped:
+            try: self.Blacklist.stop()
+            except: pass
+            try: self.Whitelist.stop()
+            except: pass
+            try: self.Panic.stop()
+            except: pass
     # endregion
     # region _stopLoop()
     def _stopLoop(self):
@@ -623,6 +625,7 @@ class Clickomat:
         if name == "lookup":
             try:
                 self.Lookup.setTarget(target)
+                self.Lookup.start()
             except:
                 self.Lookup = Watcher(self,target,"lookup")
                 self.Lookup.start()
