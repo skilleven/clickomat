@@ -18,15 +18,15 @@ single-line commands that are processed in a simple text list.
 
 > ### Coming up in 0.3.3:
 >
-> **lookup**: Multiple targets possible \
-> **blacklist:** Define target(s) which abort complete script immediately if found. \
-> **whitelist:** Define target(s) which HAVE TO BE visible on screen. If not, script is also aborted immediately.
+> **lookup**: Multiple targets possible \ ✅
+> **blacklist:** Define target(s) which abort complete script immediately if found. \ ✅
+> **whitelist:** Define target(s) which HAVE TO BE visible on screen. If not, script is also aborted immediately. ✅
 >
 > These functions will be executed as separate threads which means they will not slow down the performance of the main running section.
 >
-> `blacklist` and `whitelist` can be used to implement panic-switches.
+> `blacklist` and `whitelist` can be used to implement panic-switches. ✅
 >
-> **pop:** User defined popup messages.
+> **pop:** User defined popup messages. ✅
 >
 > Plus: Proper implementation of pyautogui's failsave -> if the mouse is manually positioned in one of the screen corners a panic-switch fires.
 

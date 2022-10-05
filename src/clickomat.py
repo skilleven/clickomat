@@ -24,7 +24,6 @@ class Watcher(threading.Thread):
         self.name        = name
 
     def check(self):
-
         if self.name == "lookup" or self.name == "blacklist":
             if len(self._target):
                 # _target comes in as list
@@ -35,16 +34,13 @@ class Watcher(threading.Thread):
 
         if self.name == "whitelist":
             if len(self._target):
-                if not self.parent._findImage(self._target[0]):
+                if not self.parent._expectedAllImages(self._target[0]):
                     return self.jumpSection()
-
-        # print(f"\nWatcher empty: {self.name}")
 
     def jumpSection(self) -> None:
         self.parent.section = self._target[1]
         if self.parent.logging: print(f"\nImage lookup found -> Go Section {self.parent.section}!\n")
         self.parent.ClickLoop(self.parent.section)
-        self.stop()
 
     def nullTarget(self):
         self._target = []
@@ -57,9 +53,7 @@ class Watcher(threading.Thread):
 
     def run(self):
         while not self._stop_event.is_set():
-            # print(f"Watcher-Loop: {self.name} -> {str(self._target[1])}")
             self.check()
-        # print(f"\nWatcher stopped: {self.name}")
 # endregion
 
 
@@ -248,6 +242,17 @@ class Clickomat:
             if x:
                 return i
         return False
+    # endregion
+    # region _findAllImages(images)
+    def _expectedAllImages(self,images):
+        err = False
+        for i in images:
+            try:
+                _,_ = pyautogui.locateCenterOnScreen(i, confidence=self.confidence)
+            except:
+                err = True
+        if err: return False
+        return True
     # endregion
     # region _locateImage(image)
     def _locateImage(self,image):
@@ -548,10 +553,8 @@ class Clickomat:
     def _setLookup(self,line):
         if self.logging: print("Set Lookup!", end=" -> ")
 
-        # only one image can be used for lookup so far...
         image = self._getImage(line)
         sec   = self._getSection(line)
-
         if image and sec: target = [image,sec]
         if self.logging: print(target)
 
@@ -566,6 +569,41 @@ class Clickomat:
         #     print(target)
         #     print("\n")
         return
+    # endregion
+    # region _setWatcher()
+    def _setWatcher(self,line,name="lookup"):
+        if self.logging: print(f"Set watcher: {name}!", end=" -> ")
+
+        image = self._getImage(line)
+        sec   = self._getSection(line)
+        if image and sec: target = [image,sec]
+        if self.logging: print(target)
+
+        if name == "lookup":
+            try:
+                self.Lookup.setTarget(target)
+            except:
+                self.Lookup = Watcher(self,target,"lookup")
+                self.Lookup.start()
+            return
+
+        if name == "blacklist":
+            try:
+                self.Blacklist.setTarget(target)
+            except:
+                self.Blacklist = Watcher(self,target,"blacklist")
+                self.Blacklist.start()
+            return
+
+        if name == "whitelist":
+            try:
+                self.Whitelist.setTarget(target)
+            except:
+                self.Whitelist = Watcher(self,target,"whitelist")
+                self.Whitelist.start()
+            return
+
+
     # endregion
     # region _if(line)
     def _if(self,line):
@@ -769,7 +807,15 @@ class Clickomat:
 
             # lookup is a Watcher now (>= v0.3.3)
             if command == "lookup" or command == "lu":
-                self._setLookup(line)
+                self._setWatcher(line,"lookup")
+
+            # blacklist watcher
+            if command == "blacklist" or command == "bl":
+                self._setWatcher(line,"blacklist")
+
+            # whitelist watcher
+            if command == "whitelist" or command == "wl":
+                self._setWatcher(line,"whitelist")
 
             # Threat...
             if sec != self.section: break
@@ -810,7 +856,12 @@ class Clickomat:
             # Threat...
             self._stopLoop()
 
-        self.Lookup.stop()
+        try: self.Lookup.stop()
+        except: pass
+        try: self.Blacklist.stop()
+        except: pass
+        try: self.Whitelist.stop()
+        except: pass
 
         if self.autoswitch and self.switched == 1:
             time.sleep(self.autoswitch_pause)
