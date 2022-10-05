@@ -147,6 +147,7 @@ class Clickomat:
 
         self.logging              = True
         self.step_pause           = 0.06
+        self.dflt_drag_duration   = 0.03
         self.switch_pause         = 0
         self.switched             = 0
         self.switch               = True
@@ -260,8 +261,8 @@ class Clickomat:
     # region _getTimeout(line)
     def _getTimeout(self,line,default=10):
         try:
-            timeout = re.search(r" [0-9]+ ", line).group(0)
-            return int(timeout)
+            timeout = re.search(r" [0-9\.]+ ", line).group(0)
+            return float(timeout)
         except:
             return default
     # endregion
@@ -471,7 +472,10 @@ class Clickomat:
         # TODO: strange behavior with set duration
         order = line.split(" ")
         image = self._getImage(line)
-        dur   = self._getTimeout(line,1)
+        dur   = float(self._getTimeout(line,self.dflt_drag_duration))
+        if dur == float(self.dflt_drag_duration): dur = False
+        print()
+        print(dur)
         try: image = image[0]
         except: pass
         if not image:
@@ -483,12 +487,12 @@ class Clickomat:
             if self.logging: print(" -> ", box, end = "")
             if "up" in order:
                 if not self.test: pyautogui.moveTo((box[0]),(box[1]+box[3]))
-                if not self.test: pyautogui.dragTo((box[0]+box[2]),(box[1]), button='left')
+                if not self.test and not dur: pyautogui.dragTo((box[0]+box[2]),(box[1]), self.dflt_drag_duration, button='left')
                 if not self.test and dur: pyautogui.dragTo((box[0]+box[2]),(box[1]), dur , button='left')
                 return ("dragUpSuccess")
             else:
                 if not self.test: pyautogui.moveTo(box[0],box[1])
-                if not self.test: pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), button='left')
+                if not self.test and not dur: pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), self.dflt_drag_duration, button='left')
                 if not self.test and dur: pyautogui.dragTo((box[0]+box[2]),(box[1]+box[3]), dur , button='left')
                 return ("dragSuccess")
         else:
