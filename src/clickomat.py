@@ -976,7 +976,7 @@ def clipPositionLoop():
             if keyboard.is_pressed('c'):
                 pyperclip.copy(clipboard)
                 exit()
-                
+
     except KeyboardInterrupt:
         pyperclip.copy(clipboard)
         exit()
