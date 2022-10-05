@@ -28,7 +28,7 @@ single-line commands that are processed in a simple text list.
 >
 > **pop:** User defined popup messages. ✅
 >
-> Plus: Proper implementation of pyautogui's failsave -> if the mouse is manually positioned in one of the screen corners a panic-switch fires.
+> Plus: Proper implementation of pyautogui's failsave -> if the mouse is manually positioned in one of the screen corners a panic-switch fires. 🚧
 
 
 <br><br>
