@@ -18,8 +18,8 @@ single-line commands that are processed in a simple text list.
 
 > ### Coming up in 0.3.3:
 >
-> **lookup**: Multiple targets possible \ ✅
-> **blacklist:** Define target(s) which abort complete script immediately if found. \ ✅
+> **lookup**: Multiple targets possible ✅ \
+> **blacklist:** Define target(s) which abort complete script immediately if found. ✅ \
 > **whitelist:** Define target(s) which HAVE TO BE visible on screen. If not, script is also aborted immediately. ✅
 >
 > These functions will be executed as separate threads which means they will not slow down the performance of the main running section.
