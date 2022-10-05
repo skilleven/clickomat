@@ -30,6 +30,8 @@ single-line commands that are processed in a simple text list.
 >
 > Plus: Proper implementation of pyautogui's failsave -> if the mouse is manually positioned in one of the screen corners a panic-switch fires.
 
+<br><br>
+
 > ### Next Milestone: v1.0.0
 > * No new features
 > * Hunt bugs to make a stable 1.0.0
