@@ -13,29 +13,6 @@ The purpose of Clickomat is to map the sometimes relatively long python commands
 single-line commands that are processed in a simple text list.
 
 
-<br><br>
-
-
-> ### New in 1.0.0:
->
-> **lookup**: Multiple targets possible \
-> **blacklist:** Define target(s) which abort complete script immediately if found. \
-> **whitelist:** Define target(s) which HAVE TO BE visible on screen. If not, script is also aborted immediately.
->
-> These functions will be executed as separate threads which means they will not slow down the performance of the main running section.
->
-> `blacklist` and `whitelist` can be used to implement panic-switches.
->
-> **pop:** User defined popup messages.
->
-> Plus: Proper implementation of pyautogui's failsave -> if the mouse is manually positioned in one of the screen corners a panic-switch fires.
-
-<br><br>
-
-> ### Next Milestone: v1.0.0
-> * No new features
-> * Hunt bugs to make a stable 1.0.0
-
 
 <br><br>
 
