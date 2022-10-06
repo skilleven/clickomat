@@ -989,9 +989,11 @@ def clipPositionLoop():
             if pos.x < 10: spx = "   "
 
             printout = f"X {pos.x}{spx}      Y {pos.y}"
+            if (pos.x < 0) or (pos.y < 0): printout = "Only Main Screen is supported by clickomat."
+
             clipboard = f"posX {pos.x}\nposY {pos.y}"
-            if pos != oldpos: print(printout)
-            oldpos = pos
+            if printout != oldpos: print(printout)
+            oldpos = printout
 
             # The event listener will be running in this block
             with kbd.Events() as events:
