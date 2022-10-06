@@ -1,12 +1,10 @@
-import pyautogui, re, time, keyboard, os, shutil, click, threading, pyperclip # type: ignore
+import pyautogui, re, time, os, shutil, keyboard, click, threading, pyperclip # type: ignore
 from tkinter import *
 import tkinter.messagebox as tkmb
 from datetime import datetime
 from os.path import exists
 from datetime import datetime
-
 from pynput.keyboard import Key, Controller
-
 kb = Controller()
 
 
@@ -273,10 +271,10 @@ class Clickomat:
             return default
     # endregion
     # region _findImages(image)
-    def _findImages(self,image):
+    def _findImages(self,images):
         # takes LIST of images!
         x = False
-        for i in image:
+        for i in images:
             try:
                 x,_ = pyautogui.locateCenterOnScreen(i, confidence=self.confidence)
             except: pass
@@ -317,22 +315,17 @@ class Clickomat:
     # region _switch()
     def _switch(self):
     # no unittest for this
-        if os.name == 'nt':
-            if not self.test: pyautogui.keyDown('alt')
-            if not self.test: pyautogui.press('tab')
-            if not self.test: pyautogui.keyUp('alt')
-        else:
-            # if not self.test: pyautogui.keyDown('command')
-            # if not self.test: pyautogui.press('tab')
-            # if not self.test: pyautogui.keyUp('command')
-
-            # Press and release space
-            kb.press(Key.cmd)
-            kb.press(Key.tab)
-            kb.release(Key.tab)
-            kb.release(Key.cmd)
-
-
+        if not self.test:
+            if os.name == 'nt':
+                kb.press(Key.alt)
+                kb.press(Key.tab)
+                kb.release(Key.tab)
+                kb.release(Key.alt)
+            else:
+                kb.press(Key.cmd)
+                kb.press(Key.tab)
+                kb.release(Key.tab)
+                kb.release(Key.cmd)
 
         if self.switch_pause > 0:
             time.sleep(self.switch_pause)
@@ -438,6 +431,7 @@ class Clickomat:
     # region _pos(line)
     def _pos(self,line):
         images = self._getImages(line)
+        image = False
         try: image = images[0]
         except: pass
 
@@ -486,12 +480,14 @@ class Clickomat:
     def _drag(self,line):
         # TODO: strange behavior with set duration
         order = line.split(" ")
+        image = False
         images = self._getImages(line)
         dur   = float(self._getTimeout(line,self.dflt_drag_duration))
         print()
         print(dur)
         try: image = images[0]
         except: pass
+
         if not image:
             self._imageNotFound()
             return("imageNotFound")
@@ -985,14 +981,24 @@ def clipPositionLoop():
         oldpos = ''
         while True:
             pos = pyautogui.position()
-            printout = f"X:{pos.x}  Y:{pos.y}"
+            if pos.x < 1000: spx = " "
+            else: spx = ""
+            if pos.y < 1000: spy = " "
+            else: spy = ""
+
+            printout = f"X {pos.x}{spx}      Y {pos.y}{spy}"
             clipboard = f"posX {pos.x}\nposY {pos.y}"
             if pos != oldpos: print(printout)
             oldpos = pos
-            time.sleep(0.1)
-            if keyboard.is_pressed('c'):
-                pyperclip.copy(clipboard)
-                exit()
+            # time.sleep(0.1)
+
+            # The event listener will be running in this block
+            with kb.Events() as events:
+                # Block at most one second
+                event = events.get(0.1)
+                if event:
+                    pyperclip.copy(clipboard)
+                    exit()
 
     except KeyboardInterrupt:
         pyperclip.copy(clipboard)
@@ -1000,4 +1006,3 @@ def clipPositionLoop():
 
 if __name__ == "__main__":
     run()
-
