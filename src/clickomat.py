@@ -5,6 +5,8 @@ from datetime import datetime
 from os.path import exists
 from datetime import datetime
 from pynput.keyboard import Key, Controller
+from pynput import keyboard as kbd
+
 kb = Controller()
 
 
@@ -981,19 +983,18 @@ def clipPositionLoop():
         oldpos = ''
         while True:
             pos = pyautogui.position()
+            spx = ""
             if pos.x < 1000: spx = " "
-            else: spx = ""
-            if pos.y < 1000: spy = " "
-            else: spy = ""
+            if pos.x < 100: spx = "  "
+            if pos.x < 10: spx = "   "
 
-            printout = f"X {pos.x}{spx}      Y {pos.y}{spy}"
+            printout = f"X {pos.x}{spx}      Y {pos.y}"
             clipboard = f"posX {pos.x}\nposY {pos.y}"
             if pos != oldpos: print(printout)
             oldpos = pos
-            # time.sleep(0.1)
 
             # The event listener will be running in this block
-            with kb.Events() as events:
+            with kbd.Events() as events:
                 # Block at most one second
                 event = events.get(0.1)
                 if event:
