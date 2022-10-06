@@ -1,5 +1,4 @@
 import pyautogui, re, time, os, shutil, keyboard, click, threading, pyperclip # type: ignore
-from tkinter import *
 import tkinter.messagebox as tkmb
 from datetime import datetime
 from os.path import exists
@@ -8,7 +7,6 @@ from pynput.keyboard import Key, Controller
 from pynput import keyboard as kbd
 
 kb = Controller()
-
 
 #-----------------------------------------------------
 #
@@ -76,22 +74,41 @@ class Failsave(threading.Thread):
         or (pos.x > self.width-4 and pos.y > self.height-4 ) \
         or (pos.x < 4 and pos.y < 4 ) \
         or (pos.x > self.width-4 and pos.y < 4 ) :
-            self.fullPanic()
+            self.parent._panic()
 
     def stop(self) -> None:
         self._stop_event.set()
 
-    def fullPanic(self) -> None:
-        print("Panic Stopp!!!")
-        self.parent.error = "Panic Stopp!!!"
-        self.parent.panicked = True
-        self.parent.stopped = True
-        self.parent.breakout = True
-        self.parent._stopAllTreads()
-
     def run(self) -> None:
         while not self._stop_event.is_set():
             self.check()
+# endregion
+# region StopLoop Thread
+class StopLoop(threading.Thread):
+    def __init__(self,parent):
+        threading.Thread.__init__(self)
+        self.parent      = parent
+        self._stop_event = threading.Event()
+
+    def check(self,parent) -> None:
+
+        if self.parent.breakout:
+            if self.parent.logging and not self.parent.panicked: print ("Loop broken!\n\n")
+            message = "An error has occured: " + self.parent.error
+            self.parent._popupMessage(message,'error')
+            self.parent._stopAllTreads()
+            exit()
+        if self.parent.stopped:
+            if self.parent.logging: print ("Loop stopped!\n\n")
+            self.parent._stopAllTreads()
+            exit()
+
+    def stop(self) -> None:
+        self._stop_event.set()
+
+    def run(self,parent) -> None:
+        while not self._stop_event.is_set():
+            self.check(parent)
 # endregion
 
 class Clickomat:
@@ -165,6 +182,15 @@ class Clickomat:
         self.error                = ""
         self.test                 = False # needed for pytest
 
+    # endregion
+    # region panic
+    def _panic(self) -> None:
+        print("Panic Stopp!!!")
+        self.error    = "Panic Stopp!!!"
+        self.panicked = True
+        self.stopped  = True
+        self.breakout = True
+        self._stopAllTreads()
     # endregion
     # region _pause(line)
     def _pause(self,line):
@@ -586,6 +612,8 @@ class Clickomat:
             except: pass
             try: self.Panic.stop()
             except: pass
+            try: self.Stoploop.stop()
+            except: pass
     # endregion
     # region _stopLoop()
     def _stopLoop(self):
@@ -627,39 +655,46 @@ class Clickomat:
         return
     # endregion
     # region _setWatcher()
-    def _setWatcher(self,line,name="lookup"):
+    def _setWatcher(self,line,name="lookup") -> bool:
         if self.logging: print(f"Set watcher: {name}!", end=" -> ")
 
         images = self._getImages(line)
         sec   = self._getSection(line)
-        if images and sec: target = [images,sec]
+
+        if images and sec:
+            target = [images,sec]
+        else:
+            return False
+
         if self.logging: print(target)
 
         if name == "lookup":
             try:
                 self.Lookup.setTarget(target)
                 self.Lookup.start()
+                return True
             except:
                 self.Lookup = Watcher(self,target,"lookup")
                 self.Lookup.start()
-            return
+                return True
 
         if name == "blacklist":
             try:
                 self.Blacklist.setTarget(target)
+                return True
             except:
                 self.Blacklist = Watcher(self,target,"blacklist")
                 self.Blacklist.start()
-            return
+                return True
 
         if name == "whitelist":
             try:
                 self.Whitelist.setTarget(target)
+                return True
             except:
                 self.Whitelist = Watcher(self,target,"whitelist")
                 self.Whitelist.start()
-            return
-
+                return True
 
     # endregion
     # region _if(line)
@@ -811,9 +846,11 @@ class Clickomat:
         if not self.test: pyautogui.PAUSE = 0
         if not self.test: pyautogui.FAILSAFE = False
 
-
         self.Panic = Failsave(self)
         self.Panic.start()
+
+        self.Stoploop = StopLoop(self)
+        self.Stoploop.start()
 
         self.ClickLoop(self.section)
 
@@ -822,7 +859,6 @@ class Clickomat:
             if self.logging: print ("Loop finished.\n\n")
     # endregion
     # region clickloop
-
     def ClickLoop(self,sec):
 
         try: self.Lookup.nullTarget()
@@ -843,9 +879,6 @@ class Clickomat:
             p = self._pause(line)
             if p: time.sleep(p)
 
-            # TODO: stoploop as Watcher?
-            self._stopLoop()
-
             if self.logging: print(lnr, end = " " )
             if self.logging: print(line, end = "" )
 
@@ -863,11 +896,13 @@ class Clickomat:
 
             # blacklist watcher
             if command == "blacklist" or command == "bl":
-                self._setWatcher(line,"blacklist")
+                result = self._setWatcher(line,"blacklist")
+                if not result: self._panic()
 
             # whitelist watcher
             if command == "whitelist" or command == "wl":
-                self._setWatcher(line,"whitelist")
+                result = self._setWatcher(line,"whitelist")
+                if not result: self._panic()
 
             # Threat...
             if sec != self.section: break
@@ -885,28 +920,16 @@ class Clickomat:
             # Threat...
             if sec != self.section: break
 
-            # Threat...
-            self._stopLoop()
-
             pushroute = self._pushRoute(command,order)
             if pushroute: eval(pushroute); continue
 
-            # Threat...
-            self._stopLoop()
-
             clickroute = self._clickRoute(command,line)
             if clickroute: eval(clickroute); continue
-
-            # Threat...
-            self._stopLoop()
 
             route = self._routes(command)
             if route: eval(route); continue
 
             if command == "end": self._end()
-
-            # Threat...
-            self._stopLoop()
 
         self.finished = True
         self._stopAllTreads()
@@ -916,7 +939,6 @@ class Clickomat:
             self._switch()
 
     # endregion
-
 # region click arguments
 CONTEXT_SETTINGS = dict(help_option_names=['-h','-help','--help'],max_content_width=400)
 @click.command(context_settings=CONTEXT_SETTINGS)
@@ -966,8 +988,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
 
     go(case_path,clicklist,images,confidence,autoswitch,silent,step,noswitch)
 # endregion
-
-#region go
+# region go
 def go(case_path,input_file,images,confidence,autoswitch,silent,step,noswitch):
     c = Clickomat(case_path,input_file,images)
     c.confidence = confidence
@@ -977,7 +998,7 @@ def go(case_path,input_file,images,confidence,autoswitch,silent,step,noswitch):
     if noswitch: c.switch = False
     c.main()
 # endregion
-
+# region clipPositionLoop()
 def clipPositionLoop():
     try:
         oldpos = ''
@@ -1006,6 +1027,7 @@ def clipPositionLoop():
     except KeyboardInterrupt:
         pyperclip.copy(clipboard)
         exit()
+# endregion
 
 if __name__ == "__main__":
     run()
