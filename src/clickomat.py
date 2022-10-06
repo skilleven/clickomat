@@ -868,7 +868,6 @@ class Clickomat:
 
         for line in self.sections[sec]:
 
-            # TODO: section control as Watcher?
             if sec != self.section: break
 
             lnr  = line[0]
@@ -882,7 +881,6 @@ class Clickomat:
             if self.logging: print(lnr, end = " " )
             if self.logging: print(line, end = "" )
 
-            # Thre at...
             if sec != self.section: break
 
             order   = line.split(" ")
@@ -904,7 +902,6 @@ class Clickomat:
                 result = self._setWatcher(line,"whitelist")
                 if not result: self._panic()
 
-            # Threat...
             if sec != self.section: break
 
             if command == "stop":
@@ -917,7 +914,6 @@ class Clickomat:
                     self.switched += 1
                 continue
 
-            # Threat...
             if sec != self.section: break
 
             pushroute = self._pushRoute(command,order)
