@@ -942,7 +942,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
 
     # check if clicklist parameter is correct
     if not ".txt" in clicklist:
-        input_file = f"{clicklist}.txt"
+        clicklist = f"{clicklist}.txt"
     input_file = os.path.join(case_path, clicklist)
     if not os.path.exists(input_file):
         print(f"Specified clicklist is not existing: {input_file}")
