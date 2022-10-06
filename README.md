@@ -2,7 +2,7 @@
 
 
 
-# Clickomat 0.3.3
+# Clickomat 1.0.0
 
 Python-Script for automated click-sequences and text entry.
 
@@ -16,7 +16,7 @@ single-line commands that are processed in a simple text list.
 <br><br>
 
 
-> ### New in 0.3.3:
+> ### New in 1.0.0:
 >
 > **lookup**: Multiple targets possible \
 > **blacklist:** Define target(s) which abort complete script immediately if found. \
@@ -41,7 +41,7 @@ single-line commands that are processed in a simple text list.
 
 
 ## Installation
-[![PyPI](https://img.shields.io/badge/PyPI%20package-0.3.3-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
+[![PyPI](https://img.shields.io/badge/PyPI%20package-1.0.0-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
 
 
 ```

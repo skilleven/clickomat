@@ -3,8 +3,8 @@ import tkinter.messagebox as tkmb
 from datetime import datetime
 from os.path import exists
 from datetime import datetime
-from pynput.keyboard import Key, Controller
-from pynput import keyboard as kbd
+from pynput.keyboard import Key, Controller # type: ignore
+from pynput import keyboard as kbd # type: ignore
 
 kb = Controller()
 
@@ -506,7 +506,6 @@ class Clickomat:
     # endregion
     # region _drag(line)
     def _drag(self,line):
-        # TODO: strange behavior with set duration
         order = line.split(" ")
         image = False
         images = self._getImages(line)
