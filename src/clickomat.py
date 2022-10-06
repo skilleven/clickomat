@@ -1014,7 +1014,7 @@ def clipPositionLoop():
 
             # The event listener will be running in this block
             with kbd.Events() as events:
-                # Block at most one second
+                # Block at most 0.1 second
                 event = events.get(0.1)
                 if event:
                     pyperclip.copy(clipboard)
