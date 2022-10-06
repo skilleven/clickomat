@@ -16,7 +16,7 @@ setup(
     license="MIT",
     py_modules=['clickomat'],
     package_dir={'':'src'},
-    install_requires=['pyautogui', 'keyboard', 'opencv-python', 'pillow', 'click', 'paperclip', 'pynput'],
+    install_requires=['pyautogui', 'keyboard', 'opencv-python', 'pillow', 'click', 'pyperclip', 'pynput'],
     keywords=['python', 'mouse-automation', 'gui-testing', 'automation', 'simulation', 'mouse', 'gui', 'testing'],
     classifiers=[
         "Programming Language :: Python :: 3",
