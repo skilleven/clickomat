@@ -10,7 +10,7 @@ kb = Controller()
 
 #-----------------------------------------------------
 #
-# Clickomat v1.0.1
+# Clickomat v1.0.2
 #
 #-----------------------------------------------------
 
@@ -185,7 +185,7 @@ class Clickomat:
     # endregion
     # region panic
     def _panic(self) -> None:
-        print("Panic Stopp!!!")
+        print("\nPanic Stopp!!!")
         self.error    = "Panic Stopp!!!"
         self.panicked = True
         self.stopped  = True
@@ -201,14 +201,16 @@ class Clickomat:
         # when False is returned the actual pause in the clickloop is skipped
         def sp():
             if self.step_pause > 0:
-                return float(self.step_pause)
+                result = [float(self.step_pause),False]  # True means: this command line was NOT a pause!
+                return result
             else:
-                return False
+                return False  # No tuple / only False means: No pause at all. Not even default pause
         if line == ".": sp()
         pause = re.search(r"^[0-9]+(\.?[0-9]+)?$", line)
         if pause:
             pause = pause.group(0)
-            return float(pause)
+            result = [float(pause),True]  # True means: this command line WAS a pause!
+            return result
         else:
             return sp()
 
@@ -873,12 +875,14 @@ class Clickomat:
             line = line[1]
 
             if self.logging: print()
-
-            p = self._pause(line)
-            if p: time.sleep(p)
-
             if self.logging: print(lnr, end = " " )
             if self.logging: print(line, end = "" )
+
+            p = self._pause(line)
+            if p: time.sleep(p[0])
+            if p[1]:
+                if self.logging: print(f" -> Pause: {p[0]} sec.", end = "")
+                continue
 
             if sec != self.section: break
 
@@ -887,7 +891,7 @@ class Clickomat:
 
             if command == "#": continue
 
-            # lookup is a Watcher now (>= v0.3.3)
+            # lookup is a Watcher now (>= v1.0.0)
             if command == "lookup" or command == "lu":
                 self._setWatcher(line,"lookup")
 
@@ -928,8 +932,7 @@ class Clickomat:
                 self._end()
                 continue
 
-            if self.logging: print("-> Command not recognized - check syntax.")
-
+            if self.logging: print(" -> Command not recognized - check syntax.", end = "")
 
         self.finished = True
         self._stopAllTreads()
@@ -959,7 +962,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
     if position: clipPositionLoop()
 
     if version:
-        print("Clickomat 1.0.1 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+        print("Clickomat 1.0.2 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
         exit()
 
     case_path = path

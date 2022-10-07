@@ -17,7 +17,7 @@ await 4 -ready-ff-win/ready-ff-mac/ready-chrome-win
 click ! -ready-ff-win/ready-ff-mac/ready-chrome-win
 
 await 4 -go-ff-win/go-ff-mac/go-chrome-win
-2
+1
 click -first-ff/first-chrome-win
 
 right 20
@@ -79,9 +79,9 @@ end
 
 
 # ---------------------------------------
-# this section is never called ;)
-# but it is still here for unittesting! 
 ##SECTION1MILL
+# this section is never called ;)
+# but it is still here for unittesting!
 
 2
 left 24

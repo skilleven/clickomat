@@ -2,7 +2,7 @@
 
 
 
-# Clickomat 1.0.1
+# Clickomat 1.0.2
 
 Python-Script for automated click-sequences and text entry.
 
@@ -18,7 +18,7 @@ single-line commands that are processed in a simple text list.
 
 
 ## Installation
-[![PyPI](https://img.shields.io/badge/PyPI%20package-1.0.1-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
+[![PyPI](https://img.shields.io/badge/PyPI%20package-1.0.2-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
 
 
 ```
