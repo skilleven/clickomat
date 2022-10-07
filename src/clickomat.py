@@ -924,7 +924,12 @@ class Clickomat:
             route = self._routes(command)
             if route: eval(route); continue
 
-            if command == "end": self._end()
+            if command == "end":
+                self._end()
+                continue
+
+            print("-> Command not recognized - check syntax.")
+
 
         self.finished = True
         self._stopAllTreads()
