@@ -928,7 +928,7 @@ class Clickomat:
                 self._end()
                 continue
 
-            print("-> Command not recognized - check syntax.")
+            if self.logging: print("-> Command not recognized - check syntax.")
 
 
         self.finished = True
