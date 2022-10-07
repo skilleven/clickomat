@@ -90,7 +90,7 @@ class StopLoop(threading.Thread):
         self.parent      = parent
         self._stop_event = threading.Event()
 
-    def check(self,parent) -> None:
+    def check(self) -> None:
 
         if self.parent.breakout:
             if self.parent.logging and not self.parent.panicked: print ("Loop broken!\n\n")
@@ -106,9 +106,9 @@ class StopLoop(threading.Thread):
     def stop(self) -> None:
         self._stop_event.set()
 
-    def run(self,parent) -> None:
+    def run(self) -> None:
         while not self._stop_event.is_set():
-            self.check(parent)
+            self.check()
 # endregion
 
 class Clickomat:
