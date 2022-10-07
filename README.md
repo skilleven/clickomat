@@ -25,6 +25,10 @@ single-line commands that are processed in a simple text list.
 $ pip install clickomat
 ```
 
+Watch how easy it is to get started:
+https://user-images.githubusercontent.com/11266793/194589489-784effbd-e261-4cf5-beb5-010c3b57e6a3.mp4
+
+
 <br><br>
 
 
