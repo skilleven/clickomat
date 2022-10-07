@@ -11,7 +11,7 @@ go ->MAIN
 1
 
 await 2 -refresh
-click -refresh-ff/refresh-chrome-win
+click -refresh-ff/refresh-ff-bright/refresh-chrome-win
 
 await 4 -ready-ff-win/ready-ff-mac/ready-chrome-win
 click ! -ready-ff-win/ready-ff-mac/ready-chrome-win
