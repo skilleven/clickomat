@@ -168,7 +168,9 @@ More commands coming...
 ```
 * pyautogui
 * keyboard
+* pynput
 * click
+* pyperclip
 * opencv-python (on windows pyautogui works only with opencv)
 * pillow (on windows pyautogui works only with pillow)
 ```
