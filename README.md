@@ -33,7 +33,7 @@ https://user-images.githubusercontent.com/11266793/194589489-784effbd-e261-4cf5-
 **FOR MAC USERS:**
 
 Unfortunately, one of the used modules (tkinter) caused problems in previous versions.
-If you have Monterey installed clickomat chrashed with a long, cryptic exception.
+If you have Monterey installed clickomat crashed with a long, cryptic exception.
 I changend the module and v1.0.3 is now working on mac again!
 
 <br><br>
