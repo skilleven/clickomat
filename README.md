@@ -27,7 +27,8 @@ $ pip install clickomat
 
 Watch how easy it is to get started:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/sIhFbQpy7ts" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+[![Quickstart / Install Guide](https://img.youtube.com/vi/sIhFbQpy7ts/default.jpg)](https://youtu.be/sIhFbQpy7ts)
 
 **FOR MAC USERS:**
 
