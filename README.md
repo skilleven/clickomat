@@ -27,11 +27,8 @@ $ pip install clickomat
 
 Watch how easy it is to get started:
 
-
-[![Quickstart / Install Guide](https://img.youtube.com/vi/sIhFbQpy7ts/default.jpg)](https://youtu.be/sIhFbQpy7ts)
-
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=sIhFbQpy7ts" target="_blank">
- <img src="http://img.youtube.com/vi/sIhFbQpy7ts/mqdefault.jpg" alt="Watch the video" width="100%" border="10" />
+ <img src="https://user-images.githubusercontent.com/11266793/194755823-d9f50c20-c8a7-4d35-9edf-ab7c2bd3c60a.png" alt="Watch the video" width="100%" border="10" />
 </a>
 
 **FOR MAC USERS:**
@@ -42,7 +39,6 @@ I changend the module and v1.0.3 or higher is now working on mac again!
 
 <br><br>
 
-![thumbnail](https://user-images.githubusercontent.com/11266793/194755823-d9f50c20-c8a7-4d35-9edf-ab7c2bd3c60a.png)
 
 
 ### Run Testscript
