@@ -30,6 +30,10 @@ Watch how easy it is to get started:
 
 [![Quickstart / Install Guide](https://img.youtube.com/vi/sIhFbQpy7ts/default.jpg)](https://youtu.be/sIhFbQpy7ts)
 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=sIhFbQpy7ts" target="_blank">
+ <img src="http://img.youtube.com/vi/sIhFbQpy7ts/mqdefault.jpg" alt="Watch the video" width="100%" border="10" />
+</a>
+
 **FOR MAC USERS:**
 
 Unfortunately, one of the used modules (tkinter) caused problems in previous versions.
