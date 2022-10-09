@@ -8,7 +8,7 @@ from pynput import keyboard as kbd # type: ignore
 kb = Controller()
 
 if os.name == 'nt':
-    import tkinter.messagebox as tkmb
+    import Tkinter as tk
 else:
     import easygui
 
@@ -727,9 +727,11 @@ class Clickomat:
     # region _popupMessage(message,t='info') t -> type
     def _popupMessage(self,message,typ='info',title='Clickomat'):
         if os.name == 'nt':
-            if typ == "info":    tkmb.showinfo(title=title, message=message)
-            if typ == "error":   tkmb.showerror(title=title, message=message)
-            if typ == "warning": tkmb.showwarning(title=title, message=message)
+            root = tk.Tk()
+            root.withdraw()
+            if typ == "info":    tk.messagebox.showinfo(title=title, message=message)
+            if typ == "error":   tk.messagebox.showerror(title=title, message=message)
+            if typ == "warning": tk.messagebox.showwarning(title=title, message=message)
         else:
             if typ == "info": easygui.msgbox(message,title)
             if typ == "error": easygui.msgbox(message,title)
