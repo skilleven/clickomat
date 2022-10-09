@@ -720,9 +720,9 @@ class Clickomat:
     # endregion
     # region _popupMessage(message,t='info') t -> type
     def _popupMessage(self,message,typ='info',title='Clickomat'):
-       if typ == "info": easygui.msgbox(title,message)
-       if typ == "error": easygui.msgbox(title,message)
-       if typ == "warning": easygui.msgbox(title,message)
+       if typ == "info": easygui.msgbox(message,title)
+       if typ == "error": easygui.msgbox(message,title)
+       if typ == "warning": easygui.msgbox(message,title)
     # endregion
     # region _screenshot()
     def _screenshot(self):
