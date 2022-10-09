@@ -25,7 +25,8 @@ single-line commands that are processed in a simple text list.
 $ pip install clickomat
 ```
 
-FOR MAC USERS:
+**FOR MAC USERS:**
+
 Unfortunately, python on mac does not come with one of the used modules by default. You have to install tkinter manually by typing in the terminal:
 ```
 brew install python-tk
