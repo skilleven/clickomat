@@ -2,7 +2,7 @@
 
 
 
-# Clickomat 1.0.3
+# Clickomat 1.0.4
 
 Python-Script for automated click-sequences and text entry.
 
@@ -18,7 +18,7 @@ single-line commands that are processed in a simple text list.
 
 
 ## Installation
-[![PyPI](https://img.shields.io/badge/PyPI%20package-1.0.3-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
+[![PyPI](https://img.shields.io/badge/PyPI%20package-1.0.4-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
 
 
 ```
@@ -34,7 +34,7 @@ https://user-images.githubusercontent.com/11266793/194589489-784effbd-e261-4cf5-
 
 Unfortunately, one of the used modules (tkinter) caused problems in previous versions.
 If you have Monterey installed clickomat crashed with a long, cryptic exception.
-I changend the module and v1.0.3 is now working on mac again!
+I changend the module and v1.0.3 or higher is now working on mac again!
 
 <br><br>
 
