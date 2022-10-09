@@ -9,7 +9,7 @@ kb = Controller()
 
 #-----------------------------------------------------
 #
-# Clickomat v1.0.2
+# Clickomat v1.0.3
 #
 #-----------------------------------------------------
 
@@ -961,7 +961,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
     if position: clipPositionLoop()
 
     if version:
-        print("Clickomat 1.0.2 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+        print("Clickomat 1.0.3 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
         exit()
 
     case_path = path
