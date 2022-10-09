@@ -1,5 +1,4 @@
-import pyautogui, re, time, os, shutil, keyboard, click, threading, pyperclip # type: ignore
-import tkinter.messagebox as tkmb
+import pyautogui, re, time, os, shutil, keyboard, click, threading, pyperclip, easygui # type: ignore
 from datetime import datetime
 from os.path import exists
 from datetime import datetime
@@ -721,9 +720,9 @@ class Clickomat:
     # endregion
     # region _popupMessage(message,t='info') t -> type
     def _popupMessage(self,message,typ='info',title='Clickomat'):
-        if typ == "info":    tkmb.showinfo(title=title, message=message)
-        if typ == "error":   tkmb.showerror(title=title, message=message)
-        if typ == "warning": tkmb.showwarning(title=title, message=message)
+       if typ == "info": easygui.msgbox(title,message)
+       if typ == "error": easygui.msgbox(title,message)
+       if typ == "warning": easygui.msgbox(title,message)
     # endregion
     # region _screenshot()
     def _screenshot(self):

@@ -32,15 +32,16 @@ https://user-images.githubusercontent.com/11266793/194589489-784effbd-e261-4cf5-
 
 **FOR MAC USERS:**
 
-Unfortunately, I currently have trouble with changes in thread-handling on mac in the current macOS version. Clickomat will NOT run on mac with Monterey. I'm searching for a solution...
-
+Unfortunately, one of the used modules (tkinter) caused problems in previous versions.
+If you have Monterey installed clickomat chrashed with a long, cryptic exception.
+I changend the module and v1.0.3 is now working on mac again!
 
 <br><br>
 
 
 ### Run Testscript
 
-Open https://checkboxolympics.com/ in Firefox (Chrome should work also). \
+Open https://checkboxolympics.com/ in Firefox (other browsers render differently so targets are not recognized). \
 It must now be ensured that ALT-TAB (Win) or CMD-TAB (Mac) can be used to switch directly back and forth between the terminal and the website.
 
 1) Install Clickomat package

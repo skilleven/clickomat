@@ -1,4 +1,10 @@
 # ---------------------------------------
+#
+#    RUN THIS EXAMPLE WITH FIREFOX ONLY!
+#    OTHER BROWSERS RENDER DIFFERENTLY AND THE TARGETS
+#    WILL NOT BE RECOGNIZED BY CLICKOMAT
+#
+# ---------------------------------------
 ##SECTION1
 
 switch
@@ -11,14 +17,14 @@ go ->MAIN
 1
 
 await 2 -refresh
-click -refresh-ff/refresh-ff-bright/refresh-chrome-win/refresh-chrome-bright
+click -refresh-ff/refresh-ff-bright
 
-await 4 -ready-ff-win/ready-ff-mac/ready-chrome-win
-click ! -ready-ff-win/ready-ff-mac/ready-chrome-win
+await 4 -ready-ff-win/ready-ff-mac
+click ! -ready-ff-win/ready-ff-mac
 
-await 4 -go-ff-win/go-ff-mac/go-chrome-win
+await 4 -go-ff-win/go-ff-mac
 1
-click -first-ff/first-chrome-win
+click ! -first-ff
 
 right 20
 click
