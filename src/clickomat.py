@@ -7,15 +7,12 @@ from pynput import keyboard as kbd # type: ignore
 
 kb = Controller()
 
-if os.name == 'nt':
-    import Tkinter as tk
-else:
-    import easygui
+import easygui # type: ignore
 
 
 #-----------------------------------------------------
 #
-# Clickomat v1.0.4
+# Clickomat v1.0.5
 #
 #-----------------------------------------------------
 
@@ -578,6 +575,14 @@ class Clickomat:
 
         return ("imageFound")
     # endregion
+    # region _enter()
+    def _enter(self):
+        if os.name == 'nt':
+            kb.press(Key.enter)
+            kb.release(Key.enter)
+        else:
+            keyboard.press('enter')
+    # endregion
     # region _del(line)
     def _del(self,line,mode="file"):
 
@@ -726,13 +731,6 @@ class Clickomat:
     # endregion
     # region _popupMessage(message,t='info') t -> type
     def _popupMessage(self,message,typ='info',title='Clickomat'):
-        if os.name == 'nt':
-            root = tk.Tk()
-            root.withdraw()
-            if typ == "info":    tk.messagebox.showinfo(title=title, message=message)
-            if typ == "error":   tk.messagebox.showerror(title=title, message=message)
-            if typ == "warning": tk.messagebox.showwarning(title=title, message=message)
-        else:
             if typ == "info": easygui.msgbox(message,title)
             if typ == "error": easygui.msgbox(message,title)
             if typ == "warning": easygui.msgbox(message,title)
@@ -793,8 +791,8 @@ class Clickomat:
         if command == "a"         : return("self._await(line)")
         if command == "write"     : return("self._write(line)")
         if command == "w"         : return("self._write(line)")
-        if command == "enter"     : return("keyboard.press('enter')")
-        if command == "."         : return("keyboard.press('enter')")
+        if command == "enter"     : return("self._enter()")
+        if command == "."         : return("self._enter()")
         if command == "scroll"    : return("self._scroll(line)")
         if command == "sl"        : return("self._scroll(line)")
         if command == "del"       : return("self._del(line)")
@@ -974,7 +972,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
     if position: clipPositionLoop()
 
     if version:
-        print("Clickomat 1.0.4 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+        print("Clickomat 1.0.5 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
         exit()
 
     case_path = path
