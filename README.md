@@ -37,8 +37,10 @@ Unfortunately, one of the used modules (tkinter) caused problems in previous ver
 If you have Monterey installed clickomat crashed with a long, cryptic exception.
 I changend the module and v1.0.3 or higher is now working on mac again!
 
-<br><br>
 
+<br><br>
+#
+<br>
 
 
 ### Run Testscript
@@ -69,6 +71,8 @@ $ clickomat -p [path-to-clickomat-folder]/testcases/checkboxolympics
 ```
 
 <br><br>
+#
+<br>
 
 ### Run Clickomat
 
@@ -88,6 +92,8 @@ $ clickomat -c clicklist.txt
 ```
 More details in the [Docs -> CLI](https://github.com/skilleven/clickomat/wiki/CLI)
 
+<br><br>
+#
 <br>
 
 #### From python-file
@@ -105,11 +111,10 @@ c.main()
 More details in the [Docs -> Python](https://github.com/skilleven/clickomat/wiki/Python)
 
 
+<br><br>
+#
 <br>
 
----
-
-<br>
 
 ## Commands
 | Command | Result
@@ -172,9 +177,10 @@ More commands coming...
 
 # [Full Documentation](https://github.com/skilleven/clickomat/wiki)
 
----
 
 <br><br>
+#
+<br>
 
 ## Dependencies:
 
@@ -188,7 +194,10 @@ More commands coming...
 * pillow (on windows pyautogui works only with pillow)
 ```
 
----
+<br><br>
+#
+<br>
+
 
 ## Examples:
 - [examplescript.txt](https://github.com/skilleven/clickomat/blob/main/examplescript.txt)
