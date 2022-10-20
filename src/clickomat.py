@@ -1,4 +1,4 @@
-import pyautogui, re, time, os, shutil, keyboard, click, threading, pyperclip # type: ignore
+import pyautogui, re, time, os, shutil, keyboard, click, threading, pyperclip, easygui # type: ignore
 from datetime import datetime
 from os.path import exists
 from datetime import datetime
@@ -6,8 +6,6 @@ from pynput.keyboard import Key, Controller # type: ignore
 from pynput import keyboard as kbd # type: ignore
 
 kb = Controller()
-
-import easygui # type: ignore
 
 
 #-----------------------------------------------------
@@ -164,7 +162,7 @@ class Clickomat:
                 exit()
 
         # Default Parameters
-        self.confidence           = 0.95
+        self.confidence           = 0.90
         self.autoswitch           = False
         self.autoswitch_pause     = 1
 
