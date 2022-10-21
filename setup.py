@@ -1,7 +1,7 @@
 from setuptools import setup
 setup(
     name="clickomat",
-    version='1.0.6',
+    version='1.0.7',
     entry_points={
         'console_scripts': [
             'clickomat=clickomat:run'

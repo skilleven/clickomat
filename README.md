@@ -2,7 +2,7 @@
 
 
 
-# Clickomat 1.0.6
+# Clickomat 1.0.7
 
 Python-Script for automated click-sequences and text entry.
 
@@ -18,7 +18,7 @@ single-line commands that are processed in a simple text list.
 
 
 ## Installation
-[![PyPI](https://img.shields.io/badge/PyPI%20package-1.0.6-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
+[![PyPI](https://img.shields.io/badge/PyPI%20package-1.0.7-brightgreen?style=for-the-badge&logo=Pypi&logoColor=white)](https://pypi.org/project/clickomat/)
 
 
 ```
@@ -130,6 +130,9 @@ More details in the [Docs -> Python](https://github.com/skilleven/clickomat/wiki
 | **shiftclick**                            |  shift-click at current position
 | **shiftclick -_images_**                  |  shift-click on imagename.png if present
 | **shiftclick ! -_images_**                |  forced shift-click on imagename.png
+| **rightclick**                            |  right-click at current position
+| **rightclick -_images_**                  |  right-click on imagename.png if present
+| **rightclick ! -_images_**                |  forced right-click on imagename.png
 | **mdown**                                 |  Mouse-Down - Stays down until released by `mup` !
 | **mup**                                   |  Mouse-Up
 | **pos -image**                            |  place mouse on imagename.png
@@ -169,9 +172,9 @@ More details in the [Docs -> Python](https://github.com/skilleven/clickomat/wiki
 | **click**       |  c   || **posY**  |  y   || **write**   |  w   |
 | **doubleclick** |  dc  || **right** |  r   || **enter**   |  .   |
 | **shiftclick**  |  sc  || **left**  |  l   || **scroll**  |  sl  |
-| **mdown**       |  md  || **up**    |  u   || **del**     |  d   |
-| **mup**         |  mu  || **down**  |  d   || **del dir** |  dd  |
-|                 |      ||           |      || **lookup**  |  lu  |
+| **rightclick**  |  rc  || **up**    |  u   || **del**     |  d   |
+| **mdown**       |  md  || **down**  |  d   || **del dir** |  dd  |
+| **mup**         |  mu  ||           |      || **lookup**  |  lu  |
 
 More commands coming...
 

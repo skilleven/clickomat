@@ -10,7 +10,7 @@ kb = Controller()
 
 #-----------------------------------------------------
 #
-# Clickomat v1.0.6
+# Clickomat v1.0.7
 #
 #-----------------------------------------------------
 
@@ -436,6 +436,11 @@ class Clickomat:
                     if self.logging: print(" -> shift-clicked!", end="")
                     return("normalShiftClickExecuted")
 
+                if mode==4:
+                    if not self.test: self._rightclick()
+                    if self.logging: print(" -> right-clicked!", end="")
+                    return("normalRightClickExecuted")
+
             if not self._clickImage(images,mode):
                 if self.logging: print(" -> not clicked!", end="")
                 order = line.split(" ")
@@ -457,6 +462,9 @@ class Clickomat:
             if mode==3:
                 if self.logging: print(" -> shift-clicked!", end="")
                 return ("ImgClick_ShiftClickExecuted")
+            if mode==4:
+                if self.logging: print(" -> right-clicked!", end="")
+                return ("ImgClick_RightClickExecuted")
     # endregion
     # region _pos(line)
     def _pos(self,line):
@@ -754,6 +762,13 @@ class Clickomat:
             if not self.test: pyautogui.click(x,y)
         if not self.test: pyautogui.keyUp('shift')
     #endregion
+    # region _rightclick(x,y)
+    def _rightclick(self,x=None,y=None):
+        if not x and not y:
+            if not self.test: pyautogui.click(button='right')
+        else:
+            if not self.test: pyautogui.click(x,y,button='right')
+    #endregion
     # region _pop(line)
     def _pop(self,line):
         try:
@@ -804,10 +819,12 @@ class Clickomat:
         if command=="click" \
         or command=="doubleclick" \
         or command=="shiftclick" \
-        or command=="c" or command=="dc" or command=="sc":
+        or command=="rightclick" \
+        or command=="c" or command=="dc" or command=="sc" or command=="rc":
             if command=="click" or command=="c"        : mode = 1
             if command=="doubleclick" or command=="dc" : mode = 2
             if command=="shiftclick" or command=="sc"  : mode = 3
+            if command=="rightclick" or command=="rc"  : mode = 4
             return(f"self._click('{line}',{mode})")
     #endregion
     # region _pushRoute(command,order)
@@ -970,7 +987,7 @@ def run(version,path,clicklist,images,confidence,autoswitch,silent,step,noswitch
     if position: clipPositionLoop()
 
     if version:
-        print("Clickomat 1.0.6 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
+        print("Clickomat 1.0.7 is installed.\nYou may want to check if your version is up to date: pip list --outdated")
         exit()
 
     case_path = path
